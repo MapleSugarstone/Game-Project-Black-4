@@ -11,12 +11,14 @@ class Button {
 
 
 	update() {
-		//if (gameEngine.mouse.x > this.x) {
-		//	this.sprite = "./startButton2.png";
-		//	console.log(2);
-		//}
-		//& (gameEngine.click.y > this.y+this.height & this.y < gameEngine.click.x)) 
-		//& gameEngine.mouse.x < this.x + this.width 
+		if ((gameEngine.mouse?.x > this.x & gameEngine.mouse?.x < this.x + this.width ) & (gameEngine.mouse?.y < this.y+this.height & gameEngine.mouse?.y > this.y)) {
+			this.sprite = "./startButton2.png";
+			console.log(2);
+			
+		} else {
+			this.sprite = "./startButton.png";
+		}
+
 
 	};
 
