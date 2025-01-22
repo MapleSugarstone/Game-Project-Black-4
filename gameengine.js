@@ -11,6 +11,7 @@ class GameEngine {
 
         // Information on the input
         this.click = null;
+        this.clickProcessed = false;
         this.mouse = null;
         this.wheel = null;
         this.keys = {};
@@ -46,6 +47,7 @@ class GameEngine {
             if (this.options.debugging) {
                 console.log("MOUSE_MOVE", getXandY(e));
             }
+            // This was added
             this.mouse = getXandY(e);
         });
 
@@ -53,6 +55,7 @@ class GameEngine {
             if (this.options.debugging) {
                 console.log("CLICK", getXandY(e));
             }
+            this.clickProcessed = true;
             this.click = getXandY(e);
         });
 
@@ -113,6 +116,10 @@ class GameEngine {
         this.update();
         this.draw();
     };
+
+    ChangeScene(scene) {
+        this.entities.rem
+    }
 
 };
 
