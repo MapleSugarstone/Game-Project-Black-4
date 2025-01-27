@@ -9,6 +9,18 @@ ASSET_MANAGER.queueDownload("./startButton.png")
 ASSET_MANAGER.queueDownload("./startButton2.png")
 ASSET_MANAGER.queueDownload("./ShopMenu.png")
 
+// Monster Sprite Images
+ASSET_MANAGER.queueDownload("./Chewy.png")
+ASSET_MANAGER.queueDownload("./Chopper.png")
+ASSET_MANAGER.queueDownload("./Cthulhu.png")
+ASSET_MANAGER.queueDownload("./Ghost.png")
+ASSET_MANAGER.queueDownload("./Goldie.png")
+ASSET_MANAGER.queueDownload("./Pinky.png")
+ASSET_MANAGER.queueDownload("./Puffer.png")
+ASSET_MANAGER.queueDownload("./Slug.png")
+ASSET_MANAGER.queueDownload("./Spider.png")
+ASSET_MANAGER.queueDownload("./Stink.png")
+
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
