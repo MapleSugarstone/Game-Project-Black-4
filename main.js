@@ -1,5 +1,5 @@
 const gameEngine = new GameEngine();
-scene = "mainMenu";
+scene = "MainMenu";
 
 const ASSET_MANAGER = new AssetManager();
 
@@ -24,6 +24,11 @@ ASSET_MANAGER.queueDownload("./Stink.png");
 // Shop Menu Buttons
 ASSET_MANAGER.queueDownload("./RollButton1.png");
 ASSET_MANAGER.queueDownload("./RollButton2.png");
+ASSET_MANAGER.queueDownload("./EndTurnButton1.png");
+ASSET_MANAGER.queueDownload("./EndTurnButton2.png");
+
+// Battle Scene
+ASSET_MANAGER.queueDownload("./BattleScene.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
@@ -31,6 +36,7 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.addEntity(new Button(650, 700, "./startButton.png", 672, 131, "./startButton2.png", () => { 
 		scene = "Shop";
 		console.log("Changed Scene to Shop");
+		console.log(scene);
 	}));
 	gameEngine.addEntity(new Background(0, 0, "./Menu.png"));
 
