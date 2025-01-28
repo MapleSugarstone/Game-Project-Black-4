@@ -58,7 +58,16 @@ class SceneManager {
     }
 
     draw(ctx) {
-        
+        if (scene === "Shop") {
+            ctx.font = '40px Arial';  
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+            
+            const goldText = `Gold: ${this.gold}`;
+            ctx.strokeText(goldText, 19, 80);
+            ctx.fillText(goldText, 19, 80);
+        }
     }
 
     clearEntities() {

@@ -45,7 +45,7 @@ ASSET_MANAGER.downloadAll(() => {
 	//gameEngine.addEntity(new Unit(gameEngine, 0, 0, "./testUnit.png"))
 
 	gameEngine.init(ctx);
-
+	gameEngine.sceneManager = new SceneManager();
 	gameEngine.start();
 });
 

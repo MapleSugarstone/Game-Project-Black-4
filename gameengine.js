@@ -91,6 +91,11 @@ class GameEngine {
         for (let i = this.entities.length - 1; i >= 0; i--) {
             this.entities[i].draw(this.ctx, this);
         }
+
+        // Only call draw if sceneManager exists
+        if (this.sceneManager) {
+            this.sceneManager.draw(this.ctx);
+        }
     };
 
     update() {
