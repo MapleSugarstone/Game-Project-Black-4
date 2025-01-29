@@ -47,13 +47,17 @@ class SceneManager {
             }));
 
             gameEngine.addEntity(new Background(0, 0, "./ShopMenu.png"));
-            // scene == "LoadedShop";
+            scene = "LoadedShop";
+            console.log("Shop finished loading");
 
         } else if (scene == "Battle") {
             this.clearEntities();
-            gameEngine.addEntity(new Background(0, 0, "./BattleScene.png"));
+            console.log("battle loaded");
+            //gameEngine.addEntity(new Background(0, 0, "./BattleScene.png"));
+            scene = "LoadedBattle";
 
         }
+        console.log("Shop Status:" + scene);
         
     }
 
@@ -62,6 +66,7 @@ class SceneManager {
     }
 
     clearEntities() {
+        //gameEngine.ChangeScene();
         gameEngine.entities = [];
     }
 
