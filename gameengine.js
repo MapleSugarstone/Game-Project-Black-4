@@ -1,41 +1,49 @@
-// This game shell was happily modified from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
-
 class GameEngine {
     constructor(options) {
-        // What you will use to draw
-        // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+        // Core properties
         this.ctx = null;
-
-        // Everything that will be updated and drawn each frame
         this.entities = [];
-
-        // Information on the input
+        this.running = false;
+        this.timestamp = 0;
+        
+        // Input state
         this.click = null;
         this.clickProcessed = false;
         this.mouse = null;
         this.wheel = null;
         this.keys = {};
-
-        // Options and the Details
+        this.lastKey = null;
+        
+        // Performance optimizations
+        this.frameTime = 0;
+        this.minimumStepTime = 1000/60; // Cap at 60 FPS
+        this.pauseWhenUnfocused = true;
+        
+        // Debug options
         this.options = options || {
             debugging: false,
+            showFPS: false,
+            showBounds: false
         };
-    };
+        
+        // Statistics
+        this.fps = 0;
+        this.frameCount = 0;
+        this.lastFPSUpdate = 0;
+    }
 
     init(ctx) {
         this.ctx = ctx;
         this.startInput();
         this.timer = new Timer();
-    };
+        this.timestamp = 0;
+    }
 
     start() {
         this.running = true;
-        const gameLoop = () => {
-            this.loop();
-            requestAnimFrame(gameLoop, this.ctx.canvas);
-        };
-        gameLoop();
-    };
+        this.timestamp = performance.now();
+        requestAnimationFrame(this.loop.bind(this));
+    }
 
     startInput() {
         const getXandY = e => ({
@@ -43,84 +51,157 @@ class GameEngine {
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
         });
         
+        // Mouse move handler
         this.ctx.canvas.addEventListener("mousemove", e => {
             if (this.options.debugging) {
                 console.log("MOUSE_MOVE", getXandY(e));
             }
-            // This was added
             this.mouse = getXandY(e);
         });
 
+        // Click handler
         this.ctx.canvas.addEventListener("click", e => {
             if (this.options.debugging) {
                 console.log("CLICK", getXandY(e));
             }
             this.clickProcessed = true;
             this.click = getXandY(e);
+            e.preventDefault();
         });
 
+        // Mouse wheel handler
         this.ctx.canvas.addEventListener("wheel", e => {
             if (this.options.debugging) {
                 console.log("WHEEL", getXandY(e), e.wheelDelta);
             }
-            e.preventDefault(); // Prevent Scrolling
+            e.preventDefault();
             this.wheel = e;
         });
 
+        // Right click handler
         this.ctx.canvas.addEventListener("contextmenu", e => {
             if (this.options.debugging) {
                 console.log("RIGHT_CLICK", getXandY(e));
             }
-            e.preventDefault(); // Prevent Context Menu
+            e.preventDefault();
             this.rightclick = getXandY(e);
         });
 
-        this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
-        this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
-    };
+        // Keyboard handlers
+        document.addEventListener("keydown", e => {
+            this.keys[e.key] = true;
+            this.lastKey = e.key;
+            if (this.options.debugging) console.log(`Key Down: ${e.key}`);
+        });
+
+        document.addEventListener("keyup", e => {
+            this.keys[e.key] = false;
+            if (this.options.debugging) console.log(`Key Up: ${e.key}`);
+        });
+
+        // Focus handlers
+        if (this.pauseWhenUnfocused) {
+            window.addEventListener('blur', () => {
+                this.running = false;
+            });
+
+            window.addEventListener('focus', () => {
+                this.running = true;
+                this.timestamp = performance.now();
+                this.loop();
+            });
+        }
+    }
 
     addEntity(entity) {
         this.entities.push(entity);
-    };
+    }
 
     draw() {
-        // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
+        // Clear the canvas
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-        // Draw latest things first
-        for (let i = this.entities.length - 1; i >= 0; i--) {
+        // Sort entities by layer (if they have one)
+        this.entities.sort((a, b) => (a.layer || 0) - (b.layer || 0));
+
+        // Draw entities
+        for (let i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.ctx, this);
         }
-    };
+
+        // Draw debug info if enabled
+        if (this.options.debugging) {
+            this.drawDebugInfo();
+        }
+    }
 
     update() {
-        let entitiesCount = this.entities.length;
-
-        for (let i = 0; i < entitiesCount; i++) {
+        // Update each entity
+        for (let i = this.entities.length - 1; i >= 0; i--) {
             let entity = this.entities[i];
-
+            
             if (!entity.removeFromWorld) {
                 entity.update();
             }
         }
+
+        // Update scene manager
         sceneManager.update();
 
-        for (let i = this.entities.length - 1; i >= 0; --i) {
-            if (this.entities[i].removeFromWorld) {
-                this.entities.splice(i, 1);
-            }
+        // Remove marked entities
+        this.entities = this.entities.filter(entity => !entity.removeFromWorld);
+
+        // Update FPS counter
+        this.frameCount++;
+        if (performance.now() - this.lastFPSUpdate > 1000) {
+            this.fps = this.frameCount;
+            this.frameCount = 0;
+            this.lastFPSUpdate = performance.now();
         }
-    };
-
-    loop() {
-        this.clockTick = this.timer.tick();
-        this.update();
-        this.draw();
-    };
-
-    ChangeScene() {
-        this.entities.rem
     }
 
-};
+    loop() {
+        if (!this.running) return;
 
+        const currentTime = performance.now();
+        const deltaTime = currentTime - this.timestamp;
+
+        if (deltaTime >= this.minimumStepTime) {
+            this.clockTick = this.timer.tick();
+            this.update();
+            this.draw();
+            this.timestamp = currentTime;
+        }
+
+        requestAnimationFrame(this.loop.bind(this));
+    }
+
+    drawDebugInfo() {
+        this.ctx.save();
+        this.ctx.fillStyle = 'white';
+        this.ctx.strokeStyle = 'black';
+        this.ctx.lineWidth = 2;
+        this.ctx.font = '16px Arial';
+
+        // Draw FPS
+        const fps = `FPS: ${this.fps}`;
+        this.ctx.strokeText(fps, 10, 20);
+        this.ctx.fillText(fps, 10, 20);
+
+        // Draw entity count
+        const entityCount = `Entities: ${this.entities.length}`;
+        this.ctx.strokeText(entityCount, 10, 40);
+        this.ctx.fillText(entityCount, 10, 40);
+
+        // Draw current scene
+        const sceneText = `Scene: ${scene}`;
+        this.ctx.strokeText(sceneText, 10, 60);
+        this.ctx.fillText(sceneText, 10, 60);
+
+        this.ctx.restore();
+    }
+
+    clearEntities() {
+        this.entities = [];
+    }
+}
