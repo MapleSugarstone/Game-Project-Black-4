@@ -1,5 +1,6 @@
 const gameEngine = new GameEngine();
 scene = "MainMenu";
+const sceneManager = new SceneManager()
 
 const ASSET_MANAGER = new AssetManager();
 
@@ -38,9 +39,10 @@ ASSET_MANAGER.downloadAll(() => {
 		console.log("Changed Scene to Shop");
 		console.log(scene);
 	}));
+
+
 	gameEngine.addEntity(new Background(0, 0, "./Menu.png"));
 
-	gameEngine.addEntity(new SceneManager());
 
 	//gameEngine.addEntity(new Unit(gameEngine, 0, 0, "./testUnit.png"))
 

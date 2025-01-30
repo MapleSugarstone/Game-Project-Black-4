@@ -103,6 +103,7 @@ class GameEngine {
                 entity.update();
             }
         }
+        sceneManager.update();
 
         for (let i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {
@@ -117,7 +118,7 @@ class GameEngine {
         this.draw();
     };
 
-    ChangeScene(scene) {
+    ChangeScene() {
         this.entities.rem
     }
 
