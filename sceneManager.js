@@ -74,9 +74,30 @@ class SceneManager {
         // Add background
         gameEngine.addEntity(new Background(0, 0, "./ShopMenu.png"));
 
+        // Add info display
+        gameEngine.addEntity(new Button(20, 20, "./Coin_Display.png", 121, 61, "./Coin_display.png", () => {
+            
+        }));
+
+        gameEngine.addEntity(new Button(170, 20, "./Health_Display.png", 121, 61, "./Health_display.png", () => {
+            
+        }));
+
+        gameEngine.addEntity(new Button(320, 20, "./Win_Display.png", 121, 61, "./Win_display.png", () => {
+            
+        }));
+
+        gameEngine.addEntity(new Button(470, 20, "./Turn_Display.png", 121, 61, "./Turn_display.png", () => {
+            
+        }));
+
         // Add buttons
         gameEngine.addEntity(new Button(200, 850, "./RollButton1.png", 200, 100, "./RollButton2.png", () => {
             this.rollShop();
+        }));
+
+        gameEngine.addEntity(new Button(410, 850, "./PurchaseButton1.png", 400, 100, "./PurchaseButton2.png", () => {
+            
         }));
 
         gameEngine.addEntity(new Button(1360, 850, "./EndTurnButton1.png", 400, 100, "./EndTurnButton2.png", () => {
