@@ -16,6 +16,14 @@ ASSET_MANAGER.queueDownload("./RollButton1.png");
 ASSET_MANAGER.queueDownload("./RollButton2.png");
 ASSET_MANAGER.queueDownload("./EndTurnButton1.png");
 ASSET_MANAGER.queueDownload("./EndTurnButton2.png");
+ASSET_MANAGER.queueDownload("./PurchaseButton1.png")
+ASSET_MANAGER.queueDownload("./PurchaseButton2.png")
+
+// Shop Info Display
+ASSET_MANAGER.queueDownload("./Coin_Display.png")
+ASSET_MANAGER.queueDownload("./Health_Display.png")
+ASSET_MANAGER.queueDownload("./Win_Display.png")
+ASSET_MANAGER.queueDownload("./Turn_Display.png")
 
 // Monster Sprites
 ASSET_MANAGER.queueDownload("./Chewy.png");
