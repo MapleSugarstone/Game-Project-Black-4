@@ -3,6 +3,8 @@ class GameEngine {
         // Core properties
         this.ctx = null;
         this.entities = [];
+        this.takenIDS = [];
+        this.SelectedUnitGlobal = null;
         this.running = false;
         this.timestamp = 0;
         

@@ -1,6 +1,7 @@
 // unit.js
 class Unit {
     constructor(x, y, sprite, stats = {}) {
+        this.newName();
         this.x = x;
         this.y = y;
         this.sprite = sprite;
@@ -25,8 +26,11 @@ class Unit {
         
         // Drag and drop properties
         this.isDragging = false;
+        this.Selected = false;
         this.dragOffsetX = 0;
         this.dragOffsetY = 0;
+        // This will allow a unit to be purchased, and be randomized when rerolling
+        this.isInShop = true;
         
         // Visual effects
         this.isHovered = false;
@@ -84,10 +88,18 @@ class Unit {
             }
         }
 
+        this.Selected = gameEngine.SelectedUnitGlobal == this.ID;
+
         // Handle hover animation
         if (this.isHovered && this.scale < 1.1) {
             this.scale += 0.01;
-        } else if (!this.isHovered && this.scale > 1) {
+        }
+
+        if (this.Selected && this.scale < 1.3) {
+            this.scale += 0.03;
+        }
+
+        if ((!this.isHovered && !this.Selected) && this.scale > 1) {
             this.scale -= 0.01;
         }
 
@@ -222,5 +234,13 @@ class Unit {
 
     takeHit() {
         this.hitAnim = 1;
+    }
+
+    newName() {
+        this.ID = Math.floor(Math.random() * 99999999999999);
+        while (gameEngine.takenIDS.includes(this.ID)) {
+            this.ID = Math.floor(Math.random() * 99999999999999);
+        }
+        gameEngine.takenIDS.push(this.ID)
     }
 }

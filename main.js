@@ -1,5 +1,6 @@
 const gameEngine = new GameEngine();
 scene = "MainMenu";
+
 const sceneManager = new SceneManager();
 
 const ASSET_MANAGER = new AssetManager();

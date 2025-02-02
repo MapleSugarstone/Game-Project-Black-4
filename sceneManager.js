@@ -1,17 +1,21 @@
 class SceneManager {
     constructor() {
+
         // Game state
         this.lives = 10;
         this.gold = 11;
         this.wins = 0;
         this.shopLevel = 1;
         this.currentRound = 1;
+        
 
         // Shop state
+        this.goldDisplayer = new Display(20, 20, "./CoinDisplay10.png", 121, 61);
         this.shopSlots = [null, null, null];
         this.frozenSlots = [false, false, false];
         this.teamSlots = [null, null, null, null, null];
         this.rerollCost = 1;
+        this.selectedUnit = null;
         
         // Available monsters in pool
         this.monsterTypes = [
@@ -57,47 +61,54 @@ class SceneManager {
             this.clearEntities();
             this.startBattle();
             scene = "LoadedBattle";
+        } else if (scene === "LoadedShop") {
+            if (this.gold == 10) {
+                this.goldDisplayer.sprite = "./CoinDisplay10.png";
+            } else if (this.gold == 9) {
+                this.goldDisplayer.sprite = "./CoinDisplay9.png";
+            } else if (this.gold == 8) {
+                this.goldDisplayer.sprite = "./CoinDisplay8.png";
+            } else if (this.gold == 7) {
+                this.goldDisplayer.sprite = "./CoinDisplay7.png";
+            } else if (this.gold == 6) {
+                this.goldDisplayer.sprite = "./CoinDisplay6.png";
+            } else if (this.gold == 5) {
+                this.goldDisplayer.sprite = "./CoinDisplay5.png";
+            } else if (this.gold == 4) {
+                this.goldDisplayer.sprite = "./CoinDisplay4.png";
+            } else if (this.gold == 3) {
+                this.goldDisplayer.sprite = "./CoinDisplay3.png";
+            } else if (this.gold == 2) {
+                this.goldDisplayer.sprite = "./CoinDisplay2.png";
+            } else if (this.gold == 1) {
+                this.goldDisplayer.sprite = "./CoinDisplay1.png";
+            } else {
+                this.goldDisplayer.sprite = "./CoinDisplay0.png";
+            }
         }
 
+        
+
         // Handle dragging
-        if (gameEngine.click && !gameEngine.clickProcessed) {
+        if (gameEngine.click) {
+            console.log("checking for clicks");
             this.handleClick(gameEngine.click.x, gameEngine.click.y);
-            gameEngine.clickProcessed = false;
         }
 
         if (gameEngine.mouse) {
             this.handleMouseMove(gameEngine.mouse.x, gameEngine.mouse.y);
         }
+
+        
     }
 
     setupShop() {
         // Add background
         gameEngine.addEntity(new Background(0, 0, "./ShopMenu.png"));
+        gameEngine.addEntity(this.goldDisplayer);
 
         // Add info display
-        if (this.gold == 10) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay10.png", 121, 61));
-        } else if (this.gold == 9) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay9.png", 121, 61));
-        } else if (this.gold == 8) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay8.png", 121, 61));
-        } else if (this.gold == 7) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay7.png", 121, 61));
-        } else if (this.gold == 6) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay6.png", 121, 61));
-        } else if (this.gold == 5) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay5.png", 121, 61));
-        } else if (this.gold == 4) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay4.png", 121, 61));
-        } else if (this.gold == 3) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay3.png", 121, 61));
-        } else if (this.gold == 2) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay2.png", 121, 61));
-        } else if (this.gold == 1) {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay1.png", 121, 61));
-        } else {
-            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay0.png", 121, 61));
-        }
+        
 
         gameEngine.addEntity(new Display(170, 20, "./HealthDisplay1.png", 121, 61));
 
@@ -111,7 +122,20 @@ class SceneManager {
         }));
 
         gameEngine.addEntity(new Button(410, 850, "./PurchaseButton1.png", 400, 100, "./PurchaseButton2.png", () => {
-            
+            console.log(gameEngine.SelectedUnitGlobal);
+            console.log(this.teamSlots.includes(null));
+            console.log(this.gold);
+            console.log(this.teamSlots);
+            // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
+            if (this.gold > 2) {
+                this.gold -= 3;
+                const index = this.teamSlots.indexOf(null);
+                this.teamSlots[index] = this.selectedUnit;
+                //this.shopSlots[this.dragStartSlot.index] = null;
+                gameEngine.SelectedUnitGlobal = null;
+                this.selectedUnit = null;
+                this.updateUnitDisplay();
+            }
         }));
 
         gameEngine.addEntity(new Button(1360, 850, "./EndTurnButton1.png", 400, 100, "./EndTurnButton2.png", () => {
@@ -150,7 +174,6 @@ class SceneManager {
             this.updateUnitDisplay();
         }
         console.log(this.gold);
-        this.setupShop();
     }
 
     updateUnitDisplay() {
@@ -177,12 +200,17 @@ class SceneManager {
         for (let i = 0; i < this.shopSlots.length; i++) {
             const unit = this.shopSlots[i];
             if (unit && this.isClickInUnit(x, y, unit)) {
-                if (this.gold >= 3) {
-                    this.draggedUnit = unit;
-                    this.dragStartSlot = {type: 'shop', index: i};
-                    unit.startDrag(x, y);
+                //this.draggedUnit = unit;
+                //this.dragStartSlot = {type: 'shop', index: i};
+                console.log("clicked");
+                if (unit.isInShop) {
+                    gameEngine.SelectedUnitGlobal = unit.ID;
+                    this.selectedUnit = unit;
+                    //this.dragStartSlot.index = null;
+                    console.log("clicked unit");
                 }
-                return;
+                
+                //unit.startDrag(x, y);
             }
         }
 
@@ -209,7 +237,7 @@ class SceneManager {
         }
     }
 
-    handleMouseMove(x, y) {
+    handleMouseMove(x, y, clickX, clickY) {
         if (this.draggedUnit) {
             this.draggedUnit.dragTo(x, y);
         }
@@ -336,23 +364,20 @@ class SceneManager {
         return team;
     }
 
-    async executeBattle(playerTeam, enemyTeam) {
+    executeBattle(playerTeam, enemyTeam) {
         while (playerTeam.length > 0 && enemyTeam.length > 0) {
-            // Front units attack each other
-            await new Promise(resolve => setTimeout(resolve, 1000));
             
-            playerTeam[0].attack(enemyTeam[0]);
-            enemyTeam[0].attack(playerTeam[0]);
+            // Animate here?
+            // playerTeam[0].attack(enemyTeam[0]);
+            // enemyTeam[0].attack(playerTeam[0]);
             
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            // Remove defeated units
             if (playerTeam[0].health <= 0) playerTeam.shift();
             if (enemyTeam[0].health <= 0) enemyTeam.shift();
+
+
+
         }
 
-        // Handle battle results
-        setTimeout(() => {
             if (playerTeam.length > 0) {
                 this.wins++;
                 this.gold += 2;
@@ -361,8 +386,8 @@ class SceneManager {
             }
             this.currentRound++;
             scene = "Shop";
-        }, 1500);
-    }
+        }
+
 
     clearEntities() {
         gameEngine.entities = [];
