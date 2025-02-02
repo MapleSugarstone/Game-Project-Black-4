@@ -6,8 +6,8 @@ const ASSET_MANAGER = new AssetManager();
 
 // Menu Assets
 ASSET_MANAGER.queueDownload("./Menu.png");
-ASSET_MANAGER.queueDownload("./startButton.png");
-ASSET_MANAGER.queueDownload("./startButton2.png");
+ASSET_MANAGER.queueDownload("./StartButton1.png");
+ASSET_MANAGER.queueDownload("./StartButton2.png");
 ASSET_MANAGER.queueDownload("./ShopMenu.png");
 ASSET_MANAGER.queueDownload("./BattleScene.png");
 
@@ -78,7 +78,7 @@ ASSET_MANAGER.downloadAll(() => {
 
     // Add UI elements
     gameEngine.addEntity(new Background(0, 0, "./Menu.png"));
-    gameEngine.addEntity(new Button(650, 700, "./startButton.png", 672, 131, "./startButton2.png", () => { 
+    gameEngine.addEntity(new Button(650, 700, "./StartButton1.png", 546, 100, "./StartButton2.png", () => { 
         scene = "Shop";
         gameState.inGame = true;
     }));
