@@ -75,19 +75,19 @@ class SceneManager {
         gameEngine.addEntity(new Background(0, 0, "./ShopMenu.png"));
 
         // Add info display
-        gameEngine.addEntity(new Button(20, 20, "./Coin_Display.png", 121, 61, "./Coin_display.png", () => {
+        gameEngine.addEntity(new Button(20, 20, "./CoinDisplay1.png", 121, 61, "./CoinDisplay1.png", () => {
             
         }));
 
-        gameEngine.addEntity(new Button(170, 20, "./Health_Display.png", 121, 61, "./Health_display.png", () => {
+        gameEngine.addEntity(new Button(170, 20, "./HealthDisplay1.png", 121, 61, "./HealthDisplay1.png", () => {
             
         }));
 
-        gameEngine.addEntity(new Button(320, 20, "./Win_Display.png", 121, 61, "./Win_display.png", () => {
+        gameEngine.addEntity(new Button(320, 20, "./WinDisplay1.png", 121, 61, "./WinDisplay1.png", () => {
             
         }));
 
-        gameEngine.addEntity(new Button(470, 20, "./Turn_Display.png", 121, 61, "./Turn_display.png", () => {
+        gameEngine.addEntity(new Button(470, 20, "./TurnDisplay1.png", 121, 61, "./TurnDisplay1.png", () => {
             
         }));
 
