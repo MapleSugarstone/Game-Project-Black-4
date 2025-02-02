@@ -96,9 +96,12 @@ class SceneManager {
             this.handleClick(gameEngine.click.x, gameEngine.click.y);
         }
 
+        /*
+
         if (gameEngine.mouse) {
             this.handleMouseMove(gameEngine.mouse.x, gameEngine.mouse.y);
         }
+            */
 
         
     }
@@ -128,7 +131,7 @@ class SceneManager {
             console.log(this.gold);
             console.log(this.teamSlots);
             // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-            if (this.gold > 2) {
+            if (this.gold > 2 && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null))) {
                 this.gold -= 3;
                 this.index = this.teamSlots.indexOf(null);
                 this.teamSlots[this.index] = this.selectedUnit;
@@ -228,6 +231,7 @@ class SceneManager {
             }
         }
 
+        /*
         // Handle unit drop
         if (this.draggedUnit) {
             const targetSlot = this.findTargetSlot(x, y);
@@ -244,6 +248,7 @@ class SceneManager {
         if (this.draggedUnit) {
             this.draggedUnit.dragTo(x, y);
         }
+            */
 
         // Update hover states
         [...this.shopSlots, ...this.teamSlots].forEach(unit => {
@@ -257,6 +262,8 @@ class SceneManager {
         return x >= unit.x && x <= unit.x + unit.width &&
                y >= unit.y && y <= unit.y + unit.height;
     }
+
+    /*
 
     findTargetSlot(x, y) {
         // Check team slots
@@ -278,6 +285,9 @@ class SceneManager {
         }
         return null;
     }
+        */
+
+    /*
 
     handleUnitDrop(targetSlot) {
         if (targetSlot.type === 'team') {
@@ -327,6 +337,7 @@ class SceneManager {
             );
         }
     }
+        */
 
     startBattle() {
         gameEngine.addEntity(new Background(0, 0, "./BattleScene.png"));
