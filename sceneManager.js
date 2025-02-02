@@ -4,6 +4,7 @@ class SceneManager {
         // Game state
         this.lives = 10;
         this.gold = 11;
+        this.index = 0;
         this.wins = 0;
         this.shopLevel = 1;
         this.currentRound = 1;
@@ -33,9 +34,9 @@ class SceneManager {
 
         // Shop coordinates
         this.shopPositions = [
-            {x: 280, y: 500},
-            {x: 480, y: 500},
-            {x: 680, y: 500}
+            {x: 280, y: 670},
+            {x: 480, y: 670},
+            {x: 680, y: 670}
         ];
 
         // Team positions
@@ -129,8 +130,10 @@ class SceneManager {
             // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
             if (this.gold > 2) {
                 this.gold -= 3;
-                const index = this.teamSlots.indexOf(null);
-                this.teamSlots[index] = this.selectedUnit;
+                this.index = this.teamSlots.indexOf(null);
+                this.teamSlots[this.index] = this.selectedUnit;
+                this.selectedUnit.x = this.teamPositions[this.index].x;
+                this.selectedUnit.y = this.teamPositions[this.index].y;
                 //this.shopSlots[this.dragStartSlot.index] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
