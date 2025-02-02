@@ -2,7 +2,7 @@ class SceneManager {
     constructor() {
         // Game state
         this.lives = 10;
-        this.gold = 10;
+        this.gold = 11;
         this.wins = 0;
         this.shopLevel = 1;
         this.currentRound = 1;
@@ -75,7 +75,29 @@ class SceneManager {
         gameEngine.addEntity(new Background(0, 0, "./ShopMenu.png"));
 
         // Add info display
-        gameEngine.addEntity(new Display(20, 20, "./CoinDisplay1.png", 121, 61));
+        if (this.gold == 10) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay10.png", 121, 61));
+        } else if (this.gold == 9) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay9.png", 121, 61));
+        } else if (this.gold == 8) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay8.png", 121, 61));
+        } else if (this.gold == 7) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay7.png", 121, 61));
+        } else if (this.gold == 6) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay6.png", 121, 61));
+        } else if (this.gold == 5) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay5.png", 121, 61));
+        } else if (this.gold == 4) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay4.png", 121, 61));
+        } else if (this.gold == 3) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay3.png", 121, 61));
+        } else if (this.gold == 2) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay2.png", 121, 61));
+        } else if (this.gold == 1) {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay1.png", 121, 61));
+        } else {
+            gameEngine.addEntity(new Display(20, 20, "./CoinDisplay0.png", 121, 61));
+        }
 
         gameEngine.addEntity(new Display(170, 20, "./HealthDisplay1.png", 121, 61));
 
@@ -127,6 +149,8 @@ class SceneManager {
             }
             this.updateUnitDisplay();
         }
+        console.log(this.gold);
+        this.setupShop();
     }
 
     updateUnitDisplay() {
