@@ -20,16 +20,16 @@ class SceneManager {
         
         // Available monsters in pool
         this.monsterTypes = [
-            "./Chewy.png",
-            "./Chopper.png",
-            "./Cthulhu.png",
-            "./Ghost.png",
-            "./Goldie.png",
-            "./Pinky.png",
-            "./Puffer.png",
-            "./Slug.png",
-            "./Spider.png",
-            "./Stink.png"
+            "./Units/Unit1.png",
+            "./Units/Unit2.png",
+            "./Units/Unit3.png",
+            "./Units/Unit4.png",
+            "./Units/Unit5.png",
+            "./Units/Unit6.png",
+            "./Units/Unit7.png",
+            "./Units/Unit8.png",
+            "./Units/Unit9.png",
+            "./Units/Unit10.png"
         ];
 
         // Shop coordinates
@@ -96,12 +96,12 @@ class SceneManager {
             this.handleClick(gameEngine.click.x, gameEngine.click.y);
         }
 
-        /*
+        
 
         if (gameEngine.mouse) {
             this.handleMouseMove(gameEngine.mouse.x, gameEngine.mouse.y);
         }
-            */
+            
 
         
     }
@@ -136,11 +136,10 @@ class SceneManager {
                 this.index = this.teamSlots.indexOf(null);
                 this.teamSlots[this.index] = this.selectedUnit;
                 this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
-                this.selectedUnit.isAnimating = true;
                 //this.shopSlots[this.dragStartSlot.index] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
-                this.updateUnitDisplay();
+                //this.updateUnitDisplay();
             }
         }));
 
@@ -219,6 +218,8 @@ class SceneManager {
                 //unit.startDrag(x, y);
             }
         }
+    
+    
 
         // Check team slots
         for (let i = 0; i < this.teamSlots.length; i++) {
@@ -230,6 +231,7 @@ class SceneManager {
                 return;
             }
         }
+    }
 
         /*
         // Handle unit drop
@@ -243,12 +245,13 @@ class SceneManager {
             this.draggedUnit = null;
         }
     }
+        */
 
     handleMouseMove(x, y, clickX, clickY) {
-        if (this.draggedUnit) {
-            this.draggedUnit.dragTo(x, y);
-        }
-            */
+        //if (this.draggedUnit) {
+        //    this.draggedUnit.dragTo(x, y);
+        //}
+            
 
         // Update hover states
         [...this.shopSlots, ...this.teamSlots].forEach(unit => {
@@ -257,14 +260,16 @@ class SceneManager {
             }
         });
     }
+    
+
 
     isClickInUnit(x, y, unit) {
         return x >= unit.x && x <= unit.x + unit.width &&
                y >= unit.y && y <= unit.y + unit.height;
     }
 
-    /*
 
+    
     findTargetSlot(x, y) {
         // Check team slots
         for (let i = 0; i < this.teamPositions.length; i++) {
@@ -285,7 +290,7 @@ class SceneManager {
         }
         return null;
     }
-        */
+        
 
     /*
 

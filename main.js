@@ -37,16 +37,16 @@ ASSET_MANAGER.queueDownload("./WinDisplay1.png")
 ASSET_MANAGER.queueDownload("./TurnDisplay1.png")
 
 // Monster Sprites
-ASSET_MANAGER.queueDownload("./Chewy.png");
-ASSET_MANAGER.queueDownload("./Chopper.png");
-ASSET_MANAGER.queueDownload("./Cthulhu.png");
-ASSET_MANAGER.queueDownload("./Ghost.png");
-ASSET_MANAGER.queueDownload("./Goldie.png");
-ASSET_MANAGER.queueDownload("./Pinky.png");
-ASSET_MANAGER.queueDownload("./Puffer.png");
-ASSET_MANAGER.queueDownload("./Slug.png");
-ASSET_MANAGER.queueDownload("./Spider.png");
-ASSET_MANAGER.queueDownload("./Stink.png");
+ASSET_MANAGER.queueDownload("./Units/Unit1.png");
+ASSET_MANAGER.queueDownload("./Units/Unit2.png");
+ASSET_MANAGER.queueDownload("./Units/Unit3.png");
+ASSET_MANAGER.queueDownload("./Units/Unit4.png");
+ASSET_MANAGER.queueDownload("./Units/Unit5.png");
+ASSET_MANAGER.queueDownload("./Units/Unit6.png");
+ASSET_MANAGER.queueDownload("./Units/Unit7.png");
+ASSET_MANAGER.queueDownload("./Units/Unit8.png");
+ASSET_MANAGER.queueDownload("./Units/Unit9.png");
+ASSET_MANAGER.queueDownload("./Units/Unit10.png");
 
 class GameState {
     constructor() {

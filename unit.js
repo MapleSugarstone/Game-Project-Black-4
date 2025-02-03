@@ -43,7 +43,7 @@ class Unit {
 
     getAbility(sprite) {
         const abilities = {
-            "./Chewy.png": {
+            "./Units/Unit1.png": {
                 name: "Bite",
                 trigger: "onAttack",
                 effect: (target) => { target.health -= 1; }
@@ -75,16 +75,16 @@ class Unit {
     update() {
         // Handle animations
         if (this.isAnimating) {
-            const dx = (this.targetX - this.x) / this.animationSpeed;
-            const dy = (this.targetY - this.y) / this.animationSpeed;
+            this.dx = (this.targetX - this.x) / this.animationSpeed;
+            this.dy = (this.targetY - this.y) / this.animationSpeed;
             
-            if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+            if (Math.abs(this.dx) < 0.1 && Math.abs(this.dy) < 0.1) {
                 this.x = this.targetX;
                 this.y = this.targetY;
                 this.isAnimating = false;
             } else {
-                this.x += dx;
-                this.y += dy;
+                this.x += this.dx;
+                this.y += this.dy;
             }
         }
 
@@ -92,6 +92,7 @@ class Unit {
 
         // Handle hover animation
         if (this.isHovered && this.scale < 1.1) {
+            console.log("hoveirng");
             this.scale += 0.01;
         }
 
@@ -156,24 +157,24 @@ class Unit {
         );
 
         // Draw stats
-        this.drawStats(ctx);
+        this.drawStats(ctx, 32, 16);
         
         ctx.restore();
     }
 
-    drawStats(ctx) {
+    drawStats(ctx, statx, staty,) {
         // Stats background
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.fillRect(this.x + 5, this.y + this.height - 30, 50, 25);
+        ctx.fillRect(this.x + 5 + statx, this.y + this.height - 30, 50, 25);
 
         // Attack stat
         ctx.fillStyle = "orange";
         ctx.font = "bold 20px Arial";
-        ctx.fillText(this.attack, this.x + 10, this.y + this.height - 10);
+        ctx.fillText(this.attack, this.x + 10 + statx, this.y + this.height - 10);
 
         // Health stat
         ctx.fillStyle = this.health < this.maxHealth ? "red" : "green";
-        ctx.fillText(this.health, this.x + 40, this.y + this.height - 10);
+        ctx.fillText(this.health, this.x + 40 + statx, this.y + this.height - 10);
 
         // Level stars if above level 1
         if (this.level > 1) {
