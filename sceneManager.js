@@ -135,8 +135,8 @@ class SceneManager {
                 this.gold -= 3;
                 this.index = this.teamSlots.indexOf(null);
                 this.teamSlots[this.index] = this.selectedUnit;
-                this.selectedUnit.x = this.teamPositions[this.index].x;
-                this.selectedUnit.y = this.teamPositions[this.index].y;
+                this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
+                this.selectedUnit.isAnimating = true;
                 //this.shopSlots[this.dragStartSlot.index] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
