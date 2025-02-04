@@ -1,9 +1,12 @@
+const WINS_THRESHOLD = 3;
+const STARTING_GOLD = 11;
+const STARTING_LIVES = 5;
 class SceneManager {
     constructor() {
 
         // Game state
-        this.lives = 10;
-        this.gold = 11;
+        this.lives = STARTING_LIVES;
+        this.gold = STARTING_GOLD;
         this.index = 0;
         this.wins = 0;
         this.shopLevel = 1;
@@ -64,6 +67,9 @@ class SceneManager {
             scene = "LoadedBattle";
         } else if (scene === "LoadedShop") {
             this.goldDisplayer.sprite = `./UI_Assets/CoinDisplay${this.gold}.png`;
+        } else if (scene === "End") {
+            this.clearEntities();
+            this.endGame();
         }
 
         
@@ -84,6 +90,34 @@ class SceneManager {
         
     }
 
+    endGame() {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/Menu.png"));
+        console.log("Wins: %d", this.wins);
+        console.log("Lives: %d", this.lives);
+        if (this.wins >= WINS_THRESHOLD) {
+            gameEngine.addEntity(new Display(650, 350, "./UI_Assets/EndTurnButton1.png", 546, 100));
+            console.log("You Win!");
+        }
+        else if (this.lives <= 0) {
+            gameEngine.addEntity(new Display(650, 350, "./UI_Assets/EndTurnButton2.png", 546, 100));
+            console.log("You Lose!");
+        }
+        
+        gameState.inGame = false;
+        gameEngine.addEntity(new Button(650, 700, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => {
+            this.lives = STARTING_LIVES;
+            this.gold = STARTING_GOLD;
+            this.index = 0;
+            this.wins = 0;
+            this.shopLevel = 1;
+            this.currentRound = 1;
+            this.frozenSlots = [false, false, false];
+            this.teamSlots = [null, null, null, null, null];
+            this.selectedUnit = null;
+            scene = "Shop";
+            gameState.inGame = true;
+    }));
+    }
     setupShop() {
         // Add background
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/ShopMenu.png"));
@@ -390,12 +424,12 @@ class SceneManager {
                 this.lives--;
                 console.log("Lives: %d", this.lives);
             }
-            
-            if (this.wins >= 10 || this.lives <= 0){
+
+            if (this.wins >= WINS_THRESHOLD || this.lives <= 0){
                 scene = "End";
             } else {
                 this.currentRound++;
-                this.gold = 11;
+                this.gold = STARTING_GOLD;
                 scene = "Shop";
             }
             
