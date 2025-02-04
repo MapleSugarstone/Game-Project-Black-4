@@ -1,12 +1,10 @@
-class Button {
-    constructor(x, y, sprite, width, height, hoversprite, method) {
+class Display {
+    constructor(x, y, sprite, width, height, method) {
         this.x = x;
         this.y = y;
         this.sprite = sprite;
         this.width = width;
         this.height = height;
-        this.hoversprite = hoversprite;
-        this.truesprite = sprite;
         this.method = method;
 
         // Visual state
@@ -28,22 +26,6 @@ class Button {
     }
 
     update() {
-        // Check mouse interaction
-        this.hovering = this.checkOverlap(gameEngine.mouse?.x, gameEngine.mouse?.y);
-        this.truesprite = this.hovering ? this.hoversprite : this.sprite;
-
-        // Handle click
-        if (this.checkOverlap(gameEngine.click?.x, gameEngine.click?.y) && gameEngine.clickProcessed && this.hovering) {
-            gameEngine.clickProcessed = false;
-            this.clicking = true;
-            this.method();
-            
-            // Add click particles
-            this.addClickParticles();
-            
-            // Reset clicking state after animation
-            setTimeout(() => this.clicking = false, 100);
-        }
 
         // Update scale animation
         const targetScale = this.clicking ? this.clickScale : (this.hovering ? this.hoverScale : 1);
@@ -73,7 +55,7 @@ class Button {
 
         // Draw the button
         ctx.drawImage(
-            ASSET_MANAGER.getAsset(this.truesprite),
+            ASSET_MANAGER.getAsset(this.sprite),
             this.x,
             this.y,
             this.width,
@@ -91,40 +73,6 @@ class Button {
         this.drawParticles(ctx);
 
         ctx.restore();
-    }
-
-    checkOverlap(x, y) {
-        if (!x || !y) return false;
-        
-        const scaledWidth = this.width * this.scale;
-        const scaledHeight = this.height * this.scale;
-        const centerX = this.x + this.width / 2;
-        const centerY = this.y + this.height / 2;
-        
-        return x >= centerX - scaledWidth/2 && 
-               x <= centerX + scaledWidth/2 && 
-               y >= centerY - scaledHeight/2 && 
-               y <= centerY + scaledHeight/2;
-    }
-
-    addClickParticles() {
-        const centerX = this.x + this.width / 2;
-        const centerY = this.y + this.height / 2;
-
-        for (let i = 0; i < 10; i++) {
-            const angle = (Math.PI * 2 * i) / 10;
-            const speed = 2 + Math.random() * 2;
-            
-            this.particles.push({
-                x: centerX,
-                y: centerY,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                life: 1,
-                size: 3 + Math.random() * 3,
-                color: `hsl(${Math.random() * 360}, 70%, 70%)`
-            });
-        }
     }
 
     updateParticles() {
