@@ -376,8 +376,28 @@ class SceneManager {
             gameEngine.addEntity(unit);
         });
 
+        this.addToggleButton(760, 100, "./UI_Assets/AutoButton", 0, 100, 100);
+        this.addToggleButton(910, 100, "./UI_Assets/FastButton", 0, 100, 100);
+        gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
+            //next turn
+        }));
+
         // Start battle sequence
         setTimeout(() => this.executeBattle(activeTeam, enemyTeam), 1000);
+    }
+
+    addToggleButton(x, y, path, toggle, width, height) {
+        if (toggle == 0) {
+            gameEngine.addEntity(new Button(x, y, `${path}1.png`, width, height, `${path}2.png`, () => {
+                gameEngine.entities = gameEngine.entities.filter((entity) => entity.sprite != `${path}1.png`);
+                this.addToggleButton(x, y, path, (toggle + 1) % 2, width, height);
+            }));
+        } else {
+            gameEngine.addEntity(new Button(x, y, `${path}Pressed1.png`, width, height, `${path}Pressed2.png`, () => {
+                gameEngine.entities = gameEngine.entities.filter((entity) => entity.sprite != `${path}Pressed1.png`);
+                this.addToggleButton(x, y, path, (toggle + 1) % 2, width, height);
+            }));
+        }
     }
 
     generateEnemyTeam() {
