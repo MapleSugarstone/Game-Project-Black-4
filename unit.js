@@ -48,7 +48,7 @@ class Unit {
                 trigger: "onAttack",
                 effect: (target) => { target.health -= 1; }
             },
-            "./Ghost.png": {
+            "./Units/Ghost.png": {
                 name: "Haunt",
                 trigger: "onDeath",
                 effect: (allies) => {
@@ -57,12 +57,12 @@ class Unit {
                     });
                 }
             },
-            "./Spider.png": {
+            "./Units/Spider.png": {
                 name: "Web",
                 trigger: "onAttack",
                 effect: (target) => { target.attack = Math.max(0, target.attack - 1); }
             },
-            "./Puffer.png": {
+            "./Units/Puffer.png": {
                 name: "Spikes",
                 trigger: "onHurt",
                 effect: (attacker) => { attacker.health -= 1; }
@@ -92,7 +92,7 @@ class Unit {
 
         // Handle hover animation
         if (this.isHovered && this.scale < 1.1) {
-            console.log("hoveirng");
+            console.log("hovering");
             this.scale += 0.01;
         }
 

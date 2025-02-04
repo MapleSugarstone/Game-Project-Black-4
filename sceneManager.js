@@ -1,9 +1,12 @@
+const WINS_THRESHOLD = 3;
+const STARTING_GOLD = 11;
+const STARTING_LIVES = 5;
 class SceneManager {
     constructor() {
 
         // Game state
-        this.lives = 10;
-        this.gold = 11;
+        this.lives = STARTING_LIVES;
+        this.gold = STARTING_GOLD;
         this.index = 0;
         this.wins = 0;
         this.shopLevel = 1;
@@ -11,7 +14,7 @@ class SceneManager {
         
 
         // Shop state
-        this.goldDisplayer = new Display(20, 20, "./CoinDisplay10.png", 121, 61);
+        this.goldDisplayer = new Display(20, 20, "./UI_Assets/CoinDisplay10.png", 121, 61);
         this.shopSlots = [null, null, null];
         this.frozenSlots = [false, false, false];
         this.teamSlots = [null, null, null, null, null];
@@ -29,7 +32,7 @@ class SceneManager {
             "./Units/Unit7.png",
             "./Units/Unit8.png",
             "./Units/Unit9.png",
-            "./Units/Unit10.png"
+            "./Units/Unit10.png",
         ];
 
         // Shop coordinates
@@ -63,29 +66,10 @@ class SceneManager {
             this.startBattle();
             scene = "LoadedBattle";
         } else if (scene === "LoadedShop") {
-            if (this.gold == 10) {
-                this.goldDisplayer.sprite = "./CoinDisplay10.png";
-            } else if (this.gold == 9) {
-                this.goldDisplayer.sprite = "./CoinDisplay9.png";
-            } else if (this.gold == 8) {
-                this.goldDisplayer.sprite = "./CoinDisplay8.png";
-            } else if (this.gold == 7) {
-                this.goldDisplayer.sprite = "./CoinDisplay7.png";
-            } else if (this.gold == 6) {
-                this.goldDisplayer.sprite = "./CoinDisplay6.png";
-            } else if (this.gold == 5) {
-                this.goldDisplayer.sprite = "./CoinDisplay5.png";
-            } else if (this.gold == 4) {
-                this.goldDisplayer.sprite = "./CoinDisplay4.png";
-            } else if (this.gold == 3) {
-                this.goldDisplayer.sprite = "./CoinDisplay3.png";
-            } else if (this.gold == 2) {
-                this.goldDisplayer.sprite = "./CoinDisplay2.png";
-            } else if (this.gold == 1) {
-                this.goldDisplayer.sprite = "./CoinDisplay1.png";
-            } else {
-                this.goldDisplayer.sprite = "./CoinDisplay0.png";
-            }
+            this.goldDisplayer.sprite = `./UI_Assets/CoinDisplay${this.gold}.png`;
+        } else if (scene === "End") {
+            this.clearEntities();
+            this.endGame();
         }
 
         
@@ -106,26 +90,54 @@ class SceneManager {
         
     }
 
+    endGame() {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/Menu.png"));
+        console.log("Wins: %d", this.wins);
+        console.log("Lives: %d", this.lives);
+        if (this.wins >= WINS_THRESHOLD) {
+            gameEngine.addEntity(new Display(650, 350, "./UI_Assets/EndTurnButton1.png", 546, 100));
+            console.log("You Win!");
+        }
+        else if (this.lives <= 0) {
+            gameEngine.addEntity(new Display(650, 350, "./UI_Assets/EndTurnButton2.png", 546, 100));
+            console.log("You Lose!");
+        }
+        
+        gameState.inGame = false;
+        gameEngine.addEntity(new Button(650, 700, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => {
+            this.lives = STARTING_LIVES;
+            this.gold = STARTING_GOLD;
+            this.index = 0;
+            this.wins = 0;
+            this.shopLevel = 1;
+            this.currentRound = 1;
+            this.frozenSlots = [false, false, false];
+            this.teamSlots = [null, null, null, null, null];
+            this.selectedUnit = null;
+            scene = "Shop";
+            gameState.inGame = true;
+    }));
+    }
     setupShop() {
         // Add background
-        gameEngine.addEntity(new Background(0, 0, "./ShopMenu.png"));
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/ShopMenu.png"));
         gameEngine.addEntity(this.goldDisplayer);
 
         // Add info display
         
 
-        gameEngine.addEntity(new Display(170, 20, "./HealthDisplay1.png", 121, 61));
+        gameEngine.addEntity(new Display(170, 20, "./UI_Assets/HealthDisplay1.png", 121, 61));
 
-        gameEngine.addEntity(new Display(320, 20, "./WinDisplay1.png", 121, 61));
+        gameEngine.addEntity(new Display(320, 20, "./UI_Assets/WinDisplay1.png", 121, 61));
 
-        gameEngine.addEntity(new Display(470, 20, "./TurnDisplay1.png", 121, 61));
+        gameEngine.addEntity(new Display(470, 20, "./UI_Assets/TurnDisplay1.png", 121, 61));
 
         // Add buttons
-        gameEngine.addEntity(new Button(200, 850, "./RollButton1.png", 200, 100, "./RollButton2.png", () => {
+        gameEngine.addEntity(new Button(200, 850, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
             this.rollShop();
         }));
 
-        gameEngine.addEntity(new Button(410, 850, "./PurchaseButton1.png", 400, 100, "./PurchaseButton2.png", () => {
+        gameEngine.addEntity(new Button(410, 850, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
             console.log(gameEngine.SelectedUnitGlobal);
             console.log(this.teamSlots.includes(null));
             console.log(this.gold);
@@ -143,14 +155,14 @@ class SceneManager {
             }
         }));
 
-        gameEngine.addEntity(new Button(1360, 850, "./EndTurnButton1.png", 400, 100, "./EndTurnButton2.png", () => {
+        gameEngine.addEntity(new Button(1360, 850, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
             scene = "Battle";
         }));
 
         // Initialize shop if empty
-        if (!this.shopSlots.some(slot => slot !== null)) {
-            this.rollShop();
-        }
+        //if (!this.shopSlots.some(slot => slot !== null)) {
+        this.rollShop();
+        //}
 
         // Add existing units to display
         this.updateUnitDisplay();
@@ -195,6 +207,7 @@ class SceneManager {
         // Add team units
         this.teamSlots.forEach((unit, i) => {
             if (unit) {
+                unit.health = unit.maxHealth;
                 gameEngine.addEntity(unit);
             }
         });
@@ -345,7 +358,7 @@ class SceneManager {
         */
 
     startBattle() {
-        gameEngine.addEntity(new Background(0, 0, "./BattleScene.png"));
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/BattleScene.png"));
         
         // Generate enemy team
         const enemyTeam = this.generateEnemyTeam();
@@ -363,8 +376,28 @@ class SceneManager {
             gameEngine.addEntity(unit);
         });
 
+        this.addToggleButton(760, 100, "./UI_Assets/AutoButton", 0, 100, 100);
+        this.addToggleButton(910, 100, "./UI_Assets/FastButton", 0, 100, 100);
+        gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
+            //next turn
+        }));
+
         // Start battle sequence
         setTimeout(() => this.executeBattle(activeTeam, enemyTeam), 1000);
+    }
+
+    addToggleButton(x, y, path, toggle, width, height) {
+        if (toggle == 0) {
+            gameEngine.addEntity(new Button(x, y, `${path}1.png`, width, height, `${path}2.png`, () => {
+                gameEngine.entities = gameEngine.entities.filter((entity) => entity.sprite != `${path}1.png`);
+                this.addToggleButton(x, y, path, (toggle + 1) % 2, width, height);
+            }));
+        } else {
+            gameEngine.addEntity(new Button(x, y, `${path}Pressed1.png`, width, height, `${path}Pressed2.png`, () => {
+                gameEngine.entities = gameEngine.entities.filter((entity) => entity.sprite != `${path}Pressed1.png`);
+                this.addToggleButton(x, y, path, (toggle + 1) % 2, width, height);
+            }));
+        }
     }
 
     generateEnemyTeam() {
@@ -389,22 +422,37 @@ class SceneManager {
             // Animate here?
             // playerTeam[0].attack(enemyTeam[0]);
             // enemyTeam[0].attack(playerTeam[0]);
+            playerTeam[0].health -= enemyTeam[0].attack;
+            console.log("Player Unit HP: %d", playerTeam[0].health);
+            enemyTeam[0].health -= playerTeam[0].attack;
+            console.log("Enemy Unit HP: %d", enemyTeam[0].health);
             
-            if (playerTeam[0].health <= 0) playerTeam.shift();
-            if (enemyTeam[0].health <= 0) enemyTeam.shift();
-
-
-
+            if (playerTeam[0].health <= 0) {
+                playerTeam.shift();
+                console.log("Player unit died!");
+            }
+            if (enemyTeam[0].health <= 0) {
+                enemyTeam.shift();
+                console.log("Enemy unit killed!");
+            }
         }
 
             if (playerTeam.length > 0) {
                 this.wins++;
-                this.gold += 2;
-            } else {
+                console.log("Wins: %d", this.wins);
+            } else if (enemyTeam.length > 0){
                 this.lives--;
+                console.log("Lives: %d", this.lives);
             }
-            this.currentRound++;
-            scene = "Shop";
+
+            if (this.wins >= WINS_THRESHOLD || this.lives <= 0){
+                scene = "End";
+            } else {
+                this.currentRound++;
+                this.gold = STARTING_GOLD;
+                scene = "Shop";
+            }
+            
         }
 
 

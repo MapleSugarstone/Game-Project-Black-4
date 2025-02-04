@@ -6,37 +6,46 @@ const sceneManager = new SceneManager();
 const ASSET_MANAGER = new AssetManager();
 
 // Menu Assets
-ASSET_MANAGER.queueDownload("./Menu.png");
-ASSET_MANAGER.queueDownload("./StartButton1.png");
-ASSET_MANAGER.queueDownload("./StartButton2.png");
-ASSET_MANAGER.queueDownload("./ShopMenu.png");
-ASSET_MANAGER.queueDownload("./BattleScene.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/Menu.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/StartButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/StartButton2.png");
 
 // Shop Buttons
-ASSET_MANAGER.queueDownload("./RollButton1.png");
-ASSET_MANAGER.queueDownload("./RollButton2.png");
-ASSET_MANAGER.queueDownload("./EndTurnButton1.png");
-ASSET_MANAGER.queueDownload("./EndTurnButton2.png");
-ASSET_MANAGER.queueDownload("./PurchaseButton1.png")
-ASSET_MANAGER.queueDownload("./PurchaseButton2.png")
+ASSET_MANAGER.queueDownload("./UI_Assets/RollButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/RollButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/EndTurnButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/EndTurnButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/PurchaseButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/PurchaseButton2.png");
 
 // Shop Info Display
-ASSET_MANAGER.queueDownload("./CoinDisplay10.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay9.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay8.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay7.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay6.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay5.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay4.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay3.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay2.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay1.png")
-ASSET_MANAGER.queueDownload("./CoinDisplay0.png")
-ASSET_MANAGER.queueDownload("./HealthDisplay1.png")
-ASSET_MANAGER.queueDownload("./WinDisplay1.png")
-ASSET_MANAGER.queueDownload("./TurnDisplay1.png")
+ASSET_MANAGER.queueDownload("./Backgrounds/ShopMenu.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay10.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay9.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay8.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay7.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay6.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay5.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay4.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay3.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay0.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/HealthDisplay1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/WinDisplay1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay1.png");
+
+// Battle Scene
+ASSET_MANAGER.queueDownload("./Backgrounds/BattleScene.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/FastButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/FastButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NextButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NextButton2.png");
 
 // Monster Sprites
+ASSET_MANAGER.queueDownload("./UI_Assets/Select.png");
 ASSET_MANAGER.queueDownload("./Units/Unit1.png");
 ASSET_MANAGER.queueDownload("./Units/Unit2.png");
 ASSET_MANAGER.queueDownload("./Units/Unit3.png");
@@ -47,6 +56,16 @@ ASSET_MANAGER.queueDownload("./Units/Unit7.png");
 ASSET_MANAGER.queueDownload("./Units/Unit8.png");
 ASSET_MANAGER.queueDownload("./Units/Unit9.png");
 ASSET_MANAGER.queueDownload("./Units/Unit10.png");
+ASSET_MANAGER.queueDownload("./Units/Chewy.png");
+ASSET_MANAGER.queueDownload("./Units/Chopper.png");
+ASSET_MANAGER.queueDownload("./Units/Cthulhu.png");
+ASSET_MANAGER.queueDownload("./Units/Ghost.png");
+ASSET_MANAGER.queueDownload("./Units/Goldie.png");
+ASSET_MANAGER.queueDownload("./Units/Pinky.png");
+ASSET_MANAGER.queueDownload("./Units/Puffer.png");
+ASSET_MANAGER.queueDownload("./Units/Slug.png");
+ASSET_MANAGER.queueDownload("./Units/Spider.png");
+ASSET_MANAGER.queueDownload("./Units/Stink.png");
 
 class GameState {
     constructor() {
@@ -90,8 +109,8 @@ ASSET_MANAGER.downloadAll(() => {
     window.addEventListener('resize', resizeCanvas);
 */
     // Add UI elements
-    gameEngine.addEntity(new Background(0, 0, "./Menu.png"));
-    gameEngine.addEntity(new Button(650, 700, "./StartButton1.png", 546, 100, "./StartButton2.png", () => { 
+    gameEngine.addEntity(new Background(0, 0, "./Backgrounds/Menu.png"));
+    gameEngine.addEntity(new Button(650, 700, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => { 
         scene = "Shop";
         gameState.inGame = true;
     }));
