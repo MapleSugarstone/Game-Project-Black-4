@@ -31,6 +31,8 @@ class Unit {
         this.dragOffsetY = 0;
         // This will allow a unit to be purchased, and be randomized when rerolling
         this.isInShop = true;
+
+        this.facingLeft = false;  // By default units face right
         
         // Visual effects
         this.isHovered = false;
@@ -123,11 +125,11 @@ class Unit {
     draw(ctx) {
         ctx.save();
         
-        // Apply scale for hover effect
+        // Apply scale for hover effect and facing direction
         ctx.translate(this.x + this.width/2, this.y + this.height/2);
-        ctx.scale(this.scale, this.scale);
+        ctx.scale(this.scale * (this.facingLeft ? -1 : 1), this.scale);
         ctx.translate(-(this.x + this.width/2), -(this.y + this.height/2));
-
+    
         // Draw attack effect
         if (this.attackAnim > 0) {
             ctx.globalAlpha = this.attackAnim;
@@ -136,7 +138,7 @@ class Unit {
             ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width * 0.75, 0, Math.PI * 2);
             ctx.fill();
         }
-
+    
         // Draw hit effect
         if (this.hitAnim > 0) {
             ctx.globalAlpha = this.hitAnim;
@@ -145,7 +147,7 @@ class Unit {
             ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width * 0.6, 0, Math.PI * 2);
             ctx.fill();
         }
-
+    
         // Draw unit
         ctx.globalAlpha = 1;
         ctx.drawImage(
@@ -155,7 +157,16 @@ class Unit {
             this.width,
             this.height
         );
-
+    
+        // Reset transform for stats so they're not flipped
+        ctx.restore();
+        ctx.save();
+        
+        // Apply only the hover scale for stats, not the flip
+        ctx.translate(this.x + this.width/2, this.y + this.height/2);
+        ctx.scale(this.scale, this.scale);
+        ctx.translate(-(this.x + this.width/2), -(this.y + this.height/2));
+    
         // Draw stats
         this.drawStats(ctx, 32, 16);
         
