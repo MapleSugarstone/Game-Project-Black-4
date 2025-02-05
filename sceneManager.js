@@ -11,7 +11,8 @@ class SceneManager {
         this.wins = 0;
         this.shopLevel = 1;
         this.currentRound = 1;
-        
+        this.activeTeam = [null, null, null, null, null];
+        this.enemyTeam = [null, null, null, null, null];
 
         // Shop state
         this.goldDisplayer = new Display(20, 20, "./UI_Assets/CoinDisplay10.png", 121, 61);
@@ -44,11 +45,11 @@ class SceneManager {
 
         // Team positions
         this.teamPositions = [
-            {x: 280, y: 300},
-            {x: 480, y: 300},
-            {x: 680, y: 300},
+            {x: 1080, y: 300},
             {x: 880, y: 300},
-            {x: 1080, y: 300}
+            {x: 680, y: 300},
+            {x: 480, y: 300},
+            {x: 280, y: 300}
         ];
 
         // Dragging state
@@ -65,6 +66,8 @@ class SceneManager {
             this.clearEntities();
             this.startBattle();
             scene = "LoadedBattle";
+        } else if (scene === "LoadedBattle") {
+            this.executeBattle(this.activeTeam, this.enemyTeam);
         } else if (scene === "LoadedShop") {
             this.goldDisplayer.sprite = `./UI_Assets/CoinDisplay${this.gold}.png`;
         } else if (scene === "End") {
@@ -76,7 +79,6 @@ class SceneManager {
 
         // Handle dragging
         if (gameEngine.click) {
-            console.log("checking for clicks");
             this.handleClick(gameEngine.click.x, gameEngine.click.y);
         }
 
@@ -142,8 +144,9 @@ class SceneManager {
             console.log(this.teamSlots.includes(null));
             console.log(this.gold);
             console.log(this.teamSlots);
+            console.log(this.selectedUnit);
             // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-            if (this.gold > 2 && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null))) {
+            if (this.gold > 2 && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit) {
                 this.gold -= 3;
                 this.index = this.teamSlots.indexOf(null);
                 this.teamSlots[this.index] = this.selectedUnit;
@@ -220,12 +223,10 @@ class SceneManager {
             if (unit && this.isClickInUnit(x, y, unit)) {
                 //this.draggedUnit = unit;
                 //this.dragStartSlot = {type: 'shop', index: i};
-                console.log("clicked");
                 if (unit.isInShop) {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
                     //this.dragStartSlot.index = null;
-                    console.log("clicked unit");
                 }
                 
                 //unit.startDrag(x, y);
@@ -361,17 +362,17 @@ class SceneManager {
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/BattleScene.png"));
         
         // Generate enemy team
-        const enemyTeam = this.generateEnemyTeam();
+        this.enemyTeam = this.generateEnemyTeam();
         
         // Position player team on left
-        const activeTeam = this.teamSlots.filter(unit => unit !== null);
-        activeTeam.forEach((unit, i) => {
-            unit.moveTo(200 + (i * 150), 400);
+        this.activeTeam = this.teamSlots.filter(unit => unit !== null);
+        this.activeTeam.forEach((unit, i) => {
+            unit.moveTo(750 + (-i * 150), 400);
             gameEngine.addEntity(unit);
         });
 
         // Position enemy team on right
-        enemyTeam.forEach((unit, i) => {
+        this.enemyTeam.forEach((unit, i) => {
             unit.moveTo(1000 + (i * 150), 400);
             gameEngine.addEntity(unit);
         });
@@ -381,9 +382,11 @@ class SceneManager {
         gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
             //next turn
         }));
+        this.battleTimer = gameEngine.timestamp/10000 + 0.1;
 
         // Start battle sequence
-        setTimeout(() => this.executeBattle(activeTeam, enemyTeam), 1000);
+        
+        //setTimeout(() => this.executeBattle(activeTeam, enemyTeam), 1000);
     }
 
     addToggleButton(x, y, path, toggle, width, height) {
@@ -417,25 +420,34 @@ class SceneManager {
     }
 
     executeBattle(playerTeam, enemyTeam) {
-        while (playerTeam.length > 0 && enemyTeam.length > 0) {
+        
+        
+
             
             // Animate here?
             // playerTeam[0].attack(enemyTeam[0]);
             // enemyTeam[0].attack(playerTeam[0]);
-            playerTeam[0].health -= enemyTeam[0].attack;
-            console.log("Player Unit HP: %d", playerTeam[0].health);
-            enemyTeam[0].health -= playerTeam[0].attack;
-            console.log("Enemy Unit HP: %d", enemyTeam[0].health);
+            if (playerTeam.length > 0 && enemyTeam.length > 0) {
+            if (this.battleTimer < gameEngine.timestamp/10000) {
+                this.battleTimer = gameEngine.timestamp/10000 + 0.1;
+                playerTeam[0].health -= enemyTeam[0].attack;
+                console.log("Player Unit HP: %d", playerTeam[0].health);
+                enemyTeam[0].health -= playerTeam[0].attack;
+                console.log("Enemy Unit HP: %d", enemyTeam[0].health);
             
-            if (playerTeam[0].health <= 0) {
-                playerTeam.shift();
-                console.log("Player unit died!");
-            }
-            if (enemyTeam[0].health <= 0) {
-                enemyTeam.shift();
-                console.log("Enemy unit killed!");
-            }
+                if (playerTeam[0].health <= 0) {
+                    playerTeam.shift();
+                    console.log("Player unit died!");
+                }
+                if (enemyTeam[0].health <= 0) {
+                    enemyTeam.shift();
+                    console.log("Enemy unit killed!");
+                }
+                console.log("battletick:" + this.battleTimer);
         }
+    } else {
+        
+            
 
             if (playerTeam.length > 0) {
                 this.wins++;
@@ -453,7 +465,10 @@ class SceneManager {
                 scene = "Shop";
             }
             
-        }
+        
+    }
+    console.log("clocktick:" + gameEngine.timestamp/10000);
+}
 
 
     clearEntities() {
