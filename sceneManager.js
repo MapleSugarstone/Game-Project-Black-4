@@ -426,7 +426,7 @@ class SceneManager {
     }
 
     generateEnemyTeam() {
-        const teamSize = Math.min(Math.floor(this.currentRound/2) + 1, 5);
+        const teamSize = Math.min(Math.max(3, Math.floor(this.currentRound/2) + 1), 5);
         const team = [];
         
         for (let i = 0; i < teamSize; i++) {
