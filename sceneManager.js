@@ -410,7 +410,9 @@ class SceneManager {
                 attack: Math.floor(Math.random() * 2) + this.currentRound,
                 health: Math.floor(Math.random() * 2) + this.currentRound + 1
             };
-            team.push(new Unit(0, 0, type, stats));
+            const unit = new Unit(0, 0, type, stats);
+            unit.facingLeft = true;  // Make enemy units face left
+            team.push(unit);
         }
         
         return team;
