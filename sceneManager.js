@@ -155,6 +155,10 @@ class SceneManager {
             this.rollShop();
         }));
 
+        gameEngine.addEntity(new Button(820, 850, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
+            this.rollShop();
+        }));
+
         gameEngine.addEntity(new Button(410, 850, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
             console.log(gameEngine.SelectedUnitGlobal);
             console.log(this.teamSlots.includes(null));
