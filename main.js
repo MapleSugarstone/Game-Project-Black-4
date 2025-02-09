@@ -17,6 +17,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/EndTurnButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/EndTurnButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/PurchaseButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/PurchaseButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/SellButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/SellButton2.png");
 
 // Shop Info Display
 ASSET_MANAGER.queueDownload("./Backgrounds/ShopMenu.png");
