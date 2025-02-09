@@ -7,6 +7,7 @@ class GameEngine {
         this.SelectedUnitGlobal = null;
         this.running = false;
         this.timestamp = 0;
+        this.theTime = 0;
         
         // Input state
         this.click = null;
@@ -170,6 +171,7 @@ class GameEngine {
 
         if (deltaTime >= this.minimumStepTime) {
             this.clockTick = this.timer.tick();
+            this.theTime += this.timer.tick();
             this.update();
             this.draw();
             this.timestamp = currentTime;

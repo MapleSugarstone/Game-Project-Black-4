@@ -11,7 +11,8 @@ class SceneManager {
         this.wins = 0;
         this.shopLevel = 1;
         this.currentRound = 1;
-        
+        this.activeTeam = [null, null, null, null, null];
+        this.enemyTeam = [null, null, null, null, null];
 
         // Shop state
         this.goldDisplayer = new Display(20, 20, "./UI_Assets/CoinDisplay10.png", 121, 61);
@@ -44,11 +45,27 @@ class SceneManager {
 
         // Team positions
         this.teamPositions = [
-            {x: 280, y: 300},
-            {x: 480, y: 300},
-            {x: 680, y: 300},
+            {x: 1080, y: 300},
             {x: 880, y: 300},
-            {x: 1080, y: 300}
+            {x: 680, y: 300},
+            {x: 480, y: 300},
+            {x: 280, y: 300}
+        ];
+
+        this.battlePositionsPlayer = [
+            {x: 750, y: 400},
+            {x: 600, y: 400},
+            {x: 450, y: 400},
+            {x: 300, y: 400},
+            {x: 150, y: 400}
+        ];
+    
+        this.battlePositionsEnemy = [
+            {x: 1000, y: 400},
+            {x: 1150, y: 400},
+            {x: 1300, y: 400},
+            {x: 1450, y: 400},
+            {x: 1600, y: 400}
         ];
 
         // Dragging state
@@ -65,6 +82,8 @@ class SceneManager {
             this.clearEntities();
             this.startBattle();
             scene = "LoadedBattle";
+        } else if (scene === "LoadedBattle") {
+            this.executeBattle(this.activeTeam, this.enemyTeam);
         } else if (scene === "LoadedShop") {
             this.goldDisplayer.sprite = `./UI_Assets/CoinDisplay${this.gold}.png`;
         } else if (scene === "End") {
@@ -76,7 +95,6 @@ class SceneManager {
 
         // Handle dragging
         if (gameEngine.click) {
-            console.log("checking for clicks");
             this.handleClick(gameEngine.click.x, gameEngine.click.y);
         }
 
@@ -142,8 +160,9 @@ class SceneManager {
             console.log(this.teamSlots.includes(null));
             console.log(this.gold);
             console.log(this.teamSlots);
+            console.log(this.selectedUnit);
             // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-            if (this.gold > 2 && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null))) {
+            if (this.gold > 2 && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit) {
                 this.gold -= 3;
                 this.index = this.teamSlots.indexOf(null);
                 this.teamSlots[this.index] = this.selectedUnit;
@@ -220,12 +239,10 @@ class SceneManager {
             if (unit && this.isClickInUnit(x, y, unit)) {
                 //this.draggedUnit = unit;
                 //this.dragStartSlot = {type: 'shop', index: i};
-                console.log("clicked");
                 if (unit.isInShop) {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
                     //this.dragStartSlot.index = null;
-                    console.log("clicked unit");
                 }
                 
                 //unit.startDrag(x, y);
@@ -361,29 +378,37 @@ class SceneManager {
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/BattleScene.png"));
         
         // Generate enemy team
-        const enemyTeam = this.generateEnemyTeam();
+        this.enemyTeam = this.generateEnemyTeam();
         
-        // Position player team on left
-        const activeTeam = this.teamSlots.filter(unit => unit !== null);
-        activeTeam.forEach((unit, i) => {
-            unit.moveTo(200 + (i * 150), 400);
+        // Create a deep copy of team slots for battle
+        this.activeTeam = this.teamSlots.filter(unit => unit !== null).map(unit => {
+            const battleUnit = new Unit(unit.x, unit.y, unit.sprite, {
+                attack: unit.attack,
+                health: unit.health,
+                level: unit.level
+            });
+            gameEngine.addEntity(battleUnit);
+            return battleUnit;
+        });
+    
+        // Position player team
+        this.activeTeam.forEach((unit, i) => {
+            unit.moveTo(this.battlePositionsPlayer[i].x, this.battlePositionsPlayer[i].y);
+        });
+    
+        // Position enemy team
+        this.enemyTeam.forEach((unit, i) => {
+            unit.moveTo(this.battlePositionsEnemy[i].x, this.battlePositionsEnemy[i].y);
+            unit.facingLeft = true;
             gameEngine.addEntity(unit);
         });
-
-        // Position enemy team on right
-        enemyTeam.forEach((unit, i) => {
-            unit.moveTo(1000 + (i * 150), 400);
-            gameEngine.addEntity(unit);
-        });
-
+    
         this.addToggleButton(760, 100, "./UI_Assets/AutoButton", 0, 100, 100);
         this.addToggleButton(910, 100, "./UI_Assets/FastButton", 0, 100, 100);
         gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
             //next turn
         }));
-
-        // Start battle sequence
-        setTimeout(() => this.executeBattle(activeTeam, enemyTeam), 1000);
+        this.battleTimer = gameEngine.timestamp/10000 + 0.1;
     }
 
     addToggleButton(x, y, path, toggle, width, height) {
@@ -401,7 +426,7 @@ class SceneManager {
     }
 
     generateEnemyTeam() {
-        const teamSize = Math.min(Math.floor(this.currentRound/2) + 1, 5);
+        const teamSize = Math.min(Math.max(3, Math.floor(this.currentRound/2) + 1), 5);
         const team = [];
         
         for (let i = 0; i < teamSize; i++) {
@@ -410,50 +435,62 @@ class SceneManager {
                 attack: Math.floor(Math.random() * 2) + this.currentRound,
                 health: Math.floor(Math.random() * 2) + this.currentRound + 1
             };
-            team.push(new Unit(0, 0, type, stats));
+            const unit = new Unit(0, 0, type, stats);
+            unit.facingLeft = true;  // Make enemy units face left
+            team.push(unit);
         }
         
         return team;
     }
 
     executeBattle(playerTeam, enemyTeam) {
-        while (playerTeam.length > 0 && enemyTeam.length > 0) {
-            
-            // Animate here?
-            // playerTeam[0].attack(enemyTeam[0]);
-            // enemyTeam[0].attack(playerTeam[0]);
-            playerTeam[0].health -= enemyTeam[0].attack;
-            console.log("Player Unit HP: %d", playerTeam[0].health);
-            enemyTeam[0].health -= playerTeam[0].attack;
-            console.log("Enemy Unit HP: %d", enemyTeam[0].health);
-            
-            if (playerTeam[0].health <= 0) {
-                playerTeam.shift();
-                console.log("Player unit died!");
+        if (playerTeam.length > 0 && enemyTeam.length > 0) {
+            if (this.battleTimer < gameEngine.timestamp/10000) {
+                this.battleTimer = gameEngine.timestamp/10000 + 0.1;
+                
+                const playerUnit = playerTeam[0];
+                const enemyUnit = enemyTeam[0];
+                
+                playerUnit.health -= enemyUnit.attack;
+                enemyUnit.health -= playerUnit.attack;
+                
+                let playerDied = playerUnit.health <= 0;
+                let enemyDied = enemyUnit.health <= 0;
+    
+                if (enemyDied) {
+                    gameEngine.entities = gameEngine.entities.filter(entity => entity !== enemyUnit);
+                    enemyTeam.shift();
+                    // Move remaining enemy units forward
+                    enemyTeam.forEach((unit, index) => {
+                        unit.moveTo(this.battlePositionsEnemy[index].x, this.battlePositionsEnemy[index].y);
+                    });
+                }
+    
+                if (playerDied) {
+                    gameEngine.entities = gameEngine.entities.filter(entity => entity !== playerUnit);
+                    playerTeam.shift();
+                    // Move remaining player units forward
+                    playerTeam.forEach((unit, index) => {
+                        unit.moveTo(this.battlePositionsPlayer[index].x, this.battlePositionsPlayer[index].y);
+                    });
+                }
             }
-            if (enemyTeam[0].health <= 0) {
-                enemyTeam.shift();
-                console.log("Enemy unit killed!");
-            }
-        }
-
+        } else {
             if (playerTeam.length > 0) {
                 this.wins++;
-                console.log("Wins: %d", this.wins);
-            } else if (enemyTeam.length > 0){
+            } else if (enemyTeam.length > 0) {
                 this.lives--;
-                console.log("Lives: %d", this.lives);
             }
-
-            if (this.wins >= WINS_THRESHOLD || this.lives <= 0){
+    
+            if (this.wins >= WINS_THRESHOLD || this.lives <= 0) {
                 scene = "End";
             } else {
                 this.currentRound++;
                 this.gold = STARTING_GOLD;
                 scene = "Shop";
             }
-            
         }
+    }
 
 
     clearEntities() {
