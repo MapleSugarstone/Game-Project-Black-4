@@ -1,6 +1,7 @@
 // unit.js
 class Unit {
     constructor(x, y, sprite, stats = {}) {
+        this.newName();
         this.x = x;
         this.y = y;
         this.sprite = sprite;
@@ -25,8 +26,13 @@ class Unit {
         
         // Drag and drop properties
         this.isDragging = false;
+        this.Selected = false;
         this.dragOffsetX = 0;
         this.dragOffsetY = 0;
+        // This will allow a unit to be purchased, and be randomized when rerolling
+        this.isInShop = true;
+
+        this.facingLeft = false;  // By default units face right
         
         // Visual effects
         this.isHovered = false;
@@ -39,12 +45,12 @@ class Unit {
 
     getAbility(sprite) {
         const abilities = {
-            "./Chewy.png": {
+            "./Units/Unit1.png": {
                 name: "Bite",
                 trigger: "onAttack",
                 effect: (target) => { target.health -= 1; }
             },
-            "./Ghost.png": {
+            "./Units/Ghost.png": {
                 name: "Haunt",
                 trigger: "onDeath",
                 effect: (allies) => {
@@ -53,12 +59,12 @@ class Unit {
                     });
                 }
             },
-            "./Spider.png": {
+            "./Units/Spider.png": {
                 name: "Web",
                 trigger: "onAttack",
                 effect: (target) => { target.attack = Math.max(0, target.attack - 1); }
             },
-            "./Puffer.png": {
+            "./Units/Puffer.png": {
                 name: "Spikes",
                 trigger: "onHurt",
                 effect: (attacker) => { attacker.health -= 1; }
@@ -71,23 +77,32 @@ class Unit {
     update() {
         // Handle animations
         if (this.isAnimating) {
-            const dx = (this.targetX - this.x) / this.animationSpeed;
-            const dy = (this.targetY - this.y) / this.animationSpeed;
+            this.dx = (this.targetX - this.x) / this.animationSpeed;
+            this.dy = (this.targetY - this.y) / this.animationSpeed;
             
-            if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+            if (Math.abs(this.dx) < 0.1 && Math.abs(this.dy) < 0.1) {
                 this.x = this.targetX;
                 this.y = this.targetY;
                 this.isAnimating = false;
             } else {
-                this.x += dx;
-                this.y += dy;
+                this.x += this.dx;
+                this.y += this.dy;
             }
         }
 
+        this.Selected = gameEngine.SelectedUnitGlobal == this.ID;
+
         // Handle hover animation
         if (this.isHovered && this.scale < 1.1) {
+            console.log("hovering");
             this.scale += 0.01;
-        } else if (!this.isHovered && this.scale > 1) {
+        }
+
+        if (this.Selected && this.scale < 1.3) {
+            this.scale += 0.03;
+        }
+
+        if ((!this.isHovered && !this.Selected) && this.scale > 1) {
             this.scale -= 0.01;
         }
 
@@ -110,11 +125,11 @@ class Unit {
     draw(ctx) {
         ctx.save();
         
-        // Apply scale for hover effect
+        // Apply scale for hover effect and facing direction
         ctx.translate(this.x + this.width/2, this.y + this.height/2);
-        ctx.scale(this.scale, this.scale);
+        ctx.scale(this.scale * (this.facingLeft ? -1 : 1), this.scale);
         ctx.translate(-(this.x + this.width/2), -(this.y + this.height/2));
-
+    
         // Draw attack effect
         if (this.attackAnim > 0) {
             ctx.globalAlpha = this.attackAnim;
@@ -123,7 +138,7 @@ class Unit {
             ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width * 0.75, 0, Math.PI * 2);
             ctx.fill();
         }
-
+    
         // Draw hit effect
         if (this.hitAnim > 0) {
             ctx.globalAlpha = this.hitAnim;
@@ -132,7 +147,7 @@ class Unit {
             ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width * 0.6, 0, Math.PI * 2);
             ctx.fill();
         }
-
+    
         // Draw unit
         ctx.globalAlpha = 1;
         ctx.drawImage(
@@ -142,26 +157,35 @@ class Unit {
             this.width,
             this.height
         );
-
+    
+        // Reset transform for stats so they're not flipped
+        ctx.restore();
+        ctx.save();
+        
+        // Apply only the hover scale for stats, not the flip
+        ctx.translate(this.x + this.width/2, this.y + this.height/2);
+        ctx.scale(this.scale, this.scale);
+        ctx.translate(-(this.x + this.width/2), -(this.y + this.height/2));
+    
         // Draw stats
-        this.drawStats(ctx);
+        this.drawStats(ctx, 32, 16);
         
         ctx.restore();
     }
 
-    drawStats(ctx) {
+    drawStats(ctx, statx, staty,) {
         // Stats background
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.fillRect(this.x + 5, this.y + this.height - 30, 50, 25);
+        ctx.fillRect(this.x + 5 + statx, this.y + this.height - 30, 50, 25);
 
         // Attack stat
         ctx.fillStyle = "orange";
         ctx.font = "bold 20px Arial";
-        ctx.fillText(this.attack, this.x + 10, this.y + this.height - 10);
+        ctx.fillText(this.attack, this.x + 10 + statx, this.y + this.height - 10);
 
         // Health stat
         ctx.fillStyle = this.health < this.maxHealth ? "red" : "green";
-        ctx.fillText(this.health, this.x + 40, this.y + this.height - 10);
+        ctx.fillText(this.health, this.x + 40 + statx, this.y + this.height - 10);
 
         // Level stars if above level 1
         if (this.level > 1) {
@@ -222,5 +246,13 @@ class Unit {
 
     takeHit() {
         this.hitAnim = 1;
+    }
+
+    newName() {
+        this.ID = Math.floor(Math.random() * 99999999999999);
+        while (gameEngine.takenIDS.includes(this.ID)) {
+            this.ID = Math.floor(Math.random() * 99999999999999);
+        }
+        gameEngine.takenIDS.push(this.ID)
     }
 }

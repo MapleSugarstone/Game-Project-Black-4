@@ -32,11 +32,11 @@ class BattleManager {
         });
     }
 
-    async executeBattle() {
+    executeBattle() {
         this.currentPhase = 'battle';
 
         while (!this.battleOver && this.playerTeam.length > 0 && this.enemyTeam.length > 0) {
-            await this.executeTurn();
+            this.executeTurn();
         }
 
         this.currentPhase = 'end';
