@@ -122,3 +122,22 @@ class Background {
         ctx.textAlign = "left";
     }
 }
+
+class MainMenuBackground {
+    constructor(game, x, y) {
+        this.game = game;
+        this.x = 0;
+        this.y = 0;
+
+        this.snowyMainMenu = new Animator(ASSET_MANAGER.getAsset("./Backgrounds/MainMenuSnowing.png"), 0, 0, 1920, 1080, 12, 0.15);
+        
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+        this.snowyMainMenu.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+    }
+}
