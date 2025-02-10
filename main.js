@@ -7,6 +7,7 @@ const ASSET_MANAGER = new AssetManager();
 
 // Menu Assets
 ASSET_MANAGER.queueDownload("./Backgrounds/Menu.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/MainMenuSnowing.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/StartButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/StartButton2.png");
 
@@ -17,6 +18,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/EndTurnButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/EndTurnButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/PurchaseButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/PurchaseButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/SellButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/SellButton2.png");
 
 // Shop Info Display
 ASSET_MANAGER.queueDownload("./Backgrounds/ShopMenu.png");
@@ -109,7 +112,8 @@ ASSET_MANAGER.downloadAll(() => {
     window.addEventListener('resize', resizeCanvas);
 */
     // Add UI elements
-    gameEngine.addEntity(new Background(0, 0, "./Backgrounds/Menu.png"));
+    // gameEngine.addEntity(new Background(0, 0, "./Backgrounds/Menu.png"));
+    gameEngine.addEntity(new MainMenuBackground(gameEngine));
     gameEngine.addEntity(new Button(650, 700, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => { 
         scene = "Shop";
         gameState.inGame = true;
