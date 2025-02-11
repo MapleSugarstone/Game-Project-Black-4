@@ -157,7 +157,7 @@ class SceneManager {
 
         gameEngine.addEntity(new Button(820, 850, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
             if (!(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit)) {
-                this.gold += 1;
+                this.gold = Math.min(10, this.gold+1);
                 this.index = this.teamSlots.indexOf(this.selectedUnit);
                 this.selectedUnit.x = gameEngine.ctx.canvas.width;
                 this.selectedUnit.y = gameEngine.ctx.canvas.height;
@@ -174,7 +174,7 @@ class SceneManager {
             console.log(this.teamSlots);
             console.log(this.selectedUnit);
             // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-            if (this.gold > 2 && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit) {
+            if (this.gold>2 && !(this.teamSlots.includes(this.selectedUnit)) && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit) {
                 this.gold -= 3;
                 this.index = this.teamSlots.indexOf(null);
                 this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
@@ -258,21 +258,22 @@ class SceneManager {
                     this.selectedUnit = unit;
                     //this.dragStartSlot.index = null;
                 }
+ 
                 //unit.startDrag(x, y);
             }
         }
-    
-    
+
 
         // Check team slots
         for (let i = 0; i < this.teamSlots.length; i++) {
             const unit = this.teamSlots[i];
            //if (unit == null) break; add once we implement auto move units to front if empty space available
             if (unit && this.isClickInUnit(x, y, unit)) {
-                this.draggedUnit = unit;
-                this.dragStartSlot = {type: 'team', index: i};
-                unit.startDrag(x, y);
-                return;
+                if (gameEngine.SelectedUnitGlobal != unit.ID) {
+                    gameEngine.SelectedUnitGlobal = unit.ID;
+                    this.selectedUnit = unit;
+                    //this.dragStartSlot.index = null;
+                }
             }
         }
     }
