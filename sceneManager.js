@@ -1,6 +1,10 @@
 const WINS_THRESHOLD = 3;
 const STARTING_GOLD = 11;
 const STARTING_LIVES = 5;
+const BUY_COST = 3;
+const UPGRADE_COST = 5;
+const ROLL_COST = 1;
+const SELL_PRICE = 1;
 class SceneManager {
     constructor() {
 
@@ -19,7 +23,6 @@ class SceneManager {
         this.shopSlots = [null, null, null];
         this.frozenSlots = [false, false, false];
         this.teamSlots = [null, null, null, null, null];
-        this.rerollCost = 1;
         this.selectedUnit = null;
         
         // Available monsters in pool
@@ -157,7 +160,8 @@ class SceneManager {
 
         gameEngine.addEntity(new Button(820, 850, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
             if (!(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit)) {
-                this.gold = Math.min(10, this.gold+1);
+
+                this.gold = Math.min(10, this.gold+SELL_PRICE);
                 this.index = this.teamSlots.indexOf(this.selectedUnit);
                 this.selectedUnit.x = gameEngine.ctx.canvas.width;
                 this.selectedUnit.y = gameEngine.ctx.canvas.height;
@@ -174,8 +178,13 @@ class SceneManager {
             console.log(this.teamSlots);
             console.log(this.selectedUnit);
             // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-            if (this.gold>2 && !(this.teamSlots.includes(this.selectedUnit)) && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit) {
-                this.gold -= 3;
+            if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
+                this.gold -= UPGRADE_COST;
+                this.selectedUnit.levelUp();
+                gameEngine.SelectedUnitGlobal = null;
+                this.selectedUnit = null;
+            } else if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit) {
+                this.gold -= BUY_COST;
                 this.index = this.teamSlots.indexOf(null);
                 this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
                 this.teamSlots[this.index] = this.selectedUnit;
@@ -202,8 +211,8 @@ class SceneManager {
     }
 
     rollShop() {
-        if (this.gold >= this.rerollCost) {
-            this.gold -= this.rerollCost;
+        if (this.gold >= ROLL_COST) {
+            this.gold -= ROLL_COST;
             
             for (let i = 0; i < this.shopSlots.length; i++) {
                 if (!this.frozenSlots[i]) {
