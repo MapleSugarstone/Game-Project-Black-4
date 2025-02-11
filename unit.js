@@ -1,4 +1,5 @@
 // unit.js
+const MAX_LEVEL = 4;
 class Unit {
     constructor(x, y, sprite, stats = {}) {
         this.newName();
@@ -73,6 +74,14 @@ class Unit {
             // Add more abilities as needed
         };
         return abilities[sprite] || null;
+    }
+
+    levelUp() {
+        if (this.level < MAX_LEVEL) {
+            this.level++;
+            this.attack++;
+            this.health++;
+        }
     }
 
     update() {
