@@ -22,7 +22,8 @@ class Unit {
         this.targetY = y;
         this.animationSpeed = 5;
         this.scale = 1;
-        this.originalY = y;
+        this.originalX = x; //for attack
+        this.originalY = y; //for float
         
         // Drag and drop properties
         this.isDragging = false;
@@ -83,10 +84,14 @@ class Unit {
             if (Math.abs(this.dx) < 0.1 && Math.abs(this.dy) < 0.1) {
                 this.x = this.targetX;
                 this.y = this.targetY;
+                this.originalX = this.x;
+                this.originalY = this.y;
                 this.isAnimating = false;
+                this.isDragging = false;
             } else {
                 this.x += this.dx;
                 this.y += this.dy;
+                this.isDragging = true;
             }
         }
 
@@ -222,19 +227,18 @@ class Unit {
     moveTo(x, y) {
         this.targetX = x;
         this.targetY = y;
-        this.originalY = y;
         this.isAnimating = true;
     }
 
     attack(target) {
-        const originalX = this.x;
+        this.originalX = this.x;
         
         // Attack animation
         this.attackAnim = 1;
         this.moveTo(this.x + 40, this.y);
         
         setTimeout(() => {
-            this.moveTo(originalX, this.y);
+            this.moveTo(this.originalX, this.y);
             target.takeHit();
             
             // Apply ability if it's an attack trigger

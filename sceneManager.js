@@ -156,7 +156,15 @@ class SceneManager {
         }));
 
         gameEngine.addEntity(new Button(820, 850, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
-            this.rollShop();
+            if (!(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit)) {
+                this.gold += 1;
+                this.index = this.teamSlots.indexOf(this.selectedUnit);
+                this.selectedUnit.x = gameEngine.ctx.canvas.width;
+                this.selectedUnit.y = gameEngine.ctx.canvas.height;
+                this.teamSlots[this.index] = null;
+                gameEngine.SelectedUnitGlobal = null;
+                this.selectedUnit = null;
+            }
         }));
 
         gameEngine.addEntity(new Button(410, 850, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
@@ -169,8 +177,8 @@ class SceneManager {
             if (this.gold > 2 && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit) {
                 this.gold -= 3;
                 this.index = this.teamSlots.indexOf(null);
-                this.teamSlots[this.index] = this.selectedUnit;
                 this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
+                this.teamSlots[this.index] = this.selectedUnit;
                 //this.shopSlots[this.dragStartSlot.index] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
@@ -180,6 +188,8 @@ class SceneManager {
 
         gameEngine.addEntity(new Button(1360, 850, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
             scene = "Battle";
+            gameEngine.SelectedUnitGlobal = null;
+            this.selectedUnit = null;
         }));
 
         // Initialize shop if empty
@@ -243,12 +253,11 @@ class SceneManager {
             if (unit && this.isClickInUnit(x, y, unit)) {
                 //this.draggedUnit = unit;
                 //this.dragStartSlot = {type: 'shop', index: i};
-                if (unit.isInShop) {
+                if (unit.isInShop && gameEngine.SelectedUnitGlobal != unit.ID) {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
                     //this.dragStartSlot.index = null;
                 }
-                
                 //unit.startDrag(x, y);
             }
         }
@@ -258,6 +267,7 @@ class SceneManager {
         // Check team slots
         for (let i = 0; i < this.teamSlots.length; i++) {
             const unit = this.teamSlots[i];
+           //if (unit == null) break; add once we implement auto move units to front if empty space available
             if (unit && this.isClickInUnit(x, y, unit)) {
                 this.draggedUnit = unit;
                 this.dragStartSlot = {type: 'team', index: i};
@@ -281,7 +291,7 @@ class SceneManager {
     }
         */
 
-    handleMouseMove(x, y, clickX, clickY) {
+    handleMouseMove(x, y) {
         //if (this.draggedUnit) {
         //    this.draggedUnit.dragTo(x, y);
         //}
@@ -291,6 +301,7 @@ class SceneManager {
         [...this.shopSlots, ...this.teamSlots].forEach(unit => {
             if (unit) {
                 unit.isHovered = this.isClickInUnit(x, y, unit);
+                //add ability text bubble
             }
         });
     }
