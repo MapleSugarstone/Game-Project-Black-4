@@ -37,6 +37,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay0.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/HealthDisplay1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/WinDisplay1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/Swap.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/Swap2.png");
 
 // Battle Scene
 ASSET_MANAGER.queueDownload("./Backgrounds/BattleScene.png");

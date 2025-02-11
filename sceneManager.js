@@ -1,6 +1,10 @@
 const WINS_THRESHOLD = 3;
 const STARTING_GOLD = 11;
 const STARTING_LIVES = 5;
+const BUY_COST = 3;
+const UPGRADE_COST = 5;
+const ROLL_COST = 1;
+const SELL_PRICE = 1;
 class SceneManager {
     constructor() {
 
@@ -19,7 +23,6 @@ class SceneManager {
         this.shopSlots = [null, null, null];
         this.frozenSlots = [false, false, false];
         this.teamSlots = [null, null, null, null, null];
-        this.rerollCost = 1;
         this.selectedUnit = null;
         
         // Available monsters in pool
@@ -156,7 +159,16 @@ class SceneManager {
         }));
 
         gameEngine.addEntity(new Button(820, 850, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
-            this.rollShop();
+            if (!(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit)) {
+
+                this.gold = Math.min(10, this.gold+SELL_PRICE);
+                this.index = this.teamSlots.indexOf(this.selectedUnit);
+                this.selectedUnit.x = gameEngine.ctx.canvas.width;
+                this.selectedUnit.y = gameEngine.ctx.canvas.height;
+                this.teamSlots[this.index] = null;
+                gameEngine.SelectedUnitGlobal = null;
+                this.selectedUnit = null;
+            }
         }));
 
         gameEngine.addEntity(new Button(410, 850, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
@@ -166,11 +178,18 @@ class SceneManager {
             console.log(this.teamSlots);
             console.log(this.selectedUnit);
             // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-            if (this.gold > 2 && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit) {
-                this.gold -= 3;
+            if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
+                this.gold -= UPGRADE_COST;
+                this.selectedUnit.levelUp();
+                gameEngine.SelectedUnitGlobal = null;
+                this.selectedUnit = null;
+            } else if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
+                this.gold -= BUY_COST;
                 this.index = this.teamSlots.indexOf(null);
-                this.teamSlots[this.index] = this.selectedUnit;
                 this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
+                this.teamSlots[this.index] = this.selectedUnit;
+                this.index2 = this.shopSlots.indexOf(this.selectedUnit);
+                this.shopSlots[this.index2] = null;
                 //this.shopSlots[this.dragStartSlot.index] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
@@ -180,7 +199,20 @@ class SceneManager {
 
         gameEngine.addEntity(new Button(1360, 850, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
             scene = "Battle";
+            gameEngine.SelectedUnitGlobal = null;
+            this.selectedUnit = null;
         }));
+
+
+        for (let i = 0; i < 4; i++) {
+        gameEngine.addEntity(new Button(980-200*i, 400, "./UI_Assets/Swap.png", 106, 51, "./UI_Assets/Swap.png", () => {
+            this.teamSlots[i]?.moveTo(this.teamPositions[i+1].x, this.teamPositions[i+1].y);
+            this.teamSlots[i+1]?.moveTo(this.teamPositions[i].x, this.teamPositions[i].y);
+            let temp1 = this.teamSlots[i];
+            this.teamSlots[i] = this.teamSlots[i+1];
+            this.teamSlots[i+1] = temp1;
+        }));
+        }
 
         // Initialize shop if empty
         //if (!this.shopSlots.some(slot => slot !== null)) {
@@ -192,8 +224,8 @@ class SceneManager {
     }
 
     rollShop() {
-        if (this.gold >= this.rerollCost) {
-            this.gold -= this.rerollCost;
+        if (this.gold >= ROLL_COST) {
+            this.gold -= ROLL_COST;
             
             for (let i = 0; i < this.shopSlots.length; i++) {
                 if (!this.frozenSlots[i]) {
@@ -243,26 +275,27 @@ class SceneManager {
             if (unit && this.isClickInUnit(x, y, unit)) {
                 //this.draggedUnit = unit;
                 //this.dragStartSlot = {type: 'shop', index: i};
-                if (unit.isInShop) {
+                if (unit.isInShop && gameEngine.SelectedUnitGlobal != unit.ID) {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
                     //this.dragStartSlot.index = null;
                 }
-                
+ 
                 //unit.startDrag(x, y);
             }
         }
-    
-    
+
 
         // Check team slots
         for (let i = 0; i < this.teamSlots.length; i++) {
             const unit = this.teamSlots[i];
+           //if (unit == null) break; add once we implement auto move units to front if empty space available
             if (unit && this.isClickInUnit(x, y, unit)) {
-                this.draggedUnit = unit;
-                this.dragStartSlot = {type: 'team', index: i};
-                unit.startDrag(x, y);
-                return;
+                if (gameEngine.SelectedUnitGlobal != unit.ID) {
+                    gameEngine.SelectedUnitGlobal = unit.ID;
+                    this.selectedUnit = unit;
+                    //this.dragStartSlot.index = null;
+                }
             }
         }
     }
@@ -281,7 +314,7 @@ class SceneManager {
     }
         */
 
-    handleMouseMove(x, y, clickX, clickY) {
+    handleMouseMove(x, y) {
         //if (this.draggedUnit) {
         //    this.draggedUnit.dragTo(x, y);
         //}
@@ -291,6 +324,7 @@ class SceneManager {
         [...this.shopSlots, ...this.teamSlots].forEach(unit => {
             if (unit) {
                 unit.isHovered = this.isClickInUnit(x, y, unit);
+                //add ability text bubble
             }
         });
     }
