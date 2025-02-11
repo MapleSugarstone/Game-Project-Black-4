@@ -183,11 +183,13 @@ class SceneManager {
                 this.selectedUnit.levelUp();
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
-            } else if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit) {
+            } else if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
                 this.gold -= BUY_COST;
                 this.index = this.teamSlots.indexOf(null);
                 this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
                 this.teamSlots[this.index] = this.selectedUnit;
+                this.index2 = this.shopSlots.indexOf(this.selectedUnit);
+                this.shopSlots[this.index2] = null;
                 //this.shopSlots[this.dragStartSlot.index] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
@@ -200,6 +202,17 @@ class SceneManager {
             gameEngine.SelectedUnitGlobal = null;
             this.selectedUnit = null;
         }));
+
+
+        for (let i = 0; i < 4; i++) {
+        gameEngine.addEntity(new Button(980-200*i, 400, "./UI_Assets/Swap.png", 106, 51, "./UI_Assets/Swap.png", () => {
+            this.teamSlots[i]?.moveTo(this.teamPositions[i+1].x, this.teamPositions[i+1].y);
+            this.teamSlots[i+1]?.moveTo(this.teamPositions[i].x, this.teamPositions[i].y);
+            let temp1 = this.teamSlots[i];
+            this.teamSlots[i] = this.teamSlots[i+1];
+            this.teamSlots[i+1] = temp1;
+        }));
+        }
 
         // Initialize shop if empty
         //if (!this.shopSlots.some(slot => slot !== null)) {
