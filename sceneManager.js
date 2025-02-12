@@ -480,37 +480,58 @@ class SceneManager {
         
         return team;
     }
-
+    
     executeBattle(playerTeam, enemyTeam) {
         if (playerTeam.length > 0 && enemyTeam.length > 0) {
             if (this.battleTimer < gameEngine.timestamp/10000) {
-                this.battleTimer = gameEngine.timestamp/10000 + 0.1;
-                
                 const playerUnit = playerTeam[0];
                 const enemyUnit = enemyTeam[0];
-                
-                playerUnit.health -= enemyUnit.attack;
-                enemyUnit.health -= playerUnit.attack;
-                
-                let playerDied = playerUnit.health <= 0;
-                let enemyDied = enemyUnit.health <= 0;
     
-                if (enemyDied) {
-                    gameEngine.entities = gameEngine.entities.filter(entity => entity !== enemyUnit);
-                    enemyTeam.shift();
-                    // Move remaining enemy units forward
-                    enemyTeam.forEach((unit, index) => {
-                        unit.moveTo(this.battlePositionsEnemy[index].x, this.battlePositionsEnemy[index].y);
-                    });
+                // Start new combat sequence
+                if (!playerUnit.isAttacking && !enemyUnit.isAttacking) {
+                    playerUnit.isAttacking = true;
+                    enemyUnit.isAttacking = true;
+                    playerUnit.attackTime = 0;
+                    enemyUnit.attackTime = 0;
+                    playerUnit.attackStartX = playerUnit.x;
+                    enemyUnit.attackStartX = enemyUnit.x;
+                    playerUnit.hasDealtDamage = false;
+                    enemyUnit.hasDealtDamage = false;
                 }
     
-                if (playerDied) {
-                    gameEngine.entities = gameEngine.entities.filter(entity => entity !== playerUnit);
-                    playerTeam.shift();
-                    // Move remaining player units forward
-                    playerTeam.forEach((unit, index) => {
-                        unit.moveTo(this.battlePositionsPlayer[index].x, this.battlePositionsPlayer[index].y);
-                    });
+                const attackTime = playerUnit.attackTime;
+                if (!playerUnit.hasDealtDamage && attackTime >= 0.75) {
+                    playerUnit.hasDealtDamage = true;
+                    enemyUnit.hasDealtDamage = true;
+                    playerUnit.health -= enemyUnit.attack;
+                    enemyUnit.health -= playerUnit.attack;
+                }
+                
+                if (attackTime >= 1.0) {
+                    playerUnit.isAttacking = false;
+                    enemyUnit.isAttacking = false;
+                    playerUnit.x = playerUnit.attackStartX;
+                    enemyUnit.x = enemyUnit.attackStartX;
+                    this.battleTimer = gameEngine.timestamp/10000 + 0.1;
+    
+                    let playerDied = playerUnit.health <= 0;
+                    let enemyDied = enemyUnit.health <= 0;
+    
+                    if (enemyDied) {
+                        gameEngine.entities = gameEngine.entities.filter(entity => entity !== enemyUnit);
+                        enemyTeam.shift();
+                        enemyTeam.forEach((unit, index) => {
+                            unit.moveTo(this.battlePositionsEnemy[index].x, this.battlePositionsEnemy[index].y);
+                        });
+                    }
+    
+                    if (playerDied) {
+                        gameEngine.entities = gameEngine.entities.filter(entity => entity !== playerUnit);
+                        playerTeam.shift();
+                        playerTeam.forEach((unit, index) => {
+                            unit.moveTo(this.battlePositionsPlayer[index].x, this.battlePositionsPlayer[index].y);
+                        });
+                    }
                 }
             }
         } else {
@@ -529,7 +550,6 @@ class SceneManager {
             }
         }
     }
-
 
     clearEntities() {
         gameEngine.entities = [];
