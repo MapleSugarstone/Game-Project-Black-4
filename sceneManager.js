@@ -20,6 +20,9 @@ class SceneManager {
 
         // Shop state
         this.goldDisplayer = new Display(20, 20, "./UI_Assets/CoinDisplay10.png", 131, 61);
+        this.livesDisplayer = new Display(170, 20, "./UI_Assets/HealthDisplay5.png", 131, 61);
+        this.winsDisplayer = new Display(320, 20, "./UI_Assets/WinDisplay0.png", 131, 61);
+        this.currentRoundDisplayer = new Display(470, 20, "./UI_Assets/TurnDisplay1.png", 131, 61);
         this.shopSlots = [null, null, null];
         this.frozenSlots = [false, false, false];
         this.teamSlots = [null, null, null, null, null];
@@ -89,6 +92,9 @@ class SceneManager {
             this.executeBattle(this.activeTeam, this.enemyTeam);
         } else if (scene === "LoadedShop") {
             this.goldDisplayer.sprite = `./UI_Assets/CoinDisplay${this.gold}.png`;
+            this.livesDisplayer.sprite = `./UI_Assets/HealthDisplay${this.lives}.png`;
+            this.winsDisplayer.sprite = `./UI_Assets/WinDisplay${this.wins}.png`;
+            this.currentRoundDisplayer.sprite = `./UI_Assets/TurnDisplay${this.currentRound}.png`;
         } else if (scene === "End") {
             this.clearEntities();
             this.endGame();
@@ -142,16 +148,15 @@ class SceneManager {
     setupShop() {
         // Add background
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/ShopMenu.png"));
-        gameEngine.addEntity(this.goldDisplayer);
 
         // Add info display
-        
+        gameEngine.addEntity(this.goldDisplayer);
 
-        gameEngine.addEntity(new Display(170, 20, "./UI_Assets/HealthDisplay5.png", 131, 61));
+        gameEngine.addEntity(this.livesDisplayer);
 
-        gameEngine.addEntity(new Display(320, 20, "./UI_Assets/WinDisplay0.png", 131, 61));
+        gameEngine.addEntity(this.winsDisplayer);
 
-        gameEngine.addEntity(new Display(470, 20, "./UI_Assets/TurnDisplay1.png", 131, 61));
+        gameEngine.addEntity(this.currentRoundDisplayer);
 
         // Add buttons
         gameEngine.addEntity(new Button(200, 850, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
@@ -161,7 +166,7 @@ class SceneManager {
         gameEngine.addEntity(new Button(820, 850, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
             if (!(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit)) {
 
-                this.gold = Math.min(10, this.gold+SELL_PRICE);
+                this.gold = Math.min(20, this.gold+SELL_PRICE);
                 this.index = this.teamSlots.indexOf(this.selectedUnit);
                 this.selectedUnit.x = gameEngine.ctx.canvas.width;
                 this.selectedUnit.y = gameEngine.ctx.canvas.height;

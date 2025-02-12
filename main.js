@@ -159,7 +159,7 @@ ASSET_MANAGER.downloadAll(() => {
     // Add UI elements
     // gameEngine.addEntity(new Background(0, 0, "./Backgrounds/Menu.png"));
     gameEngine.addEntity(new MainMenuBackground(gameEngine));
-    gameEngine.addEntity(new Button(650, 700, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => { 
+    gameEngine.addEntity(new Button(687, 800, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => { 
         scene = "Shop";
         gameState.inGame = true;
     }));
