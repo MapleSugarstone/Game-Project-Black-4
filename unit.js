@@ -25,6 +25,18 @@ class Unit {
         this.scale = 1;
         this.originalX = x; //for attack
         this.originalY = y; //for float
+
+        // Combat animation state tracking
+        this.isAttacking = false;          // Controls if unit is currently in attack animation sequence
+        this.attackTime = 0;               // Tracks elapsed time during attack animation (in seconds)
+        this.attackStartX = x;             // Stores initial X position to return to after attack completes
+        this.rotation = 0;                 // Current rotation angle for attack animation (in degrees)
+        this.hasDealtDamage = false;       // Prevents damage from being applied multiple times per attack
+        
+        // Shake effect properties for attack animation
+        this.shakeIntensity = 0;           // Maximum pixel offset for current shake
+        this.shakeOffsetX = 0;             // Current horizontal shake displacement
+        this.shakeOffsetY = 0;             // Current vertical shake displacement
         
         // Drag and drop properties
         this.isDragging = false;
@@ -85,7 +97,7 @@ class Unit {
     }
 
     update() {
-        // Handle animations
+        // Handle shop movement and positioning animations
         if (this.isAnimating) {
             this.dx = (this.targetX - this.x) / this.animationSpeed;
             this.dy = (this.targetY - this.y) / this.animationSpeed;
@@ -103,88 +115,143 @@ class Unit {
                 this.isDragging = true;
             }
         }
-
+    
+        // Track if unit is currently selected in shop
         this.Selected = gameEngine.SelectedUnitGlobal == this.ID;
-
-        // Handle hover animation
+    
+        // Handle attack animation during combat
+        if (this.isAttacking) {
+            this.attackTime += gameEngine.clockTick;
+    
+            // Update shake effect during charge-up and lunge phases (first 0.75 seconds)
+            if (this.attackTime < 0.75) {
+                // Gradually increase shake intensity during charge-up
+                const shakeProgress = Math.min(1, this.attackTime / 0.3);
+                this.shakeIntensity = 4 * shakeProgress;
+                // Apply random shake offset in both directions
+                this.shakeOffsetX = (Math.random() * 2 - 1) * this.shakeIntensity;
+                this.shakeOffsetY = (Math.random() * 2 - 1) * this.shakeIntensity;
+            } else {
+                // Reset shake after lunge phase
+                this.shakeIntensity = 0;
+                this.shakeOffsetX = 0;
+                this.shakeOffsetY = 0;
+            }
+    
+            // Charge-up phase (0 to 0.6 seconds) - Rotate into attack position
+            if (this.attackTime < 0.6) {
+                const chargeProgress = this.attackTime / 0.6;
+                // Quick initial rotation then hold position
+                const easeInRotation = chargeProgress < 0.2 ? 
+                    Math.pow(chargeProgress * 5, 2) : 1;
+                // Apply rotation based on unit's team
+                this.rotation = this.facingLeft ? 
+                    -30 * easeInRotation : 
+                    30 * easeInRotation;
+                this.x = this.attackStartX;  // Hold position during charge
+            } 
+            // Lunge phase (0.6 to 0.75 seconds) - Move forward to attack
+            else if (this.attackTime < 0.75) {
+                const lungeProgress = (this.attackTime - 0.6) / 0.15;
+                // Custom easing for snappy forward movement
+                const easeInOutLunge = lungeProgress < 0.5 ? 
+                    4 * lungeProgress * lungeProgress * lungeProgress : 
+                    1 - Math.pow(-2 * lungeProgress + 2, 3) / 2;
+                
+                const ATTACK_DISTANCE = 61;  // Pixels to move forward
+                if (this.facingLeft) {
+                    this.x = this.attackStartX - (ATTACK_DISTANCE * easeInOutLunge);
+                    this.rotation = -30;  // Hold rotation during lunge
+                } else {
+                    this.x = this.attackStartX + (ATTACK_DISTANCE * easeInOutLunge);
+                    this.rotation = 30;   // Hold rotation during lunge
+                }
+            }
+            // Return phase (0.75 to 1.0 seconds) - Move back to starting position
+            else if (this.attackTime < 1.0) {
+                const returnProgress = (this.attackTime - 0.75) / 0.25;
+                // Smooth ease out for natural return motion
+                const easeOutReturn = 1 - Math.pow(1 - returnProgress, 4);
+                
+                const ATTACK_DISTANCE = 61;
+                if (this.facingLeft) {
+                    this.x = (this.attackStartX - ATTACK_DISTANCE) + (ATTACK_DISTANCE * easeOutReturn);
+                    this.rotation = -30 * (1 - easeOutReturn);  // Gradually remove rotation
+                } else {
+                    this.x = (this.attackStartX + ATTACK_DISTANCE) - (ATTACK_DISTANCE * easeOutReturn);
+                    this.rotation = 30 * (1 - easeOutReturn);   // Gradually remove rotation
+                }
+            }
+        }
+    
+        // Handle hover/selection scaling in shop
         if (this.isHovered && this.scale < 1.1) {
-            console.log("hovering");
             this.scale += 0.01;
         }
-
+    
         if (this.Selected && this.scale < 1.3) {
             this.scale += 0.03;
         }
-
+    
         if ((!this.isHovered && !this.Selected) && this.scale > 1) {
             this.scale -= 0.01;
         }
-
-        // Handle attack animation
-        if (this.attackAnim > 0) {
-            this.attackAnim -= 0.1;
-        }
-
-        // Handle hit animation
-        if (this.hitAnim > 0) {
-            this.hitAnim -= 0.1;
-        }
-
-        // Floating animation when not dragging
+    
+        // Apply floating animation when not being dragged
         if (!this.isDragging) {
             this.y = this.originalY + Math.sin(Date.now() / 500) * 5;
         }
     }
 
     draw(ctx) {
-        ctx.save();
+        ctx.save();  // Save current canvas state
         
-        // Apply scale for hover effect and facing direction
-        ctx.translate(this.x + this.width/2, this.y + this.height/2);
-        ctx.scale(this.scale * (this.facingLeft ? -1 : 1), this.scale);
-        ctx.translate(-(this.x + this.width/2), -(this.y + this.height/2));
-    
-        // Draw attack effect
-        if (this.attackAnim > 0) {
-            ctx.globalAlpha = this.attackAnim;
-            ctx.fillStyle = 'yellow';
-            ctx.beginPath();
-            ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width * 0.75, 0, Math.PI * 2);
-            ctx.fill();
+        // Calculate position including any shake effect during combat
+        let drawX = this.x;
+        let drawY = this.y;
+        if (this.isAttacking) {
+            // Add shake offset to position during attack animations
+            drawX += this.shakeOffsetX;
+            drawY += this.shakeOffsetY;
         }
     
-        // Draw hit effect
-        if (this.hitAnim > 0) {
-            ctx.globalAlpha = this.hitAnim;
-            ctx.fillStyle = 'red';
-            ctx.beginPath();
-            ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width * 0.6, 0, Math.PI * 2);
-            ctx.fill();
+        // Center point for rotations and scaling
+        const centerX = drawX + this.width/2;
+        const centerY = drawY + this.height/2;
+        
+        // Move canvas origin to unit's center point
+        ctx.translate(centerX, centerY);
+    
+        // Apply rotation if unit is attacking
+        if (this.isAttacking) {
+            ctx.rotate(this.rotation * Math.PI/180);
         }
     
-        // Draw unit
-        ctx.globalAlpha = 1;
+        // Apply scaling (from selection/hover)
+        ctx.scale(this.scale, this.scale);
+    
+        // Flip sprite if unit is on enemy team
+        if (this.facingLeft) {
+            ctx.scale(-1, 1);
+        }
+    
+        // Move origin back to top-left for drawing
+        ctx.translate(-this.width/2, -this.height/2);
+        
+        // Draw the unit sprite
         ctx.drawImage(
             ASSET_MANAGER.getAsset(this.sprite),
-            this.x,
-            this.y,
+            0,
+            0,
             this.width,
             this.height
         );
-    
-        // Reset transform for stats so they're not flipped
-        ctx.restore();
-        ctx.save();
         
-        // Apply only the hover scale for stats, not the flip
-        ctx.translate(this.x + this.width/2, this.y + this.height/2);
-        ctx.scale(this.scale, this.scale);
-        ctx.translate(-(this.x + this.width/2), -(this.y + this.height/2));
+        // Restore canvas to original state
+        ctx.restore();
     
-        // Draw stats
+        // Draw stats (not affected by transformations)
         this.drawStats(ctx, 32, 16);
-        
-        ctx.restore();
     }
 
     drawStats(ctx, statx, staty,) {
