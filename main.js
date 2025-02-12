@@ -23,6 +23,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/SellButton2.png");
 
 // Shop Info Display
 ASSET_MANAGER.queueDownload("./Backgrounds/ShopMenu.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/UnitPlatformSnow.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay20.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay19.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay18.png");
@@ -80,8 +81,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay4.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay3.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay1.png");
-ASSET_MANAGER.queueDownload("./UI_Assets/Swap.png");
-ASSET_MANAGER.queueDownload("./UI_Assets/Swap2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/SwapButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/SwapButton2.png");
 
 // Battle Scene
 ASSET_MANAGER.queueDownload("./Backgrounds/BattleScene.png");

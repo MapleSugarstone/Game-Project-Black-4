@@ -99,10 +99,10 @@ class Background {
             ctx.fillText("SHOP PHASE", ctx.canvas.width / 2, 50);
             
             // Draw gold cost indicators
-            ctx.font = "24px Arial";
-            ctx.fillStyle = "gold";
-            ctx.fillText("Cost: 3 Gold", 280, 650);
-            ctx.fillText("Reroll: 1 Gold", 200, 830);
+            // ctx.font = "24px Arial";
+            // ctx.fillStyle = "gold";
+            // ctx.fillText("Cost: 3 Gold", 280, 650);
+            // ctx.fillText("Reroll: 1 Gold", 200, 830);
         }
 
         if (scene === "LoadedBattle") {
