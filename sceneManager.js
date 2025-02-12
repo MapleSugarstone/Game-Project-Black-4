@@ -44,9 +44,9 @@ class SceneManager {
 
         // Shop coordinates
         this.shopPositions = [
-            {x: 280, y: 670},
-            {x: 480, y: 670},
-            {x: 680, y: 670}
+            {x: 280, y: 650},
+            {x: 480, y: 650},
+            {x: 680, y: 650}
         ];
 
         // Team positions
@@ -149,6 +149,18 @@ class SceneManager {
         // Add background
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/ShopMenu.png"));
 
+        // Unit platforms
+        // Shop positions
+        gameEngine.addEntity(new Display(240, 665, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new Display(440, 665, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new Display(640, 665, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        // Team positions
+        gameEngine.addEntity(new Display(1040, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new Display(840, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new Display(640, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new Display(440, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new Display(240, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+
         // Add info display
         gameEngine.addEntity(this.goldDisplayer);
 
@@ -159,11 +171,11 @@ class SceneManager {
         gameEngine.addEntity(this.currentRoundDisplayer);
 
         // Add buttons
-        gameEngine.addEntity(new Button(200, 850, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
+        gameEngine.addEntity(new Button(200, 900, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
             this.rollShop();
         }));
 
-        gameEngine.addEntity(new Button(820, 850, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
+        gameEngine.addEntity(new Button(820, 900, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
             if (!(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit)) {
 
                 this.gold = Math.min(20, this.gold+SELL_PRICE);
@@ -176,7 +188,7 @@ class SceneManager {
             }
         }));
 
-        gameEngine.addEntity(new Button(410, 850, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
+        gameEngine.addEntity(new Button(410, 900, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
             console.log(gameEngine.SelectedUnitGlobal);
             console.log(this.teamSlots.includes(null));
             console.log(this.gold);
@@ -202,7 +214,7 @@ class SceneManager {
             }
         }));
 
-        gameEngine.addEntity(new Button(1360, 850, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
+        gameEngine.addEntity(new Button(1360, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
             scene = "Battle";
             gameEngine.SelectedUnitGlobal = null;
             this.selectedUnit = null;
@@ -210,7 +222,7 @@ class SceneManager {
 
 
         for (let i = 0; i < 4; i++) {
-        gameEngine.addEntity(new Button(980-200*i, 400, "./UI_Assets/Swap.png", 106, 51, "./UI_Assets/Swap.png", () => {
+        gameEngine.addEntity(new Button(990-200*i, 400, "./UI_Assets/SwapButton1.png", 106, 51, "./UI_Assets/SwapButton2.png", () => {
             this.teamSlots[i]?.moveTo(this.teamPositions[i+1].x, this.teamPositions[i+1].y);
             this.teamSlots[i+1]?.moveTo(this.teamPositions[i].x, this.teamPositions[i].y);
             let temp1 = this.teamSlots[i];
