@@ -19,7 +19,7 @@ class SceneManager {
         this.enemyTeam = [null, null, null, null, null];
 
         // Shop state
-        this.goldDisplayer = new Display(20, 20, "./UI_Assets/CoinDisplay10.png", 121, 61);
+        this.goldDisplayer = new Display(20, 20, "./UI_Assets/CoinDisplay10.png", 131, 61);
         this.shopSlots = [null, null, null];
         this.frozenSlots = [false, false, false];
         this.teamSlots = [null, null, null, null, null];
@@ -147,11 +147,11 @@ class SceneManager {
         // Add info display
         
 
-        gameEngine.addEntity(new Display(170, 20, "./UI_Assets/HealthDisplay1.png", 121, 61));
+        gameEngine.addEntity(new Display(170, 20, "./UI_Assets/HealthDisplay5.png", 131, 61));
 
-        gameEngine.addEntity(new Display(320, 20, "./UI_Assets/WinDisplay1.png", 121, 61));
+        gameEngine.addEntity(new Display(320, 20, "./UI_Assets/WinDisplay0.png", 131, 61));
 
-        gameEngine.addEntity(new Display(470, 20, "./UI_Assets/TurnDisplay1.png", 121, 61));
+        gameEngine.addEntity(new Display(470, 20, "./UI_Assets/TurnDisplay1.png", 131, 61));
 
         // Add buttons
         gameEngine.addEntity(new Button(200, 850, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
