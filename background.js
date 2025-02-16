@@ -40,28 +40,28 @@ class Background {
         // Draw overlay effects based on scene
         if (scene === "LoadedShop") {
             // Shop grid lines
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-            ctx.lineWidth = 2;
+            // ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+            // ctx.lineWidth = 2;
 
             // Draw shop slots grid
-            for (let i = 0; i < 3; i++) {
-                ctx.strokeRect(
-                    280 + (i * 200),
-                    500,
-                    128,
-                    128
-                );
-            }
+            // for (let i = 0; i < 3; i++) {
+            //     ctx.strokeRect(
+            //         280 + (i * 200),
+            //         500,
+            //         128,
+            //         128
+            //     );
+            // }
 
             // Draw team slots grid
-            for (let i = 0; i < 5; i++) {
-                ctx.strokeRect(
-                    280 + (i * 200),
-                    300,
-                    128,
-                    128
-                );
-            }
+            // for (let i = 0; i < 5; i++) {
+            //     ctx.strokeRect(
+            //         280 + (i * 200),
+            //         300,
+            //         128,
+            //         128
+            //     );
+            // }
         }
 
         if (scene === "LoadedBattle") {
@@ -87,16 +87,16 @@ class Background {
 
     drawHUD(ctx) {
         // Common HUD elements
-        ctx.fillStyle = "white";
-        ctx.font = "24px Arial";
+        // ctx.fillStyle = "white";
+        // ctx.font = "24px Arial";
         
         // Draw scene-specific HUD
         if (scene === "LoadedShop") {
             // Shop timer or turn indicator
-            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-            ctx.font = "bold 32px Arial";
-            ctx.textAlign = "center";
-            ctx.fillText("SHOP PHASE", ctx.canvas.width / 2, 50);
+            // ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            // ctx.font = "bold 32px Arial";
+            // ctx.textAlign = "center";
+            // ctx.fillText("SHOP PHASE", ctx.canvas.width / 2, 50);
             
             // Draw gold cost indicators
             // ctx.font = "24px Arial";
@@ -129,7 +129,26 @@ class MainMenuBackground {
         this.x = 0;
         this.y = 0;
 
-        this.snowyMainMenu = new Animator(ASSET_MANAGER.getAsset("./Backgrounds/MainMenuSnowing.png"), 0, 0, 1920, 1080, 12, 0.15);
+        this.snowyMainMenu = new Animator(ASSET_MANAGER.getAsset("./Backgrounds/MainMenuSnowing.png"), 0, 0, 1920, 1080, 12, 0.1);
+        
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+        this.snowyMainMenu.drawFrame(this.game.clockTick, ctx, this.x, this.y);
+    }
+}
+
+class ShopMenuBackground {
+    constructor(game, x, y) {
+        this.game = game;
+        this.x = 0;
+        this.y = 0;
+
+        this.snowyMainMenu = new Animator(ASSET_MANAGER.getAsset("./Backgrounds/ShopMenuBackgroundSnowing.png"), 0, 0, 1920, 1080, 14, 0.1);
         
     }
 

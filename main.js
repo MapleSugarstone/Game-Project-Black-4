@@ -22,7 +22,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/SellButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/SellButton2.png");
 
 // Shop Info Display
-ASSET_MANAGER.queueDownload("./Backgrounds/ShopMenu.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/ShopMenuBackgroundSnowing.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/UnitPlatformSnow.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay20.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/CoinDisplay19.png");
