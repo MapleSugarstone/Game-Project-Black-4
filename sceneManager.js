@@ -147,7 +147,7 @@ class SceneManager {
     }
     setupShop() {
         // Add background
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/ShopMenu.png"));
+        gameEngine.addEntity(new ShopMenuBackground(gameEngine));
 
         // Unit platforms
         // Shop positions
