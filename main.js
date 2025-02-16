@@ -6,10 +6,10 @@ const sceneManager = new SceneManager();
 const ASSET_MANAGER = new AssetManager();
 
 // Menu Assets
-ASSET_MANAGER.queueDownload("./Backgrounds/Menu.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/MainMenuSnowing.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/StartButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/StartButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/FrostArena.png");
 
 // Shop Buttons
 ASSET_MANAGER.queueDownload("./UI_Assets/RollButton1.png");
@@ -158,8 +158,8 @@ ASSET_MANAGER.downloadAll(() => {
     window.addEventListener('resize', resizeCanvas);
 */
     // Add UI elements
-    // gameEngine.addEntity(new Background(0, 0, "./Backgrounds/Menu.png"));
     gameEngine.addEntity(new MainMenuBackground(gameEngine));
+    gameEngine.addEntity(new Display(560, 200, "./UI_Assets/FrostArena.png", 800, 200))
     gameEngine.addEntity(new Button(687, 800, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => { 
         scene = "Shop";
         gameState.inGame = true;
