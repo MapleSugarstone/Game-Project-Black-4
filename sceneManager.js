@@ -542,10 +542,9 @@ class SceneManager {
     }
 
     killUnit(unit) {
-
         let tempTeam = null;
         let tempBattlePos = null;
-
+    
         if (this.activeTeam.includes(unit)) {
             tempTeam = this.activeTeam;
             tempBattlePos = this.battlePositionsPlayer;
@@ -553,12 +552,33 @@ class SceneManager {
             tempTeam = this.enemyTeam;
             tempBattlePos = this.battlePositionsEnemy;
         }
-
+    
         this.eventQueue.unshift("D." + unit.ID);
-        gameEngine.entities = gameEngine.entities.filter(entity => entity !== unit);
-        tempTeam.shift();
+        
+        // Start death animation instead of immediately removing
+        unit.animator.startDeath();
+        
+        // Remove from team array but keep in entities
+        const index = tempTeam.indexOf(unit);
+        if (index > -1) {
+            tempTeam.splice(index, 1);
+        }
+        
+        // Move remaining units forward
         tempTeam.forEach((unit, index) => {
             unit.moveTo(tempBattlePos[index].x, tempBattlePos[index].y);
+        });
+    }
+    
+    checkAndCleanupDeadUnits() {
+        // Remove dead units once they go off screen
+        gameEngine.entities = gameEngine.entities.filter(entity => {
+            if (entity instanceof Unit && entity.animator.isDying) {
+                // Keep unit until it goes sufficiently off screen
+                return entity.x > -200 && entity.x < gameEngine.ctx.canvas.width + 200 
+                    && entity.y > -200 && entity.y < gameEngine.ctx.canvas.height + 200;
+            }
+            return true;
         });
     }
 
