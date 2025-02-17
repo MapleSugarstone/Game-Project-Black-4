@@ -465,7 +465,7 @@ class SceneManager {
         if (playerTeam.length > 0 && enemyTeam.length > 0) {
             // Check if enough time has passed since last battle action
             if (this.battleTimer < gameEngine.timestamp/10000) {
-    
+        
                 // First check if there are any queued actions to process
                 if (this.actionQueue.length > 0) {
                     let theAction = this.actionQueue.pop();
@@ -479,6 +479,10 @@ class SceneManager {
 
                     // Effect after animation
                     this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
+                    // Check for passive ability deaths after applying the action
+                    if (theAction[2].health <= 0) {
+                        this.killUnit(theAction[2], true);
+                    }
                 } 
                 // Then check if there are any events to parse
                 else if (this.eventQueue.length > 0) {
@@ -490,17 +494,17 @@ class SceneManager {
                     console.log("attempting attack");
                     const playerUnit = playerTeam[0];
                     const enemyUnit = enemyTeam[0];
-    
+        
                     // Check if units can start a new attack
                     if (!playerUnit.animator.isAttacking && !enemyUnit.animator.isAttacking) {
                         // Initialize attack animations for both units
                         playerUnit.animator.startAttack();
                         enemyUnit.animator.startAttack();
                     }
-    
+        
                     // Get current attack animation progress
                     const attackTime = playerUnit.animator.attackTime;
-    
+        
                     // Check if it's time to deal damage (75% through animation)
                     if (!playerUnit.animator.hasDealtDamage && attackTime >= 0.75) {
                         playerUnit.animator.hasDealtDamage = true;
@@ -522,6 +526,14 @@ class SceneManager {
                         this.affectStat("HP", enemyUnit.attack*-1, playerUnit, this.activeTeam, this.battlePositionsPlayer);
                         this.affectStat("HP", playerUnit.attack*-1, enemyUnit, this.enemyTeam, this.battlePositionsEnemy);
                         
+                        // Check for combat deaths
+                        if (playerUnit.health <= 0) {
+                            this.killUnit(playerUnit, false);
+                        }
+                        if (enemyUnit.health <= 0) {
+                            this.killUnit(enemyUnit, false);
+                        }
+                        
                         // Queue attack events
                         this.eventQueue.unshift("A." + playerUnit.ID);
                         this.eventQueue.unshift("A." + enemyUnit.ID);
@@ -537,7 +549,7 @@ class SceneManager {
             } else if (enemyTeam.length > 0) {
                 this.lives--;
             }
-    
+        
             // Check if game is over or continue to next round
             if (this.wins >= WINS_THRESHOLD || this.lives <= 0) {
                 scene = "End";
@@ -549,10 +561,12 @@ class SceneManager {
         }
     }
 
-    killUnit(unit) {
+    killUnit(unit, isPassiveDeath) {
+        // Determine which team and positions to use for unit repositioning
         let tempTeam = null;
         let tempBattlePos = null;
     
+        // Check if unit is from player team or enemy team
         if (this.activeTeam.includes(unit)) {
             tempTeam = this.activeTeam;
             tempBattlePos = this.battlePositionsPlayer;
@@ -561,18 +575,25 @@ class SceneManager {
             tempBattlePos = this.battlePositionsEnemy;
         }
     
+        // Add death event to queue for ability triggers
         this.eventQueue.unshift("D." + unit.ID);
+    
+        if (!isPassiveDeath) {
+            // For combat deaths - start the launch animation
+            unit.animator.startDeath();
+        } else {
+            // For passive ability deaths - remove unit immediately
+            // Later we'll add smoke puff effect here
+            gameEngine.entities = gameEngine.entities.filter(entity => entity !== unit);
+        }
         
-        // Start death animation instead of immediately removing
-        unit.animator.startDeath();
-        
-        // Remove from team array but keep in entities
+        // Remove unit from its team array
         const index = tempTeam.indexOf(unit);
         if (index > -1) {
             tempTeam.splice(index, 1);
         }
-        
-        // Move remaining units forward
+    
+        // Move all remaining units forward to fill the gap
         tempTeam.forEach((unit, index) => {
             unit.moveTo(tempBattlePos[index].x, tempBattlePos[index].y);
         });
@@ -687,22 +708,26 @@ class SceneManager {
     }
 
     affectStat(stat, amount, unit, team, teampos) {
+        // Log debug info about stat change
         console.log("affecting stats" + stat + " " + amount + " " + unit);
+     
+        // Handle HP changes
         if (stat == "HP") {
+            // Apply HP change
             unit.health += Number(amount);
+            
+            // If unit took damage, add hurt event to queue
             if (amount < 0) {
                 this.eventQueue.unshift("H." + unit.ID);
             }
         }
+     
+        // Handle Attack changes 
         if (stat == "AT") {
+            // Apply attack change, ensuring it doesn't go below 0
             unit.attack = Math.max(0, unit.attack + Number(amount));
         }
-
-        if (unit.health <= 0) {
-
-            this.killUnit(unit);
-        }
-    }
+     }
 
     checkTriggerValidity(whoTriggers, TID, Team, Owner) {
 
