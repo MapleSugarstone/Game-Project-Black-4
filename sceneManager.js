@@ -470,6 +470,14 @@ class SceneManager {
                 if (this.actionQueue.length > 0) {
                     let theAction = this.actionQueue.pop();
                     console.log("attempting action " + theAction[0] + theAction[1]);
+
+                    // Placeholder for animation
+                    console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
+                    console.log(theAction[5]);
+                    console.log(theAction[2]);
+
+
+                    // Effect after animation
                     this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
                 } 
                 // Then check if there are any events to parse
@@ -595,15 +603,15 @@ class SceneManager {
             let eventInfo = this.currentEvent.split(".");
             for (let i = 0; i < this.abilityQueue.length; i++) {
 
-                console.log(this.abilityQueue[i]);
+                //console.log(this.abilityQueue[i]);
 
                 // Checking every ability compared to the event and even triggerer to see if it should be applied
                 if (this.abilityQueue[i].triggerCondition == eventInfo[0] &&
                      this.checkTriggerValidity(this.abilityQueue[i].whoTriggers, eventInfo[1], this.abilityQueue[i].team, this.abilityQueue[i].CID)) {
                         this.applyEffect(this.abilityQueue[i], eventInfo[1], this.abilityQueue[i].team, this.abilityQueue[i].CID);
-                        console.log("success");
+                        //console.log("success");
                 } else {
-                    console.log("failure");
+                    //console.log("failure");
                 }
             }
         }
@@ -614,6 +622,13 @@ class SceneManager {
         let target = null;
         let theParty = null;
         let theBattlePositions = null;
+        let ownerUnit = null;
+
+        [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
+            if (unit.ID == owner) {
+                ownerUnit = unit;
+            }
+        });
 
         if (team == 0) {
             theParty = this.activeTeam;
@@ -624,11 +639,7 @@ class SceneManager {
         }
 
         if (ability.whoAffected == "I") {
-            [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
-                if (unit.ID == owner) {
-                    target = unit;
-                }
-            });
+            target = ownerUnit;
         }
 
         if (ability.whoAffected == "T") {
@@ -672,8 +683,7 @@ class SceneManager {
 
         // After finding the target and stats to be affected, the information is sent to this
         // queue to be processed after every ability is checked for an event.
-        console.log("Action being added to queue:" + [abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions]);
-        this.actionQueue.unshift([abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions]);
+        this.actionQueue.unshift([abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions, ownerUnit, ability.visualEffect]);
     }
 
     affectStat(stat, amount, unit, team, teampos) {
