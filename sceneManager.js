@@ -461,87 +461,76 @@ class SceneManager {
     }
     
     executeBattle(playerTeam, enemyTeam) {
-
-
+        // Only proceed if both teams have units
         if (playerTeam.length > 0 && enemyTeam.length > 0) {
+            // Check if enough time has passed since last battle action
             if (this.battleTimer < gameEngine.timestamp/10000) {
-
     
-
+                // First check if there are any queued actions to process
                 if (this.actionQueue.length > 0) {
                     let theAction = this.actionQueue.pop();
                     console.log("attempting action " + theAction[0] + theAction[1]);
                     this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
-                } else if (this.eventQueue.length > 0) {
+                } 
+                // Then check if there are any events to parse
+                else if (this.eventQueue.length > 0) {
                     console.log("parsing events" + this.eventQueue);
                     this.ParseEvents();
-                } else {   
+                } 
+                // If no queued actions/events, proceed with combat
+                else {   
                     console.log("attempting attack");
                     const playerUnit = playerTeam[0];
                     const enemyUnit = enemyTeam[0];
-
-                    if (!playerUnit.isAttacking && !enemyUnit.isAttacking) {
-                        playerUnit.isAttacking = true;
-                        enemyUnit.isAttacking = true;
-                        playerUnit.attackTime = 0;
-                        enemyUnit.attackTime = 0;
-                        playerUnit.attackStartX = playerUnit.x;
-                        enemyUnit.attackStartX = enemyUnit.x;
-                        playerUnit.hasDealtDamage = false;
-                        enemyUnit.hasDealtDamage = false;
+    
+                    // Check if units can start a new attack
+                    if (!playerUnit.animator.isAttacking && !enemyUnit.animator.isAttacking) {
+                        // Initialize attack animations for both units
+                        playerUnit.animator.startAttack();
+                        enemyUnit.animator.startAttack();
                     }
-        
-                    const attackTime = playerUnit.attackTime;
-                    if (!playerUnit.hasDealtDamage && attackTime >= 0.75) {
-                        playerUnit.hasDealtDamage = true;
-                        enemyUnit.hasDealtDamage = true;
-                        
-                        //playerUnit.health -= enemyUnit.attack;
-                        //enemyUnit.health -= playerUnit.attack;
-
+    
+                    // Get current attack animation progress
+                    const attackTime = playerUnit.animator.attackTime;
+    
+                    // Check if it's time to deal damage (75% through animation)
+                    if (!playerUnit.animator.hasDealtDamage && attackTime >= 0.75) {
+                        playerUnit.animator.hasDealtDamage = true;
+                        enemyUnit.animator.hasDealtDamage = true;
                     }
                     
+                    // Check if attack sequence is complete
                     if (attackTime >= 1.0) {
-                        playerUnit.isAttacking = false;
-                        enemyUnit.isAttacking = false;
-                        playerUnit.x = playerUnit.attackStartX;
-                        enemyUnit.x = enemyUnit.attackStartX;
+                        // Reset attack states
+                        playerUnit.animator.isAttacking = false;
+                        enemyUnit.animator.isAttacking = false;
+                        playerUnit.x = playerUnit.animator.attackStartX;
+                        enemyUnit.x = enemyUnit.animator.attackStartX;
+                        
+                        // Set timer for next battle action
                         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
+                        
+                        // Apply damage to both units
                         this.affectStat("HP", enemyUnit.attack*-1, playerUnit, this.activeTeam, this.battlePositionsPlayer);
                         this.affectStat("HP", playerUnit.attack*-1, enemyUnit, this.enemyTeam, this.battlePositionsEnemy);
+                        
+                        // Queue attack events
                         this.eventQueue.unshift("A." + playerUnit.ID);
                         this.eventQueue.unshift("A." + enemyUnit.ID);
-                        /*
-                        let playerDied = playerUnit.health <= 0;
-                        let enemyDied = enemyUnit.health <= 0;
-        
-                        if (enemyDied) {
-                            gameEngine.entities = gameEngine.entities.filter(entity => entity !== enemyUnit);
-                            enemyTeam.shift();
-                            enemyTeam.forEach((unit, index) => {
-                                unit.moveTo(this.battlePositionsEnemy[index].x, this.battlePositionsEnemy[index].y);
-                            });
-                        }
-        
-                        if (playerDied) {
-                            gameEngine.entities = gameEngine.entities.filter(entity => entity !== playerUnit);
-                            playerTeam.shift();
-                            playerTeam.forEach((unit, index) => {
-                                unit.moveTo(this.battlePositionsPlayer[index].x, this.battlePositionsPlayer[index].y);
-                            });
-                        }
-                            */
                     }
                 }
-                
             }
-        } else {
+        } 
+        // If one team is empty, battle is over
+        else {
+            // Handle victory conditions
             if (playerTeam.length > 0) {
                 this.wins++;
             } else if (enemyTeam.length > 0) {
                 this.lives--;
             }
     
+            // Check if game is over or continue to next round
             if (this.wins >= WINS_THRESHOLD || this.lives <= 0) {
                 scene = "End";
             } else {
