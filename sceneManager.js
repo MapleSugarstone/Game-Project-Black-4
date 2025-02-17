@@ -17,6 +17,11 @@ class SceneManager {
         this.currentRound = 1;
         this.activeTeam = [null, null, null, null, null];
         this.enemyTeam = [null, null, null, null, null];
+        this.eventQueue = [];
+        this.actionQueue = [];
+        this.abilityQueue = [];
+        this.sortingList = [];
+        
 
         // Shop state
         this.goldDisplayer = new Display(20, 20, "./UI_Assets/CoinDisplay10.png", 131, 61);
@@ -317,19 +322,7 @@ class SceneManager {
         }
     }
 
-        /*
-        // Handle unit drop
-        if (this.draggedUnit) {
-            const targetSlot = this.findTargetSlot(x, y);
-            if (targetSlot) {
-                this.handleUnitDrop(targetSlot);
-            } else {
-                this.returnUnitToStart();
-            }
-            this.draggedUnit = null;
-        }
-    }
-        */
+
 
     handleMouseMove(x, y) {
         //if (this.draggedUnit) {
@@ -377,59 +370,11 @@ class SceneManager {
     }
         
 
-    /*
-
-    handleUnitDrop(targetSlot) {
-        if (targetSlot.type === 'team') {
-            if (this.dragStartSlot.type === 'shop') {
-                // Buying from shop
-                if (this.gold >= 3 && !this.teamSlots[targetSlot.index]) {
-                    this.gold -= 3;
-                    this.teamSlots[targetSlot.index] = this.draggedUnit;
-                    this.shopSlots[this.dragStartSlot.index] = null;
-                }
-            } else {
-                // Moving within team
-                if (this.teamSlots[targetSlot.index]) {
-                    // Combine if same type
-                    if (this.teamSlots[targetSlot.index].type === this.draggedUnit.type) {
-                        this.teamSlots[targetSlot.index].level++;
-                        this.teamSlots[targetSlot.index].attack++;
-                        this.teamSlots[targetSlot.index].health++;
-                        this.teamSlots[this.dragStartSlot.index] = null;
-                    } else {
-                        // Swap positions
-                        const temp = this.teamSlots[targetSlot.index];
-                        this.teamSlots[targetSlot.index] = this.draggedUnit;
-                        this.teamSlots[this.dragStartSlot.index] = temp;
-                    }
-                } else {
-                    // Move to empty slot
-                    this.teamSlots[targetSlot.index] = this.draggedUnit;
-                    this.teamSlots[this.dragStartSlot.index] = null;
-                }
-            }
-        }
-
-        this.updateUnitDisplay();
-    }
-
-    returnUnitToStart() {
-        if (this.dragStartSlot.type === 'shop') {
-            this.draggedUnit.moveTo(
-                this.shopPositions[this.dragStartSlot.index].x,
-                this.shopPositions[this.dragStartSlot.index].y
-            );
-        } else {
-            this.draggedUnit.moveTo(
-                this.teamPositions[this.dragStartSlot.index].x,
-                this.teamPositions[this.dragStartSlot.index].y
-            );
-        }
-    }
-        */
 
     startBattle() {
+        this.eventQueue = ["SB.N"];
+        this.abilityQueue = [];
+        this.actionQueue = [];
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/BattleScene.png"));
         
         // Generate enemy team
@@ -444,6 +389,22 @@ class SceneManager {
             });
             gameEngine.addEntity(battleUnit);
             return battleUnit;
+        });
+
+        // Adding abilities to the Ability Queue
+        this.activeTeam.forEach((unit, i) => {
+            let tempAbility = unit.ability;
+            tempAbility.team = 0;
+            tempAbility.CID = unit.ID;
+            this.abilityQueue.push(unit.ability);
+            this.sortingList.push(unit.attack);
+        });
+        this.enemyTeam.forEach((unit, i) => {
+            let tempAbility = unit.ability;
+            tempAbility.team = 1;
+            tempAbility.CID = unit.ID;
+            this.abilityQueue.push(unit.ability);
+            this.sortingList.push(unit.attack);
         });
     
         // Position player team
@@ -464,6 +425,7 @@ class SceneManager {
             //next turn
         }));
         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
+        this.ParseEvents();
     }
 
     addToggleButton(x, y, path, toggle, width, height) {
@@ -499,57 +461,79 @@ class SceneManager {
     }
     
     executeBattle(playerTeam, enemyTeam) {
+
+
         if (playerTeam.length > 0 && enemyTeam.length > 0) {
             if (this.battleTimer < gameEngine.timestamp/10000) {
-                const playerUnit = playerTeam[0];
-                const enemyUnit = enemyTeam[0];
+
     
-                // Start new combat sequence
-                if (!playerUnit.isAttacking && !enemyUnit.isAttacking) {
-                    playerUnit.isAttacking = true;
-                    enemyUnit.isAttacking = true;
-                    playerUnit.attackTime = 0;
-                    enemyUnit.attackTime = 0;
-                    playerUnit.attackStartX = playerUnit.x;
-                    enemyUnit.attackStartX = enemyUnit.x;
-                    playerUnit.hasDealtDamage = false;
-                    enemyUnit.hasDealtDamage = false;
-                }
-    
-                const attackTime = playerUnit.attackTime;
-                if (!playerUnit.hasDealtDamage && attackTime >= 0.75) {
-                    playerUnit.hasDealtDamage = true;
-                    enemyUnit.hasDealtDamage = true;
-                    playerUnit.health -= enemyUnit.attack;
-                    enemyUnit.health -= playerUnit.attack;
+
+                if (this.actionQueue.length > 0) {
+                    let theAction = this.actionQueue.pop();
+                    console.log("attempting action " + theAction[0] + theAction[1]);
+                    this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
+                } else if (this.eventQueue.length > 0) {
+                    console.log("parsing events" + this.eventQueue);
+                    this.ParseEvents();
+                } else {   
+                    console.log("attempting attack");
+                    const playerUnit = playerTeam[0];
+                    const enemyUnit = enemyTeam[0];
+
+                    if (!playerUnit.isAttacking && !enemyUnit.isAttacking) {
+                        playerUnit.isAttacking = true;
+                        enemyUnit.isAttacking = true;
+                        playerUnit.attackTime = 0;
+                        enemyUnit.attackTime = 0;
+                        playerUnit.attackStartX = playerUnit.x;
+                        enemyUnit.attackStartX = enemyUnit.x;
+                        playerUnit.hasDealtDamage = false;
+                        enemyUnit.hasDealtDamage = false;
+                    }
+        
+                    const attackTime = playerUnit.attackTime;
+                    if (!playerUnit.hasDealtDamage && attackTime >= 0.75) {
+                        playerUnit.hasDealtDamage = true;
+                        enemyUnit.hasDealtDamage = true;
+                        
+                        //playerUnit.health -= enemyUnit.attack;
+                        //enemyUnit.health -= playerUnit.attack;
+
+                    }
+                    
+                    if (attackTime >= 1.0) {
+                        playerUnit.isAttacking = false;
+                        enemyUnit.isAttacking = false;
+                        playerUnit.x = playerUnit.attackStartX;
+                        enemyUnit.x = enemyUnit.attackStartX;
+                        this.battleTimer = gameEngine.timestamp/10000 + 0.1;
+                        this.affectStat("HP", enemyUnit.attack*-1, playerUnit, this.activeTeam, this.battlePositionsPlayer);
+                        this.affectStat("HP", playerUnit.attack*-1, enemyUnit, this.enemyTeam, this.battlePositionsEnemy);
+                        this.eventQueue.unshift("A." + playerUnit.ID);
+                        this.eventQueue.unshift("A." + enemyUnit.ID);
+                        /*
+                        let playerDied = playerUnit.health <= 0;
+                        let enemyDied = enemyUnit.health <= 0;
+        
+                        if (enemyDied) {
+                            gameEngine.entities = gameEngine.entities.filter(entity => entity !== enemyUnit);
+                            enemyTeam.shift();
+                            enemyTeam.forEach((unit, index) => {
+                                unit.moveTo(this.battlePositionsEnemy[index].x, this.battlePositionsEnemy[index].y);
+                            });
+                        }
+        
+                        if (playerDied) {
+                            gameEngine.entities = gameEngine.entities.filter(entity => entity !== playerUnit);
+                            playerTeam.shift();
+                            playerTeam.forEach((unit, index) => {
+                                unit.moveTo(this.battlePositionsPlayer[index].x, this.battlePositionsPlayer[index].y);
+                            });
+                        }
+                            */
+                    }
                 }
                 
-                if (attackTime >= 1.0) {
-                    playerUnit.isAttacking = false;
-                    enemyUnit.isAttacking = false;
-                    playerUnit.x = playerUnit.attackStartX;
-                    enemyUnit.x = enemyUnit.attackStartX;
-                    this.battleTimer = gameEngine.timestamp/10000 + 0.1;
-    
-                    let playerDied = playerUnit.health <= 0;
-                    let enemyDied = enemyUnit.health <= 0;
-    
-                    if (enemyDied) {
-                        gameEngine.entities = gameEngine.entities.filter(entity => entity !== enemyUnit);
-                        enemyTeam.shift();
-                        enemyTeam.forEach((unit, index) => {
-                            unit.moveTo(this.battlePositionsEnemy[index].x, this.battlePositionsEnemy[index].y);
-                        });
-                    }
-    
-                    if (playerDied) {
-                        gameEngine.entities = gameEngine.entities.filter(entity => entity !== playerUnit);
-                        playerTeam.shift();
-                        playerTeam.forEach((unit, index) => {
-                            unit.moveTo(this.battlePositionsPlayer[index].x, this.battlePositionsPlayer[index].y);
-                        });
-                    }
-                }
             }
         } else {
             if (playerTeam.length > 0) {
@@ -568,7 +552,198 @@ class SceneManager {
         }
     }
 
+    killUnit(unit) {
+
+        let tempTeam = null;
+        let tempBattlePos = null;
+
+        if (this.activeTeam.includes(unit)) {
+            tempTeam = this.activeTeam;
+            tempBattlePos = this.battlePositionsPlayer;
+        } else {
+            tempTeam = this.enemyTeam;
+            tempBattlePos = this.battlePositionsEnemy;
+        }
+
+        this.eventQueue.unshift("D." + unit.ID);
+        gameEngine.entities = gameEngine.entities.filter(entity => entity !== unit);
+        tempTeam.shift();
+        tempTeam.forEach((unit, index) => {
+            unit.moveTo(tempBattlePos[index].x, tempBattlePos[index].y);
+        });
+    }
+
     clearEntities() {
         gameEngine.entities = [];
     }
+
+    ParseEvents() {
+        console.log("Events are being parsed");
+        console.log(this.eventQueue);
+
+        while (this.eventQueue.length > 0) {
+            this.currentEvent = this.eventQueue.pop();
+            let eventInfo = this.currentEvent.split(".");
+            for (let i = 0; i < this.abilityQueue.length; i++) {
+
+                console.log(this.abilityQueue[i]);
+
+                // Checking every ability compared to the event and even triggerer to see if it should be applied
+                if (this.abilityQueue[i].triggerCondition == eventInfo[0] &&
+                     this.checkTriggerValidity(this.abilityQueue[i].whoTriggers, eventInfo[1], this.abilityQueue[i].team, this.abilityQueue[i].CID)) {
+                        this.applyEffect(this.abilityQueue[i], eventInfo[1], this.abilityQueue[i].team, this.abilityQueue[i].CID);
+                        console.log("success");
+                } else {
+                    console.log("failure");
+                }
+            }
+        }
+    }
+
+    applyEffect(ability, eventTriggerer, team, owner) {
+        let abilityInfo = ability.effect.split(".");
+        let target = null;
+        let theParty = null;
+        let theBattlePositions = null;
+
+        if (team == 0) {
+            theParty = this.activeTeam;
+            theBattlePositions = this.battlePositionsPlayer;
+        } else {
+            theParty = this.enemyTeam;
+            theBattlePositions = this.battlePositionsEnemy;
+        }
+
+        if (ability.whoAffected == "I") {
+            [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
+                if (unit.ID == owner) {
+                    target = unit;
+                }
+            });
+        }
+
+        if (ability.whoAffected == "T") {
+            [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
+                if (unit.ID == eventTriggerer) {
+                    target = unit;
+                }
+            });
+        }
+        
+        
+        if (team == 0) {
+            if (ability.whoAffected == "RE") {
+                target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
+            }
+            if (ability.whoAffected == "RA") {
+                target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
+            }
+            if (ability.whoAffected == "FE") {
+                target = this.enemyTeam[0];
+            }
+            if (ability.whoAffected == "FA") {
+                target = this.activeTeam[0];
+            }
+        }
+
+        if (team == 1) {
+            if (ability.whoAffected == "RE") {
+                target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
+            }
+            if (ability.whoAffected == "RA") {
+                target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
+            }
+            if (ability.whoAffected == "FE") {
+                target = this.activeTeam[0];
+            }
+            if (ability.whoAffected == "FA") {
+                target = this.enemyTeam[0];
+            }
+        }
+
+        // After finding the target and stats to be affected, the information is sent to this
+        // queue to be processed after every ability is checked for an event.
+        console.log("Action being added to queue:" + [abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions]);
+        this.actionQueue.unshift([abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions]);
+    }
+
+    affectStat(stat, amount, unit, team, teampos) {
+        console.log("affecting stats" + stat + " " + amount + " " + unit);
+        if (stat == "HP") {
+            unit.health += Number(amount);
+            if (amount < 0) {
+                this.eventQueue.unshift("H." + unit.ID);
+            }
+        }
+        if (stat == "AT") {
+            unit.attack = Math.max(0, unit.attack + Number(amount));
+        }
+
+        if (unit.health <= 0) {
+
+            this.killUnit(unit);
+        }
+    }
+
+    checkTriggerValidity(whoTriggers, TID, Team, Owner) {
+
+        if (whoTriggers == "N") {
+            return true;
+        }
+
+        if (whoTriggers == "I") {
+            return TID == Owner;
+        }
+
+        // Team is ally
+        if (Team == 0) {
+            if (whoTriggers == "E") {
+                return this.teamContainsID(TID, this.enemyTeam);
+            }
+            if (whoTriggers == "A") {
+                return this.teamContainsID(TID, this.activeTeam);
+            }
+            if (whoTriggers == "AA") {
+                let tempIndex = this.indexOfID(TID, this.activeTeam);
+                let tempIndex2 = this.indexOfID(Owner, this.activeTeam);
+                return tempIndex == tempIndex2-1
+            }
+        }
+
+      // Team is enemy
+        if (Team == 1) {
+            if (whoTriggers == "E") {
+                return this.teamContainsID(TID, this.activeTeam);
+            }
+            if (whoTriggers == "A") {
+                return this.teamContainsID(TID, this.enemyTeam);
+            }
+            if (whoTriggers == "AA") {
+                let tempIndex = this.indexOfID(TID, this.enemyTeam);
+                let tempIndex2 = this.indexOfID(Owner, this.enemyTeam);
+                return tempIndex == tempIndex2-1
+            }
+        }
+    }
+
+    teamContainsID(ID, team) {
+        team.forEach((unit) => {
+            if (unit.ID == ID) {
+                return true;
+            } 
+        });
+            return false;
+    }
+
+    indexOfID(ID, team) {
+        team.forEach((unit, i) => {
+            if (unit.ID == ID) {
+                return i;
+            } 
+        });
+            return -99;
+    }
+
 }
+
+    

@@ -54,38 +54,40 @@ class Unit {
         this.hitAnim = 0;
         
         // Ability
-        this.ability = this.getAbility(sprite);
+        this.getAbility(sprite);
     }
 
     getAbility(sprite) {
-        const abilities = {
-            "./Units/Unit1.png": {
-                name: "Bite",
-                trigger: "onAttack",
-                effect: (target) => { target.health -= 1; }
-            },
-            "./Units/Ghost.png": {
-                name: "Haunt",
-                trigger: "onDeath",
-                effect: (allies) => {
-                    allies.forEach(ally => {
-                        if (ally) ally.attack += 1;
-                    });
-                }
-            },
-            "./Units/Spider.png": {
-                name: "Web",
-                trigger: "onAttack",
-                effect: (target) => { target.attack = Math.max(0, target.attack - 1); }
-            },
-            "./Units/Puffer.png": {
-                name: "Spikes",
-                trigger: "onHurt",
-                effect: (attacker) => { attacker.health -= 1; }
-            }
-            // Add more abilities as needed
-        };
-        return abilities[sprite] || null;
+        // Triggers: H - Hurt, SB - Start of Battle, A - Attack
+        // Who triggers?: I - Myself, N - None, AA - Ally Ahead, RA - Random Ally, RE - Random Enemy, FE - Front Enemy, FA - Front Ally
+        // EE - Every Enemy
+        // Who is Affected?: ^ Same notation
+        //
+        //
+
+        switch (sprite) {
+            case "./Units/Unit1.png":
+                this.ability = new Passive("H", "I", "RA", "HP.1", false);
+                break;
+            case "./Units/Unit2.png":
+                this.ability = new Passive("SB", "N", "RE", "HP.-99", false);
+                break;
+            case "./Units/Unit3.png":
+                this.ability = new Passive("A", "I", "RE", "AT.-1", false);
+                break;
+            case "./Units/Unit4.png":
+                this.ability = new Passive("A", "AA", "I", "AT.1", false);
+                break;
+            case "./Units/Unit5.png":
+                this.ability = new Passive("D", "I", "FE", "HP.-1", true);
+                break;
+            case "./Units/Unit6.png":
+                this.ability = new Passive("H", "EE", "T", "AT.-1", false);
+                break;
+            default:
+                this.ability = new Passive("N", "N", "N", "N", false);
+                
+        }
     }
 
     levelUp() {
