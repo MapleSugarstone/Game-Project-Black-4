@@ -147,13 +147,13 @@ class GameEngine {
                 entity.update();
             }
         }
-
+    
         // Update scene manager
         sceneManager.update();
-
+    
         // Remove marked entities
         this.entities = this.entities.filter(entity => !entity.removeFromWorld);
-
+    
         // Update FPS counter
         this.frameCount++;
         if (performance.now() - this.lastFPSUpdate > 1000) {
@@ -161,6 +161,9 @@ class GameEngine {
             this.frameCount = 0;
             this.lastFPSUpdate = performance.now();
         }
+        
+        // Check and cleanup dead units
+        sceneManager.checkAndCleanupDeadUnits();
     }
 
     loop() {

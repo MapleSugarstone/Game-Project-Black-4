@@ -1,7 +1,7 @@
 class UnitAnimator {
     constructor(unit) {
         this.unit = unit;
-
+    
         // Movement animation
         this.isAnimating = false;
         this.targetX = unit.x;
@@ -9,25 +9,55 @@ class UnitAnimator {
         this.animationSpeed = 5;
         this.originalX = unit.x;
         this.originalY = unit.y;
-
+    
         // Combat animation
         this.isAttacking = false;
         this.attackTime = 0;
         this.attackStartX = unit.x;
         this.hasDealtDamage = false;
         this.rotation = 0;
-
+    
         // Shake effect properties
         this.shakeIntensity = 0;
         this.shakeOffsetX = 0;
         this.shakeOffsetY = 0;
-
+    
         // Shop animations
         this.scale = 1;
         this.isDragging = false;
+    
+        // Death animation properties
+        this.isDying = false;
+        this.deathTime = 0;
+        this.deathX = 0;
+        this.deathY = 0;
+        this.deathVelocityX = 0;
+        this.deathVelocityY = 0;
+        this.deathRotation = 0;
+        this.gravity = 1;  // Controls arc trajectory steepness
     }
 
+
     update(clockTick) {
+        // Handle death animation - needs to be first to override other animations
+        if (this.isDying) {
+            this.deathTime += clockTick;
+            
+            // Update velocity and position using physics
+            this.deathVelocityY += this.gravity;  // Apply gravity
+            this.deathX += this.deathVelocityX;   // Move horizontally
+            this.deathY += this.deathVelocityY;   // Move vertically
+            
+            // Spin 720 degrees over 0.6 seconds (1200 degrees per second)
+            this.deathRotation += (1200 * clockTick);
+            
+            // Update unit's actual position
+            this.unit.x = this.deathX;
+            this.unit.y = this.deathY;
+            
+            return; // Skip other animations when dying
+        }
+    
         // Handle shop movement and positioning
         if (this.isAnimating) {
             const dx = (this.targetX - this.unit.x) / this.animationSpeed;
@@ -46,11 +76,11 @@ class UnitAnimator {
                 this.isDragging = true;
             }
         }
-
+    
         // Handle attack animation
         if (this.isAttacking) {
             this.attackTime += clockTick;
-
+    
             if (this.attackTime < 0.75) {
                 const shakeProgress = Math.min(1, this.attackTime / 0.3);
                 this.shakeIntensity = 4 * shakeProgress;
@@ -61,7 +91,7 @@ class UnitAnimator {
                 this.shakeOffsetX = 0;
                 this.shakeOffsetY = 0;
             }
-
+    
             if (this.attackTime < 0.6) {
                 const chargeProgress = this.attackTime / 0.6;
                 const easeInRotation = chargeProgress < 0.2 ? 
@@ -100,20 +130,20 @@ class UnitAnimator {
                 }
             }
         }
-
+    
         // Handle hover/selection scaling
         if (this.unit.isHovered && this.scale < 1.1) {
             this.scale += 0.01;
         }
-
+    
         if (this.unit.Selected && this.scale < 1.3) {
             this.scale += 0.03;
         }
-
+    
         if ((!this.unit.isHovered && !this.unit.Selected) && this.scale > 1) {
             this.scale -= 0.01;
         }
-
+    
         // Apply floating animation
         if (!this.isDragging) {
             this.unit.y = this.originalY + Math.sin(Date.now() / 500) * 5;
@@ -127,6 +157,20 @@ class UnitAnimator {
         this.hasDealtDamage = false;
     }
 
+    startDeath() {
+        this.isDying = true;
+        this.deathTime = 0;
+        
+        // Set initial position
+        this.deathX = this.unit.x;
+        this.deathY = this.unit.y;
+        this.deathRotation = 0;
+        
+        // Set launch velocities
+        this.deathVelocityY = -30;  // Initial upward velocity
+        this.deathVelocityX = this.unit.facingLeft ? 20 : -20;  // Direction based on team
+    }
+
     moveTo(x, y) {
         this.targetX = x;
         this.targetY = y;
@@ -134,6 +178,15 @@ class UnitAnimator {
     }
 
     getDrawPosition() {
+        if (this.isDying) {
+            return {
+                x: this.unit.x,
+                y: this.unit.y,
+                rotation: this.deathRotation,
+                scale: 1  // Maintain full size until star explosion
+            };
+        }
+        
         return {
             x: this.unit.x + this.shakeOffsetX,
             y: this.unit.y + this.shakeOffsetY,
