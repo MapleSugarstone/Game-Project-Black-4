@@ -177,15 +177,15 @@ class SceneManager {
 
         // Unit platforms
         // Shop positions
-        gameEngine.addEntity(new Display(240, 665, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
-        gameEngine.addEntity(new Display(440, 665, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
-        gameEngine.addEntity(new Display(640, 665, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new DisplayStill(240, 665, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new DisplayStill(440, 665, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new DisplayStill(640, 665, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
         // Team positions
-        gameEngine.addEntity(new Display(1040, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
-        gameEngine.addEntity(new Display(840, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
-        gameEngine.addEntity(new Display(640, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
-        gameEngine.addEntity(new Display(440, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
-        gameEngine.addEntity(new Display(240, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new DisplayStill(1040, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new DisplayStill(840, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new DisplayStill(640, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new DisplayStill(440, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
+        gameEngine.addEntity(new DisplayStill(240, 315, "./UI_Assets/UnitPlatformSnow.png", 200, 200));
 
         // Add info display
         gameEngine.addEntity(this.goldDisplayer);
