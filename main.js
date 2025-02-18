@@ -116,6 +116,11 @@ ASSET_MANAGER.queueDownload("./Units/Slug.png");
 ASSET_MANAGER.queueDownload("./Units/Spider.png");
 ASSET_MANAGER.queueDownload("./Units/Stink.png");
 
+// Win, Lose, Draw round
+ASSET_MANAGER.queueDownload("./Backgrounds/WinRound.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/LoseRound.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/DrawRound.png");
+
 class GameState {
     constructor() {
         this.inGame = false;
@@ -134,7 +139,7 @@ ASSET_MANAGER.downloadAll(() => {
    
     // Add UI elements
     gameEngine.addEntity(new MainMenuBackground(gameEngine));
-    gameEngine.addEntity(new Display(560, 200, "./UI_Assets/FrostArena.png", 800, 200))
+    gameEngine.addEntity(new Display(580, 200, "./UI_Assets/FrostArena.png", 800, 200))
     gameEngine.addEntity(new Button(687, 800, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => { 
         scene = "Shop";
         gameState.inGame = true;
