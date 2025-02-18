@@ -81,11 +81,11 @@ class Button {
         );
 
         // Draw hover effect
-        if (this.hovering) {
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(this.x, this.y, this.width, this.height);
-        }
+        // if (this.hovering) {
+        //     ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        //     ctx.lineWidth = 2;
+        //     ctx.strokeRect(this.x, this.y, this.width, this.height);
+        // }
 
         // Draw particles
         this.drawParticles(ctx);
