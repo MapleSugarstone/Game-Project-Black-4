@@ -131,32 +131,7 @@ ASSET_MANAGER.downloadAll(() => {
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false; // Disable image smoothing for pixel art
 
-    // Set canvas size to match window size while maintaining aspect ratio
-    /* 
-    function resizeCanvas() {
-        const targetAspectRatio = 16/9;
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        const windowRatio = width / height;
-
-        if (windowRatio > targetAspectRatio) {
-            canvas.height = height;
-            canvas.width = height * targetAspectRatio;
-        } else {
-            canvas.width = width;
-            canvas.height = width / targetAspectRatio;
-        }
-
-        canvas.style.position = 'absolute';
-        canvas.style.left = `${(window.innerWidth - canvas.width) / 2}px`;
-        canvas.style.top = `${(window.innerHeight - canvas.height) / 2}px`;
-    }
-        
-
-    // Initial resize and add event listener for window resize
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-*/
+   
     // Add UI elements
     gameEngine.addEntity(new MainMenuBackground(gameEngine));
     gameEngine.addEntity(new Display(560, 200, "./UI_Assets/FrostArena.png", 800, 200))

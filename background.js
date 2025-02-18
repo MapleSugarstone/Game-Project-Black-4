@@ -37,33 +37,6 @@ class Background {
             ctx.canvas.height
         );
 
-        // Draw overlay effects based on scene
-        if (scene === "LoadedShop") {
-            // Shop grid lines
-            // ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-            // ctx.lineWidth = 2;
-
-            // Draw shop slots grid
-            // for (let i = 0; i < 3; i++) {
-            //     ctx.strokeRect(
-            //         280 + (i * 200),
-            //         500,
-            //         128,
-            //         128
-            //     );
-            // }
-
-            // Draw team slots grid
-            // for (let i = 0; i < 5; i++) {
-            //     ctx.strokeRect(
-            //         280 + (i * 200),
-            //         300,
-            //         128,
-            //         128
-            //     );
-            // }
-        }
-
         if (scene === "LoadedBattle") {
             // Battle scene effects
             ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
@@ -86,24 +59,6 @@ class Background {
     }
 
     drawHUD(ctx) {
-        // Common HUD elements
-        // ctx.fillStyle = "white";
-        // ctx.font = "24px Arial";
-        
-        // Draw scene-specific HUD
-        if (scene === "LoadedShop") {
-            // Shop timer or turn indicator
-            // ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-            // ctx.font = "bold 32px Arial";
-            // ctx.textAlign = "center";
-            // ctx.fillText("SHOP PHASE", ctx.canvas.width / 2, 50);
-            
-            // Draw gold cost indicators
-            // ctx.font = "24px Arial";
-            // ctx.fillStyle = "gold";
-            // ctx.fillText("Cost: 3 Gold", 280, 650);
-            // ctx.fillText("Reroll: 1 Gold", 200, 830);
-        }
 
         if (scene === "LoadedBattle") {
             // Battle phase indicator
