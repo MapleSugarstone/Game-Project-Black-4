@@ -122,6 +122,27 @@ class SceneManager {
         
     }
 
+    roundWin() {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/WinRound.png"));
+        gameEngine.addEntity(new Button(1360, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
+            scene = "Shop";
+        }));
+    }
+
+    roundLose() {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/LoseRound.png"));
+        gameEngine.addEntity(new Button(1360, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
+            scene = "Shop";
+        }));
+    }
+
+    roundDraw() {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/DrawRound.png"));
+        gameEngine.addEntity(new Button(1360, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
+            scene = "Shop";
+        }));
+    }
+
     endGame() {
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/Menu.png"));
         console.log("Wins: %d", this.wins);
@@ -546,8 +567,13 @@ class SceneManager {
             // Handle victory conditions
             if (playerTeam.length > 0) {
                 this.wins++;
+                scene = "Win round";
+                console.log(scene);
             } else if (enemyTeam.length > 0) {
                 this.lives--;
+                scene = "Lose round";
+            } else if (playerTeam.length === enemyTeam.length) {
+                scene = "Draw round";
             }
         
             // Check if game is over or continue to next round
@@ -556,7 +582,15 @@ class SceneManager {
             } else {
                 this.currentRound++;
                 this.gold = STARTING_GOLD;
-                scene = "Shop";
+                if (scene === "Win round") {
+                    this.roundWin();
+                } else if (scene === "Lose round") {
+                    this.roundLose();
+                } else if (scene === "Draw round") {
+                    this.roundDraw();
+                }
+                // scene = "Shop";
+                // console.log(scene);
             }
         }
     }
