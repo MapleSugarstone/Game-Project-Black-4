@@ -197,11 +197,11 @@ class SceneManager {
         gameEngine.addEntity(this.currentRoundDisplayer);
 
         // Add buttons
-        gameEngine.addEntity(new Button(200, 900, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
+        gameEngine.addEntity(new Button(100, 900, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
             this.rollShop();
         }));
 
-        gameEngine.addEntity(new Button(820, 900, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
+        gameEngine.addEntity(new Button(720, 900, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
             if (!(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit)) {
 
                 this.gold = Math.min(20, this.gold+SELL_PRICE);
@@ -214,19 +214,14 @@ class SceneManager {
             }
         }));
 
-        gameEngine.addEntity(new Button(410, 900, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
+        gameEngine.addEntity(new Button(310, 900, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
             console.log(gameEngine.SelectedUnitGlobal);
             console.log(this.teamSlots.includes(null));
             console.log(this.gold);
             console.log(this.teamSlots);
             console.log(this.selectedUnit);
             // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-            if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
-                this.gold -= UPGRADE_COST;
-                this.selectedUnit.levelUp();
-                gameEngine.SelectedUnitGlobal = null;
-                this.selectedUnit = null;
-            } else if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
+            if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
                 this.gold -= BUY_COST;
                 this.index = this.teamSlots.indexOf(null);
                 this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
@@ -240,7 +235,23 @@ class SceneManager {
             }
         }));
 
-        gameEngine.addEntity(new Button(1360, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
+        gameEngine.addEntity(new Button(930, 900, "./UI_Assets/UpGradeButton1.png", 400, 100, "./UI_Assets/UpGradeButton2.png", () => {
+            console.log(gameEngine.SelectedUnitGlobal);
+            console.log(this.teamSlots.includes(null));
+            console.log(this.gold);
+            console.log(this.teamSlots);
+            console.log(this.selectedUnit);
+            // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
+            if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
+                this.gold -= UPGRADE_COST;
+                this.selectedUnit.levelUp();
+                gameEngine.SelectedUnitGlobal = null;
+                this.selectedUnit = null;
+                console.log("Up grade team unit")
+            }
+        }));
+
+        gameEngine.addEntity(new Button(1425, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
             scene = "Battle";
             gameEngine.SelectedUnitGlobal = null;
             this.selectedUnit = null;
@@ -337,6 +348,29 @@ class SceneManager {
                 if (gameEngine.SelectedUnitGlobal != unit.ID) {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
+                    console.log("Selected team unit");
+
+
+                    // Idea for having up grade button appear ontop of purchase button, but isn't the best method
+                    // gameEngine.addEntity(new Button(410, 900, "./UI_Assets/UpGradeButton1.png", 400, 100, "./UI_Assets/UpGradeButton2.png", () => {
+                    //     // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
+                    //     if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
+                    //         this.gold -= UPGRADE_COST;
+                    //         this.selectedUnit.levelUp();
+                    //         gameEngine.SelectedUnitGlobal = null;
+                    //         this.selectedUnit = null;
+                    //         console.log("Up grade team unit");
+
+                    //         // Timer function used to delay removing the up grade button after 1 second
+                    //         setTimeout(function() {
+                    //             console.log("timer started");
+                    //             gameEngine.entities.pop();
+                    //         }, 1000);
+                    //     } 
+                    // }));
+
+
+
                     //this.dragStartSlot.index = null;
                 }
             }
