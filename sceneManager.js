@@ -197,11 +197,11 @@ class SceneManager {
         gameEngine.addEntity(this.currentRoundDisplayer);
 
         // Add buttons
-        gameEngine.addEntity(new Button(100, 900, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
+        gameEngine.addEntity(new Button(60, 920, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
             this.rollShop();
         }));
 
-        gameEngine.addEntity(new Button(720, 900, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
+        gameEngine.addEntity(new Button(680, 920, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
             if (!(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit)) {
 
                 this.gold = Math.min(20, this.gold+SELL_PRICE);
@@ -214,7 +214,7 @@ class SceneManager {
             }
         }));
 
-        gameEngine.addEntity(new Button(310, 900, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
+        gameEngine.addEntity(new Button(270, 920, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
             console.log(gameEngine.SelectedUnitGlobal);
             console.log(this.teamSlots.includes(null));
             console.log(this.gold);
@@ -235,7 +235,7 @@ class SceneManager {
             }
         }));
 
-        gameEngine.addEntity(new Button(930, 900, "./UI_Assets/UpGradeButton1.png", 400, 100, "./UI_Assets/UpGradeButton2.png", () => {
+        gameEngine.addEntity(new Button(890, 920, "./UI_Assets/UpGradeButton1.png", 400, 100, "./UI_Assets/UpGradeButton2.png", () => {
             console.log(gameEngine.SelectedUnitGlobal);
             console.log(this.teamSlots.includes(null));
             console.log(this.gold);
@@ -251,7 +251,7 @@ class SceneManager {
             }
         }));
 
-        gameEngine.addEntity(new Button(1425, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
+        gameEngine.addEntity(new Button(1460, 920, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
             scene = "Battle";
             gameEngine.SelectedUnitGlobal = null;
             this.selectedUnit = null;
