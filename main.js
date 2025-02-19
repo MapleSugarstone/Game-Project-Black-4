@@ -83,6 +83,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/SwapButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/SwapButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/UpGradeButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/UpGradeButton2.png");
 
 // Battle Scene
 ASSET_MANAGER.queueDownload("./Backgrounds/BattleScene.png");
