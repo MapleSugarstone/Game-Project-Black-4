@@ -1,4 +1,4 @@
-const WINS_THRESHOLD = 3;
+const WINS_THRESHOLD = 10;
 const STARTING_GOLD = 11;
 const STARTING_LIVES = 5;
 const BUY_COST = 3;
@@ -125,14 +125,121 @@ class SceneManager {
     }
 
     roundWin() {
+        this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 150));
         gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
             scene = "Shop";
         }));
+
+        gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        gameEngine.addEntity(new DisplayStill(1295, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+
+        console.log("Total wins: " + this.wins);
+
+        if (this.wins === 1) {
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+        } else if (this.wins === 2) {
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+        } else if (this.wins === 3) {
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+        } else if (this.wins === 4) {
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+        } else if (this.wins === 5) {
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+        } else if (this.wins === 6) {
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+        } else if (this.wins === 7) {
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+        } else if (this.wins === 8) {
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+        } else if (this.wins === 9) {
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(1295, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+        } else if (this.wins === 10) {
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(1295, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
+
+        }
+
+        // for (let i = 1; i < this.wins+1; i++) {
+        //     gameEngine.addEntity(new DisplayStill((910/this.wins)*i, 500, "./UI_Assets/Win.png", 100, 100));
+        // }
     }
 
     roundLose() {
+        this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 150));
         gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
@@ -173,6 +280,7 @@ class SceneManager {
     }
 
     roundDraw() {
+        this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 150));
         gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
@@ -181,15 +289,31 @@ class SceneManager {
     }
 
     endGame() {
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/Menu.png"));
-        console.log("Wins: %d", this.wins);
-        console.log("Lives: %d", this.lives);
+        this.clearEntities();
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        console.log("Wins: ", this.wins);
+        console.log("Lives: ", this.lives);
         if (this.wins >= WINS_THRESHOLD) {
-            gameEngine.addEntity(new Display(650, 350, "./UI_Assets/EndTurnButton1.png", 546, 100));
+            gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 150));
+            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new DisplayStill(1295, 500, "./UI_Assets/Win.png", 100, 100));
+            setTimeout(function() {
+                gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
+              }, 1000);
             console.log("You Win!");
         }
         else if (this.lives <= 0) {
-            gameEngine.addEntity(new Display(650, 350, "./UI_Assets/EndTurnButton2.png", 546, 100));
+            gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 150));
+            setTimeout(function() {
+                gameEngine.entities.pop();
+              }, 1000);
             console.log("You Lose!");
         }
         
@@ -322,8 +446,12 @@ class SceneManager {
                 if (!this.frozenSlots[i]) {
                     const type = this.monsterTypes[Math.floor(Math.random() * this.monsterTypes.length)];
                     const stats = {
-                        attack: Math.floor(Math.random() * 2) + 1,
-                        health: Math.floor(Math.random() * 2) + 2
+                        // attack: Math.floor(Math.random() * 2) + 1,
+                        // health: Math.floor(Math.random() * 2) + 2
+
+                        // God mode for testing, uncomment to use
+                        attack: 50,
+                        health: 50
                     };
                     
                     this.shopSlots[i] = new Unit(
