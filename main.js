@@ -92,6 +92,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FastButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FastButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/FastButtonPressed1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/FastButtonPressed2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NextButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NextButton2.png");
 
