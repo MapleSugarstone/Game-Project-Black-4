@@ -22,7 +22,7 @@ class SceneManager {
         this.abilityQueue = [];
         this.sortingList = [];
         this.battleAnimationSpeed = 1;
-        this.fastToggle = 1;
+        this.fastToggle = false;
         
 
         // Shop state
@@ -517,14 +517,20 @@ class SceneManager {
         //     //next turn
         // }));
 
-        gameEngine.addEntity(this.fastButton = new Button(910, 100, `./UI_Assets/FastButton1.png`, 100, 100, `./UI_Assets/FastButton2.png`, () => {
+        gameEngine.addEntity(this.fastButton = new Button(910, 100, "./UI_Assets/FastButton1.png", 100, 100, "./UI_Assets/FastButton2.png", () => {
             this.battleAnimationSpeed = (this.battleAnimationSpeed % 2) + 1;
             this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
             this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
-            this.fastButton.hoversprite = `./UI_Assets/FastButton${this.fastToggle}.png`;
-            this.fastToggle = (this.fastToggle % 2) + 1;
-            this.fastButton.sprite = `./UI_Assets/FastButton${this.fastToggle}.png`;
-            this.fastButton.trueSprite = this.fastButton.sprite;
+
+            this.fastToggle = !this.fastToggle;
+            if(this.fastToggle) {
+                this.fastButton.sprite = "./UI_Assets/FastButtonPressed1.png";
+                this.fastButton.hoversprite = "./UI_Assets/FastButtonPressed2.png";
+            } else {
+                this.fastButton.sprite = "./UI_Assets/FastButton1.png";
+                this.fastButton.hoversprite = "./UI_Assets/FastButton2.png";
+            }
+                this.fastButton.truesprite = this.fastButton.sprite;
         }));
         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
         this.ParseEvents();
@@ -643,7 +649,7 @@ class SceneManager {
         } 
         // If one team is empty, battle is over
         else {
-            //reset battle animation speed
+            //reset battle animation
             this.battleAnimationSpeed = 1;
             this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = 1);
             this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = 1);
