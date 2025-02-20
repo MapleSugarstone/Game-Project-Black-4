@@ -123,22 +123,25 @@ class SceneManager {
     }
 
     roundWin() {
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/WinRound.png"));
-        gameEngine.addEntity(new Button(1360, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 150));
+        gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
             scene = "Shop";
         }));
     }
 
     roundLose() {
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/LoseRound.png"));
-        gameEngine.addEntity(new Button(1360, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 150));
+        gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
             scene = "Shop";
         }));
     }
 
     roundDraw() {
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/DrawRound.png"));
-        gameEngine.addEntity(new Button(1360, 900, "./UI_Assets/EndTurnButton1.png", 400, 100, "./UI_Assets/EndTurnButton2.png", () => {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 150));
+        gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
             scene = "Shop";
         }));
     }

@@ -119,9 +119,13 @@ ASSET_MANAGER.queueDownload("./Units/Spider.png");
 ASSET_MANAGER.queueDownload("./Units/Stink.png");
 
 // Win, Lose, Draw round
-ASSET_MANAGER.queueDownload("./Backgrounds/WinRound.png");
-ASSET_MANAGER.queueDownload("./Backgrounds/LoseRound.png");
-ASSET_MANAGER.queueDownload("./Backgrounds/DrawRound.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/WinRound.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/LoseRound.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/DrawRound.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NextTurnButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NextTurnButton2.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/SolidBlack.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/SolidWhite.png");
 
 class GameState {
     constructor() {
