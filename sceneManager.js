@@ -21,6 +21,8 @@ class SceneManager {
         this.actionQueue = [];
         this.abilityQueue = [];
         this.sortingList = [];
+        this.battleAnimationSpeed = 1;
+        this.fastToggle = 1;
         
 
         // Shop state
@@ -475,6 +477,7 @@ class SceneManager {
             const battleUnit = new Unit(unit.x, unit.y, unit.sprite, {
                 attack: unit.attack,
                 health: unit.health,
+                maxHealth: unit.maxHealth,
                 level: unit.level
             });
             gameEngine.addEntity(battleUnit);
@@ -509,28 +512,36 @@ class SceneManager {
             gameEngine.addEntity(unit);
         });
     
-        this.addToggleButton(760, 100, "./UI_Assets/AutoButton", 0, 100, 100);
-        this.addToggleButton(910, 100, "./UI_Assets/FastButton", 0, 100, 100);
-        gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
-            //next turn
+        // this.addToggleButton(760, 100, "./UI_Assets/AutoButton", 0, 100, 100);
+        // this.addToggleFast(0);
+        // gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
+        //     //next turn
+        // }));
+
+        gameEngine.addEntity(this.fastButton = new Button(910, 100, `./UI_Assets/FastButton1.png`, 100, 100, `./UI_Assets/FastButton2.png`, () => {
+            this.battleAnimationSpeed = (this.battleAnimationSpeed % 2) + 1;
+            this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
+            this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
+            this.fastButton.hoversprite = `./UI_Assets/FastButton${this.fastToggle}.png`;
+            this.fastToggle = (this.fastToggle % 2) + 1;
+            this.fastButton.sprite = `./UI_Assets/FastButton${this.fastToggle}.png`;
+            this.fastButton.trueSprite = this.fastButton.sprite;
         }));
         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
         this.ParseEvents();
     }
 
-    addToggleButton(x, y, path, toggle, width, height) {
-        if (toggle == 0) {
-            gameEngine.addEntity(new Button(x, y, `${path}1.png`, width, height, `${path}2.png`, () => {
-                gameEngine.entities = gameEngine.entities.filter((entity) => entity.sprite != `${path}1.png`);
-                this.addToggleButton(x, y, path, (toggle + 1) % 2, width, height);
-            }));
-        } else {
-            gameEngine.addEntity(new Button(x, y, `${path}Pressed1.png`, width, height, `${path}Pressed2.png`, () => {
-                gameEngine.entities = gameEngine.entities.filter((entity) => entity.sprite != `${path}Pressed1.png`);
-                this.addToggleButton(x, y, path, (toggle + 1) % 2, width, height);
-            }));
-        }
-    }
+    // addToggleFast(toggle) {
+    //     const buttonType = ["", "Pressed"];
+
+    //     gameEngine.addEntity(new Button(910, 100, `./UI_Assets/FastButton${buttonType[toggle]}1.png`, 100, 100, `./UI_Assets/FastButton${buttonType[toggle]}2.png`, () => {
+    //         this.battleAnimationSpeed = (this.battleAnimationSpeed % 2) + 1;
+    //         this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
+    //         this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
+    //         gameEngine.entities = gameEngine.entities.filter((entity) => !(entity.trueSprite == `./UI_Assets/FastButton${buttonType[toggle]}1.png`));
+    //         this.addToggleFast((toggle + 1) % 2);
+    //     }));
+    // }
 
     generateEnemyTeam() {
         const teamSize = Math.min(Math.max(3, Math.floor(this.currentRound/2) + 1), 5);
@@ -554,7 +565,7 @@ class SceneManager {
         // Only proceed if both teams have units
         if (playerTeam.length > 0 && enemyTeam.length > 0) {
             // Check if enough time has passed since last battle action
-            if (this.battleTimer < gameEngine.timestamp/10000) {
+            if (this.battleTimer < (gameEngine.timestamp/10000) * this.battleAnimationSpeed) {
         
                 // First check if there are any queued actions to process
                 if (this.actionQueue.length > 0) {
@@ -633,6 +644,10 @@ class SceneManager {
         } 
         // If one team is empty, battle is over
         else {
+            //reset battle animation speed
+            this.battleAnimationSpeed = 1;
+            this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = 1);
+            this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = 1);
             // Handle victory conditions
             if (playerTeam.length > 0) {
                 this.wins++;
