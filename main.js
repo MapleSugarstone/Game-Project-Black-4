@@ -124,6 +124,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/LoseRound.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/DrawRound.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NextTurnButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NextTurnButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/HealthHeart.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidBlack.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidWhite.png");
 
