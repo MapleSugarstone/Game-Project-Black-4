@@ -13,6 +13,7 @@ class Unit {
         this.attack = stats.attack || 2;
         this.health = stats.health || 2;
         this.maxHealth = this.health;
+        this.maxHealth = stats.maxHealth || this.health;
         this.level = stats.level || 1;
         this.type = sprite; // Use sprite path as type identifier
         this.cost = 3; // Standard cost for units
@@ -72,6 +73,7 @@ class Unit {
             this.level++;
             this.attack++;
             this.health++;
+            this.maxHealth++;
         }
     }
 

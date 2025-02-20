@@ -475,6 +475,7 @@ class SceneManager {
             const battleUnit = new Unit(unit.x, unit.y, unit.sprite, {
                 attack: unit.attack,
                 health: unit.health,
+                maxHealth: unit.maxHealth,
                 level: unit.level
             });
             gameEngine.addEntity(battleUnit);
