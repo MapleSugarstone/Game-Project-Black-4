@@ -687,8 +687,8 @@ class SceneManager {
         for (let i = 0; i < teamSize; i++) {
             const type = this.monsterTypes[Math.floor(Math.random() * this.monsterTypes.length)];
             const stats = {
-                attack: Math.floor(Math.random() * 2) + this.currentRound,
-                health: Math.floor(Math.random() * 2) + this.currentRound + 1
+                attack: Math.floor(Math.random() * 2), //+ this.currentRound,
+                health: Math.floor(Math.random() * 2) //+ this.currentRound + 1
             };
             const unit = new Unit(0, 0, type, stats);
             unit.facingLeft = true;  // Make enemy units face left
@@ -979,8 +979,8 @@ class SceneManager {
      
         // Handle Attack changes 
         if (stat == "AT") {
-            // Apply attack change, ensuring it doesn't go below 0
-            unit.attack = Math.max(0, unit.attack + Number(amount));
+            // Apply attack change, ensuring it doesn't go below 1
+            unit.attack = Math.max(1, unit.attack + Number(amount));
         }
      }
 
