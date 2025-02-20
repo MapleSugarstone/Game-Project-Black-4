@@ -100,3 +100,33 @@ class Display {
         ctx.globalAlpha = 1;
     }
 }
+
+class DisplayStill {
+    constructor(x, y, sprite, width, height, method) {
+        this.x = x;
+        this.y = y;
+        this.sprite = sprite;
+        this.width = width;
+        this.height = height;
+        this.method = method;
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+        ctx.save();
+
+        // Draw the image
+        ctx.drawImage(
+            ASSET_MANAGER.getAsset(this.sprite),
+            this.x,
+            this.y,
+            this.width,
+            this.height
+        );
+
+        ctx.restore();
+    }
+}

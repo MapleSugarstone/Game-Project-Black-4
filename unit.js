@@ -16,18 +16,7 @@ class Unit {
         this.level = stats.level || 1;
         this.type = sprite; // Use sprite path as type identifier
         this.cost = 3; // Standard cost for units
-        
-        // Animation properties
-        this.isAnimating = false;
-        this.targetX = x;
-        this.targetY = y;
-        this.animationSpeed = 5;
-        this.scale = 1;
-        this.originalX = x; //for attack
-        this.originalY = y; //for float
-        
-        // Drag and drop properties
-        this.isDragging = false;
+        this.animator = new UnitAnimator(this);
         this.Selected = false;
         this.dragOffsetX = 0;
         this.dragOffsetY = 0;
@@ -42,38 +31,40 @@ class Unit {
         this.hitAnim = 0;
         
         // Ability
-        this.ability = this.getAbility(sprite);
+        this.getAbility(sprite);
     }
 
     getAbility(sprite) {
-        const abilities = {
-            "./Units/Unit1.png": {
-                name: "Bite",
-                trigger: "onAttack",
-                effect: (target) => { target.health -= 1; }
-            },
-            "./Units/Ghost.png": {
-                name: "Haunt",
-                trigger: "onDeath",
-                effect: (allies) => {
-                    allies.forEach(ally => {
-                        if (ally) ally.attack += 1;
-                    });
-                }
-            },
-            "./Units/Spider.png": {
-                name: "Web",
-                trigger: "onAttack",
-                effect: (target) => { target.attack = Math.max(0, target.attack - 1); }
-            },
-            "./Units/Puffer.png": {
-                name: "Spikes",
-                trigger: "onHurt",
-                effect: (attacker) => { attacker.health -= 1; }
-            }
-            // Add more abilities as needed
-        };
-        return abilities[sprite] || null;
+        // Triggers: H - Hurt, SB - Start of Battle, A - Attack
+        // Who triggers?: I - Myself, N - None, AA - Ally Ahead, RA - Random Ally, RE - Random Enemy, FE - Front Enemy, FA - Front Ally
+        // EE - Every Enemy
+        // Who is Affected?: ^ Same notation
+        //
+        //
+
+        switch (sprite) {
+            case "./Units/Unit1.png":
+                this.ability = new Passive("H", "I", "RA", "HP.1", false, "BuffAlly", "Heal a random ally's HP by 1 when hurt.");
+                break;
+            case "./Units/Unit2.png":
+                this.ability = new Passive("SB", "N", "RE", "HP.-2", false, "Projectile", "Deal 2 damage to random enemy at the start of the battle.");
+                break;
+            case "./Units/Unit3.png":
+                this.ability = new Passive("A", "I", "RE", "AT.-1", false, "Projectile", "Deal 1 damage to a random enemy after attacking.");
+                break;
+            case "./Units/Unit4.png":
+                this.ability = new Passive("A", "AA", "I", "AT.1", false, "BuffAlly", "When the ally ahead attacks, increase attack by 1.");
+                break;
+            case "./Units/Unit5.png":
+                this.ability = new Passive("D", "I", "FE", "HP.-1", true, "Projectile", "When this unit dies, it deals 1 damage to the enemy in front.");
+                break;
+            case "./Units/Unit6.png":
+                this.ability = new Passive("H", "EE", "T", "AT.-1", false, "Projectile", "Whenever an enemy is hurt, reduce their attack by 1.");
+                break;
+            default:
+                this.ability = new Passive("N", "N", "N", "N", false, "N", "This unit has no passive.");
+                
+        }
     }
 
     levelUp() {
@@ -85,106 +76,46 @@ class Unit {
     }
 
     update() {
-        // Handle animations
-        if (this.isAnimating) {
-            this.dx = (this.targetX - this.x) / this.animationSpeed;
-            this.dy = (this.targetY - this.y) / this.animationSpeed;
-            
-            if (Math.abs(this.dx) < 0.1 && Math.abs(this.dy) < 0.1) {
-                this.x = this.targetX;
-                this.y = this.targetY;
-                this.originalX = this.x;
-                this.originalY = this.y;
-                this.isAnimating = false;
-                this.isDragging = false;
-            } else {
-                this.x += this.dx;
-                this.y += this.dy;
-                this.isDragging = true;
-            }
-        }
-
+        this.animator.update(gameEngine.clockTick);
         this.Selected = gameEngine.SelectedUnitGlobal == this.ID;
-
-        // Handle hover animation
-        if (this.isHovered && this.scale < 1.1) {
-            console.log("hovering");
-            this.scale += 0.01;
-        }
-
-        if (this.Selected && this.scale < 1.3) {
-            this.scale += 0.03;
-        }
-
-        if ((!this.isHovered && !this.Selected) && this.scale > 1) {
-            this.scale -= 0.01;
-        }
-
-        // Handle attack animation
-        if (this.attackAnim > 0) {
-            this.attackAnim -= 0.1;
-        }
-
-        // Handle hit animation
-        if (this.hitAnim > 0) {
-            this.hitAnim -= 0.1;
-        }
-
-        // Floating animation when not dragging
-        if (!this.isDragging) {
-            this.y = this.originalY + Math.sin(Date.now() / 500) * 5;
-        }
     }
 
     draw(ctx) {
+        // Get current animation state (position, rotation, scale)
+        const animState = this.animator.getDrawPosition();
+        
         ctx.save();
         
-        // Apply scale for hover effect and facing direction
-        ctx.translate(this.x + this.width/2, this.y + this.height/2);
-        ctx.scale(this.scale * (this.facingLeft ? -1 : 1), this.scale);
-        ctx.translate(-(this.x + this.width/2), -(this.y + this.height/2));
-    
-        // Draw attack effect
-        if (this.attackAnim > 0) {
-            ctx.globalAlpha = this.attackAnim;
-            ctx.fillStyle = 'yellow';
-            ctx.beginPath();
-            ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width * 0.75, 0, Math.PI * 2);
-            ctx.fill();
+        // Calculate center point for transformations
+        const centerX = animState.x + this.width/2;
+        const centerY = animState.y + this.height/2;
+        
+        // Apply transformations around center point
+        ctx.translate(centerX, centerY);
+        ctx.rotate(animState.rotation * Math.PI/180);
+        ctx.scale(animState.scale, animState.scale);
+        
+        // Flip sprite if facing left
+        if (this.facingLeft) {
+            ctx.scale(-1, 1);
         }
-    
-        // Draw hit effect
-        if (this.hitAnim > 0) {
-            ctx.globalAlpha = this.hitAnim;
-            ctx.fillStyle = 'red';
-            ctx.beginPath();
-            ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width * 0.6, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    
-        // Draw unit
-        ctx.globalAlpha = 1;
+        
+        // Move back to top-left for drawing
+        ctx.translate(-this.width/2, -this.height/2);
+        
+        // Draw the unit sprite
         ctx.drawImage(
             ASSET_MANAGER.getAsset(this.sprite),
-            this.x,
-            this.y,
+            0,
+            0,
             this.width,
             this.height
         );
-    
-        // Reset transform for stats so they're not flipped
-        ctx.restore();
-        ctx.save();
         
-        // Apply only the hover scale for stats, not the flip
-        ctx.translate(this.x + this.width/2, this.y + this.height/2);
-        ctx.scale(this.scale, this.scale);
-        ctx.translate(-(this.x + this.width/2), -(this.y + this.height/2));
+        ctx.restore();
     
-        // Draw stats
+        // Draw stats (not affected by transformations)
         this.drawStats(ctx, 32, 16);
-        
-        ctx.restore();
     }
 
     drawStats(ctx, statx, staty,) {
@@ -216,49 +147,9 @@ class Unit {
         }
     }
 
-    startDrag(mouseX, mouseY) {
-        this.isDragging = true;
-        this.dragOffsetX = this.x - mouseX;
-        this.dragOffsetY = this.y - mouseY;
-    }
-
-    dragTo(mouseX, mouseY) {
-        if (this.isDragging) {
-            this.x = mouseX + this.dragOffsetX;
-            this.y = mouseY + this.dragOffsetY;
-        }
-    }
-
-    endDrag() {
-        this.isDragging = false;
-    }
-
     moveTo(x, y) {
-        this.targetX = x;
-        this.targetY = y;
-        this.isAnimating = true;
-    }
-
-    attack(target) {
-        this.originalX = this.x;
-        
-        // Attack animation
-        this.attackAnim = 1;
-        this.moveTo(this.x + 40, this.y);
-        
-        setTimeout(() => {
-            this.moveTo(this.originalX, this.y);
-            target.takeHit();
-            
-            // Apply ability if it's an attack trigger
-            if (this.ability && this.ability.trigger === "onAttack") {
-                this.ability.effect(target);
-            }
-        }, 200);
-    }
-
-    takeHit() {
-        this.hitAnim = 1;
+        // Delegate movement animation to animator
+        this.animator.moveTo(x, y);
     }
 
     newName() {

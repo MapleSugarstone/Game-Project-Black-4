@@ -31,19 +31,6 @@ class Button {
         // Check mouse interaction
         this.hovering = this.checkOverlap(gameEngine.mouse?.x, gameEngine.mouse?.y);
         this.truesprite = this.hovering ? this.hoversprite : this.sprite;
-        // if (this.truesprite == this.hoversprite) { // can have message pop up be a constructor
-        //     //text bubble that states:
-        //     //      the price of purchase for purchase button
-        //     //      gold return for sell button
-        //     //      roll price and description for roll button
-        //     //      nothing for end turn
-        //     //      nothing for start adventure
-        //     //      next turn for nextButton
-        //     //      speed up description for FastButton
-        //     //      Auto play for AutoButton
-        // } else {
-        //      turn off text bubble?
-        // }
 
         // Handle click
         if (this.checkOverlap(gameEngine.click?.x, gameEngine.click?.y) && gameEngine.clickProcessed && this.hovering) {
@@ -94,11 +81,11 @@ class Button {
         );
 
         // Draw hover effect
-        if (this.hovering) {
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(this.x, this.y, this.width, this.height);
-        }
+        // if (this.hovering) {
+        //     ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        //     ctx.lineWidth = 2;
+        //     ctx.strokeRect(this.x, this.y, this.width, this.height);
+        // }
 
         // Draw particles
         this.drawParticles(ctx);
