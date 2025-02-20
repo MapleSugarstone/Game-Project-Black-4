@@ -16,6 +16,7 @@ class UnitAnimator {
         this.attackStartX = unit.x;
         this.hasDealtDamage = false;
         this.rotation = 0;
+        this.battleAnimationSpeed = 1;
     
         // Shake effect properties
         this.shakeIntensity = 0;
@@ -41,7 +42,7 @@ class UnitAnimator {
     update(clockTick) {
         // Handle death animation - needs to be first to override other animations
         if (this.isDying) {
-            this.deathTime += clockTick;
+            this.deathTime += (clockTick * this.battleAnimationSpeed);
             
             // Update velocity and position using physics
             this.deathVelocityY += this.gravity;  // Apply gravity
@@ -79,7 +80,7 @@ class UnitAnimator {
     
         // Handle attack animation
         if (this.isAttacking) {
-            this.attackTime += clockTick;
+            this.attackTime += (clockTick * this.battleAnimationSpeed);
     
             if (this.attackTime < 0.75) {
                 const shakeProgress = Math.min(1, this.attackTime / 0.3);
