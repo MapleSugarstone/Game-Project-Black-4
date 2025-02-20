@@ -136,6 +136,38 @@ class SceneManager {
         gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
             scene = "Shop";
         }));
+
+        if (this.lives === 4) {
+            gameEngine.addEntity(new DisplayStill(424, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(648, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(872, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(1096, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(1320, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            setTimeout(function() {
+                gameEngine.entities.pop();
+              }, 1000);
+        } else if (this.lives === 3) {
+            gameEngine.addEntity(new DisplayStill(548, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(772, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(996, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(1220, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            setTimeout(function() {
+                gameEngine.entities.pop();
+              }, 1000);
+        } else if (this.lives === 2) {
+            gameEngine.addEntity(new DisplayStill(672, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(896, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(1120, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            setTimeout(function() {
+                gameEngine.entities.pop();
+              }, 1000);
+        } else if (this.lives === 1) {
+            gameEngine.addEntity(new DisplayStill(796, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new DisplayStill(1020, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            setTimeout(function() {
+                gameEngine.entities.pop();
+              }, 1000);
+        }
     }
 
     roundDraw() {
