@@ -98,6 +98,10 @@ class SceneManager {
         } else if (scene === "LoadedBattle") {
             this.executeBattle(this.activeTeam, this.enemyTeam);
         } else if (scene === "LoadedShop") {
+            // console.log("Gold: " + this.gold);
+            // console.log("Lives: " + this.lives);
+            // console.log("Wins: " + this.wins);
+            // console.log("Current Round: " + this.currentRound);
             this.goldDisplayer.sprite = `./UI_Assets/CoinDisplay${this.gold}.png`;
             this.livesDisplayer.sprite = `./UI_Assets/HealthDisplay${this.lives}.png`;
             this.winsDisplayer.sprite = `./UI_Assets/WinDisplay${this.wins}.png`;
@@ -128,9 +132,12 @@ class SceneManager {
         this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 150));
-        gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-            scene = "Shop";
-        }));
+
+        setTimeout(function() {
+            gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                scene = "Shop";
+            }));
+          }, 1500);
 
         gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
         gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
@@ -217,34 +224,19 @@ class SceneManager {
             setTimeout(function() {
                 gameEngine.addEntity(new DisplayStill(1295, 500, "./UI_Assets/Win.png", 100, 100));
               }, 1000);
-        } else if (this.wins === 10) {
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(1295, 500, "./UI_Assets/Win.png", 100, 100));
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-
-        }
-
-        // for (let i = 1; i < this.wins+1; i++) {
-        //     gameEngine.addEntity(new DisplayStill((910/this.wins)*i, 500, "./UI_Assets/Win.png", 100, 100));
-        // }
+        } 
     }
 
     roundLose() {
         this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 150));
-        gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-            scene = "Shop";
-        }));
+
+        setTimeout(function() {
+            gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                scene = "Shop";
+            }));
+          }, 1500);
 
         if (this.lives === 4) {
             gameEngine.addEntity(new DisplayStill(424, 500, "./UI_Assets/HealthHeart.png", 200, 200));
@@ -283,16 +275,26 @@ class SceneManager {
         this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 150));
-        gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-            scene = "Shop";
-        }));
+
+        setTimeout(function() {
+            gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                scene = "Shop";
+            }));
+          }, 1500);
     }
 
     endGame() {
-        this.clearEntities();
+        scene = "End Game";
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
-        console.log("Wins: ", this.wins);
-        console.log("Lives: ", this.lives);
+
+        gameState.inGame = false;
+        setTimeout(function() {
+            gameEngine.addEntity(new Button(687, 900, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => { 
+                scene = "Shop";
+                gameState.inGame = true;
+        }));
+          }, 1500);
+
         if (this.wins >= WINS_THRESHOLD) {
             gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 150));
             gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
@@ -308,30 +310,37 @@ class SceneManager {
                 gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
               }, 1000);
             console.log("You Win!");
+            this.lives = STARTING_LIVES;
+                this.gold = STARTING_GOLD;
+                this.index = 0;
+                this.wins = 0;
+                this.shopLevel = 1;
+                this.currentRound = 1;
+                this.frozenSlots = [false, false, false];
+                this.teamSlots = [null, null, null, null, null];
+                this.selectedUnit = null;
+            
         }
         else if (this.lives <= 0) {
             gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 150));
+            gameEngine.addEntity(new DisplayStill(860, 500, "./UI_Assets/HealthHeart.png", 200, 200));
             setTimeout(function() {
                 gameEngine.entities.pop();
               }, 1000);
             console.log("You Lose!");
+            this.lives = STARTING_LIVES;
+                this.gold = STARTING_GOLD;
+                this.index = 0;
+                this.wins = 0;
+                this.shopLevel = 1;
+                this.currentRound = 1;
+                this.frozenSlots = [false, false, false];
+                this.teamSlots = [null, null, null, null, null];
+                this.selectedUnit = null;
         }
         
-        gameState.inGame = false;
-        gameEngine.addEntity(new Button(650, 700, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => {
-            this.lives = STARTING_LIVES;
-            this.gold = STARTING_GOLD;
-            this.index = 0;
-            this.wins = 0;
-            this.shopLevel = 1;
-            this.currentRound = 1;
-            this.frozenSlots = [false, false, false];
-            this.teamSlots = [null, null, null, null, null];
-            this.selectedUnit = null;
-            scene = "Shop";
-            gameState.inGame = true;
-    }));
     }
+
     setupShop() {
         // Add background
         gameEngine.addEntity(new ShopMenuBackground(gameEngine));
@@ -446,12 +455,12 @@ class SceneManager {
                 if (!this.frozenSlots[i]) {
                     const type = this.monsterTypes[Math.floor(Math.random() * this.monsterTypes.length)];
                     const stats = {
-                        // attack: Math.floor(Math.random() * 2) + 1,
-                        // health: Math.floor(Math.random() * 2) + 2
+                        attack: Math.floor(Math.random() * 2) + 1,
+                        health: Math.floor(Math.random() * 2) + 2
 
                         // God mode for testing, uncomment to use
-                        attack: 50,
-                        health: 50
+                        // attack: 50,
+                        // health: 50
                     };
                     
                     this.shopSlots[i] = new Unit(
