@@ -166,14 +166,14 @@ ASSET_MANAGER.downloadAll(() => {
     }));
 
     // Add audio button
-    const audioButton = new Button(1750, 50, "./Sounds/AudioOn.png", 64, 64, "./Sounds/AudioOff.png", () => {
+    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 64, 64, "./UI_Assets/AudioOff.png", () => {
         SOUND_ENGINE.toggleAudio();
-        if (audioButton.sprite === "./Sounds/AudioOn.png") {
-            audioButton.sprite = "./Sounds/AudioOff.png";
-            audioButton.hoversprite = "./Sounds/AudioOff.png";
+        if (audioButton.sprite === "./UI_Assets/AudioOn.png") {
+            audioButton.sprite = "./UI_Assets/AudioOff.png";
+            audioButton.hoversprite = "./UI_Assets/AudioOff.png";
         } else {
-            audioButton.sprite = "./Sounds/AudioOn.png";
-            audioButton.hoversprite = "./Sounds/AudioOn.png";
+            audioButton.sprite = "./UI_Assets/AudioOn.png";
+            audioButton.hoversprite = "./UI_Assets/AudioOn.png";
         }
         audioButton.truesprite = audioButton.sprite;
     });
