@@ -5,7 +5,7 @@ const SOUND_ENGINE = new SoundEngine();
 const sceneManager = new SceneManager();
 
 // Menu Assets
-ASSET_MANAGER.queueDownload("./Backgrounds/MainMenuSnowing.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/MainMenuBackgroundSnowing.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/StartButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/StartButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FrostArena.png");
@@ -91,7 +91,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/UpGradeButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/UpGradeButton2.png");
 
 // Battle Scene
-ASSET_MANAGER.queueDownload("./Backgrounds/BattleScene.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/BattleBackgroundSnowing.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FastButton1.png");

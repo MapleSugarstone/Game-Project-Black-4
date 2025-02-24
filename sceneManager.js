@@ -66,19 +66,19 @@ class SceneManager {
         ];
 
         this.battlePositionsPlayer = [
-            {x: 750, y: 400},
-            {x: 600, y: 400},
-            {x: 450, y: 400},
-            {x: 300, y: 400},
-            {x: 150, y: 400}
+            {x: 750, y: 680},
+            {x: 600, y: 680},
+            {x: 450, y: 680},
+            {x: 300, y: 680},
+            {x: 150, y: 680}
         ];
     
         this.battlePositionsEnemy = [
-            {x: 1000, y: 400},
-            {x: 1150, y: 400},
-            {x: 1300, y: 400},
-            {x: 1450, y: 400},
-            {x: 1600, y: 400}
+            {x: 1000, y: 680},
+            {x: 1150, y: 680},
+            {x: 1300, y: 680},
+            {x: 1450, y: 680},
+            {x: 1600, y: 680}
         ];
 
         // Dragging state
@@ -604,7 +604,9 @@ class SceneManager {
         this.eventQueue = ["SB.N"];
         this.abilityQueue = [];
         this.actionQueue = [];
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/BattleScene.png"));
+        
+        // Add background
+        gameEngine.addEntity(new BattleBackground(gameEngine));
         
         // Generate enemy team
         this.enemyTeam = this.generateEnemyTeam();
