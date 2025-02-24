@@ -11,8 +11,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/StartButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FrostArena.png");
 
 // Audio Assets
-ASSET_MANAGER.queueDownload("./Sounds/AudioOn.png");
-ASSET_MANAGER.queueDownload("./Sounds/AudioOff.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/AudioOn.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/AudioOff.png");
 ASSET_MANAGER.queueAudioDownload("./Sounds/menuMusic.mp3");
 
 // Shop Buttons
