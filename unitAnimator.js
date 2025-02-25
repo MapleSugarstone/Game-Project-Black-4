@@ -36,8 +36,12 @@ class UnitAnimator {
         this.deathVelocityY = 0;
         this.deathRotation = 0;
         this.gravity = 1;  // Controls arc trajectory steepness
+        
+        // Animation completion flags
+        this.hitAnimComplete = true;
+        this.hitAnimDuration = 0.3; // seconds
+        this.hitAnimTimer = 0;
     }
-
 
     update(clockTick) {
         // Handle death animation - needs to be first to override other animations
@@ -131,6 +135,22 @@ class UnitAnimator {
                 }
             }
         }
+        
+        // Update hit animation
+        if (!this.hitAnimComplete) {
+            this.hitAnimTimer += clockTick;
+            
+            // Flash effect and shake intensity are handled in the startHit method
+            
+            if (this.hitAnimTimer >= this.hitAnimDuration) {
+                this.hitAnimComplete = true;
+                this.hitAnimTimer = 0;
+                this.shakeIntensity = 0;
+                this.shakeOffsetX = 0;
+                this.shakeOffsetY = 0;
+                this.unit.flashEffect = false;
+            }
+        }
     
         // Handle hover/selection scaling
         if (this.unit.isHovered && this.scale < 1.1) {
@@ -194,5 +214,35 @@ class UnitAnimator {
             rotation: this.rotation,
             scale: this.scale
         };
+    }
+
+    startHit() {
+        // Simple hit animation - shake and flash
+        this.shakeIntensity = 8;
+        this.shakeOffsetX = (Math.random() * 2 - 1) * this.shakeIntensity;
+        this.shakeOffsetY = (Math.random() * 2 - 1) * this.shakeIntensity;
+        
+        // Flash effect
+        this.unit.flashEffect = true;
+        
+        // Set animation tracking variables
+        this.hitAnimComplete = false;
+        this.hitAnimTimer = 0;
+    }
+    
+    isHitAnimationComplete() {
+        return this.hitAnimComplete;
+    }
+    
+    isDeathAnimationComplete() {
+        // Consider death animation complete after unit goes offscreen
+        if (this.isDying && this.deathTime > 1.0) {
+            return true;
+        }
+        return false;
+    }
+
+    isAttackAnimationComplete() {
+        return !this.isAttacking || this.attackTime >= 1.0;
     }
 }
