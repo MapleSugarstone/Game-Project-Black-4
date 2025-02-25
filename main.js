@@ -133,6 +133,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/NextTurnButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/HealthHeart.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/Win.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/WinPlaceHolder.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/DrawDisplay.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidBlack.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidWhite.png");
 
