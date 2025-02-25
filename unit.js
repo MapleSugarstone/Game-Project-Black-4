@@ -30,6 +30,7 @@ class Unit {
         this.isHovered = false;
         this.attackAnim = 0;
         this.hitAnim = 0;
+        this.flashEffect = false;
         
         // Ability
         this.getAbility(sprite);
@@ -102,6 +103,11 @@ class Unit {
             ctx.scale(-1, 1);
         }
         
+        // Apply flash effect if hit
+        if (this.flashEffect) {
+            ctx.globalAlpha = 0.7 + 0.3 * Math.sin(Date.now() / 50);
+        }
+        
         // Move back to top-left for drawing
         ctx.translate(-this.width/2, -this.height/2);
         
@@ -143,9 +149,35 @@ class Unit {
         }
 
         // Ability indicator if unit has one
-        if (this.ability) {
+        if (this.ability && this.ability.description !== "This unit has no passive.") {
             ctx.fillStyle = 'purple';
             ctx.fillText("✧", this.x + this.width - 20, this.y + 20);
+            
+            // Show ability description on hover
+            if (this.isHovered) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(this.x, this.y - 60, this.width, 40);
+                ctx.fillStyle = 'white';
+                ctx.font = "12px Arial";
+                
+                // Wrap text for long descriptions
+                let words = this.ability.description.split(' ');
+                let line = '';
+                let y = this.y - 45;
+                let lineHeight = 15;
+                
+                for (let i = 0; i < words.length; i++) {
+                    let testLine = line + words[i] + ' ';
+                    if (ctx.measureText(testLine).width > this.width - 10) {
+                        ctx.fillText(line, this.x + 5, y);
+                        line = words[i] + ' ';
+                        y += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, this.x + 5, y);
+            }
         }
     }
 
