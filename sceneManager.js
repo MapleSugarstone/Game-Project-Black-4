@@ -275,6 +275,7 @@ class SceneManager {
         this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 150));
+        gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
 
         setTimeout(function() {
             gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
