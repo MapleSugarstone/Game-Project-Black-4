@@ -118,6 +118,8 @@ class Unit {
     
         // Draw stats (not affected by transformations)
         this.drawStats(ctx, 32, 16);
+
+        if (this.Selected) this.drawDescription(ctx);
     }
 
     drawStats(ctx, statx, staty,) {
@@ -147,6 +149,43 @@ class Unit {
             ctx.fillStyle = 'purple';
             ctx.fillText("✧", this.x + this.width - 20, this.y + 20);
         }
+    }
+
+    drawDescription(ctx) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        let left = 1240;
+        let bottom = 200;
+        if (this.isInShop) {
+            left = 940;
+            bottom = 550;
+        }
+        ctx.fillRect(left, bottom, 300, 180);
+
+        const lines = this.splitText(this.ability.description);
+
+        ctx.fillStyle = "cyan";
+        ctx.font = "bold 20px Arial";
+
+        for (let i = 0; i < lines.length; i++) ctx.fillText(lines[i], left + 20, bottom + 35 + (25 * i));
+    }
+
+    splitText(text) {
+        let index = 0;
+        let end = 20;
+        let lines = []
+        let textLeft = text;
+
+        while (textLeft.length > end) {
+            while (textLeft.charAt(end) != ' ') end --;
+            lines[index] = textLeft.substring(0, end);
+            textLeft = textLeft.substring(end+1);
+            index++;
+            end = 20;
+        }
+
+        lines[index] = textLeft;
+
+        return lines
     }
 
     moveTo(x, y) {
