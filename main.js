@@ -139,6 +139,15 @@ ASSET_MANAGER.queueDownload("./UI_Assets/DrawDisplay.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidBlack.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidWhite.png");
 
+// Win, Lose game
+ASSET_MANAGER.queueDownload("./UI_Assets/WinGame.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/LoseGame.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure2.png");
+
+// Projectiles
+ASSET_MANAGER.queueDownload("./Projectiles/SnowBall.png");
+
 class GameState {
     constructor() {
         this.inGame = false;
@@ -169,7 +178,7 @@ ASSET_MANAGER.downloadAll(() => {
     }));
 
     // Add audio button
-    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 64, 64, "./UI_Assets/AudioOff.png", () => {
+    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 100, 100, "./UI_Assets/AudioOff.png", () => {
         SOUND_ENGINE.toggleAudio();
         if (audioButton.sprite === "./UI_Assets/AudioOn.png") {
             audioButton.sprite = "./UI_Assets/AudioOff.png";
