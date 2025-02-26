@@ -395,6 +395,7 @@ class SceneManager {
             if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
                 this.gold -= BUY_COST;
                 this.index = this.teamSlots.indexOf(null);
+                this.selectedUnit.isInShop = false;
                 this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
                 this.teamSlots[this.index] = this.selectedUnit;
                 this.index2 = this.shopSlots.indexOf(this.selectedUnit);
