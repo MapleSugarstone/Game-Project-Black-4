@@ -23,6 +23,8 @@ class SceneManager {
         this.sortingList = [];
         this.battleAnimationSpeed = 1;
         this.fastToggle = false;
+        this.autoToggle = false;
+        this.isNextApproved = false;
         
 
         // Shop state
@@ -395,6 +397,7 @@ class SceneManager {
             if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
                 this.gold -= BUY_COST;
                 this.index = this.teamSlots.indexOf(null);
+                this.selectedUnit.isInShop = false;
                 this.selectedUnit.moveTo(this.teamPositions[this.index].x, this.teamPositions[this.index].y);
                 this.teamSlots[this.index] = this.selectedUnit;
                 this.index2 = this.shopSlots.indexOf(this.selectedUnit);
@@ -652,12 +655,22 @@ class SceneManager {
             gameEngine.addEntity(unit);
         });
     
-        // this.addToggleButton(760, 100, "./UI_Assets/AutoButton", 0, 100, 100);
-        // this.addToggleFast(0);
-        // gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
-        //     //next turn
-        // }));
-
+        gameEngine.addEntity(this.autoButton = new Button(760, 100, "./UI_Assets/AutoButton1.png", 100, 100, "./UI_Assets/AutoButton2.png", () => {
+            this.autoToggle = !this.autoToggle;
+            this.isNextApproved = true;
+            if(this.autoToggle) {
+                this.autoButton.sprite = "./UI_Assets/AutoButtonPressed1.png";
+                this.autoButton.hoversprite = "./UI_Assets/AutoButtonPressed2.png";
+            } else {
+                this.autoButton.sprite = "./UI_Assets/AutoButton1.png";
+                this.autoButton.hoversprite = "./UI_Assets/AutoButton2.png";
+            }
+            this.autoButton.truesprite = this.autoButton.sprite;
+        }));
+        gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
+                this.isNextApproved = true;
+                //if(this.autoToggle) this.isNextApproved = false; ///put this line on where you want the battle paused
+        }));
         gameEngine.addEntity(this.fastButton = new Button(910, 100, "./UI_Assets/FastButton1.png", 100, 100, "./UI_Assets/FastButton2.png", () => {
             this.battleAnimationSpeed = (this.battleAnimationSpeed % 2) + 1;
             this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
@@ -671,23 +684,11 @@ class SceneManager {
                 this.fastButton.sprite = "./UI_Assets/FastButton1.png";
                 this.fastButton.hoversprite = "./UI_Assets/FastButton2.png";
             }
-                this.fastButton.truesprite = this.fastButton.sprite;
+            this.fastButton.truesprite = this.fastButton.sprite;
         }));
         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
         this.ParseEvents();
     }
-
-    // addToggleFast(toggle) {
-    //     const buttonType = ["", "Pressed"];
-
-    //     gameEngine.addEntity(new Button(910, 100, `./UI_Assets/FastButton${buttonType[toggle]}1.png`, 100, 100, `./UI_Assets/FastButton${buttonType[toggle]}2.png`, () => {
-    //         this.battleAnimationSpeed = (this.battleAnimationSpeed % 2) + 1;
-    //         this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
-    //         this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
-    //         gameEngine.entities = gameEngine.entities.filter((entity) => !(entity.trueSprite == `./UI_Assets/FastButton${buttonType[toggle]}1.png`));
-    //         this.addToggleFast((toggle + 1) % 2);
-    //     }));
-    // }
 
     generateEnemyTeam() {
         const teamSize = Math.min(Math.max(3, Math.floor(this.currentRound/2) + 1), 5);
@@ -712,7 +713,6 @@ class SceneManager {
         if (playerTeam.length > 0 && enemyTeam.length > 0) {
             // Check if enough time has passed since last battle action
             if (this.battleTimer < (gameEngine.timestamp/10000) * this.battleAnimationSpeed) {
-        
                 // First check if there are any queued actions to process
                 if (this.actionQueue.length > 0) {
                     let theAction = this.actionQueue.pop();
@@ -737,7 +737,7 @@ class SceneManager {
                     this.ParseEvents();
                 } 
                 // If no queued actions/events, proceed with combat
-                else {   
+                else if (this.isNextApproved){   
                     console.log("attempting attack");
                     const playerUnit = playerTeam[0];
                     const enemyUnit = enemyTeam[0];
@@ -760,6 +760,7 @@ class SceneManager {
                     
                     // Check if attack sequence is complete
                     if (attackTime >= 1.0) {
+                        if(!this.autoToggle) this.isNextApproved = false;
                         // Reset attack states
                         playerUnit.animator.isAttacking = false;
                         enemyUnit.animator.isAttacking = false;
@@ -812,6 +813,9 @@ class SceneManager {
             } else {
                 this.currentRound++;
                 this.gold = STARTING_GOLD;
+                this.fastToggle = false;
+                this.autoToggle = false;
+                this.isNextApproved = false;
                 if (scene === "Win round") {
                     this.roundWin();
                 } else if (scene === "Lose round") {
