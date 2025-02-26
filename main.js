@@ -1,15 +1,19 @@
 const gameEngine = new GameEngine();
-scene = "MainMenu";
+const ASSET_MANAGER = new AssetManager();
+const SOUND_ENGINE = new SoundEngine();
 
 const sceneManager = new SceneManager();
 
-const ASSET_MANAGER = new AssetManager();
-
 // Menu Assets
-ASSET_MANAGER.queueDownload("./Backgrounds/MainMenuSnowing.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/MainMenuBackgroundSnowing.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/StartButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/StartButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FrostArena.png");
+
+// Audio Assets
+ASSET_MANAGER.queueDownload("./UI_Assets/AudioOn.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/AudioOff.png");
+ASSET_MANAGER.queueAudioDownload("./Sounds/menuMusic.mp3");
 
 // Shop Buttons
 ASSET_MANAGER.queueDownload("./UI_Assets/RollButton1.png");
@@ -87,7 +91,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/UpGradeButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/UpGradeButton2.png");
 
 // Battle Scene
-ASSET_MANAGER.queueDownload("./Backgrounds/BattleScene.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/BattleBackgroundSnowing.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FastButton1.png");
@@ -127,6 +131,9 @@ ASSET_MANAGER.queueDownload("./UI_Assets/DrawRound.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NextTurnButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NextTurnButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/HealthHeart.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/Win.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/WinPlaceHolder.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/DrawDisplay.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidBlack.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidWhite.png");
 
@@ -143,8 +150,11 @@ const gameState = new GameState();
 ASSET_MANAGER.downloadAll(() => {
     const canvas = document.getElementById("gameWorld");
     const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false; // Disable image smoothing for pixel art
+    ctx.imageSmoothingEnabled = false;
 
+    // Initialize scene and sound AFTER assets are loaded
+    scene = "MainMenu";
+    SOUND_ENGINE.updateScene("MainMenu");
    
     // Add UI elements
     gameEngine.addEntity(new MainMenuBackground(gameEngine));
@@ -152,7 +162,24 @@ ASSET_MANAGER.downloadAll(() => {
     gameEngine.addEntity(new Button(687, 800, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => { 
         scene = "Shop";
         gameState.inGame = true;
+        // Trigger music on user interaction
+        SOUND_ENGINE.updateScene("MainMenu");
     }));
+
+    // Add audio button
+    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 64, 64, "./UI_Assets/AudioOff.png", () => {
+        SOUND_ENGINE.toggleAudio();
+        if (audioButton.sprite === "./UI_Assets/AudioOn.png") {
+            audioButton.sprite = "./UI_Assets/AudioOff.png";
+            audioButton.hoversprite = "./UI_Assets/AudioOff.png";
+        } else {
+            audioButton.sprite = "./UI_Assets/AudioOn.png";
+            audioButton.hoversprite = "./UI_Assets/AudioOn.png";
+        }
+        audioButton.truesprite = audioButton.sprite;
+    });
+
+    gameEngine.addEntity(audioButton);
 
     // Stats display
     class StatsDisplay {
