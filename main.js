@@ -178,7 +178,7 @@ ASSET_MANAGER.downloadAll(() => {
     }));
 
     // Add audio button
-    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 64, 64, "./UI_Assets/AudioOff.png", () => {
+    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 100, 100, "./UI_Assets/AudioOff.png", () => {
         SOUND_ENGINE.toggleAudio();
         if (audioButton.sprite === "./UI_Assets/AudioOn.png") {
             audioButton.sprite = "./UI_Assets/AudioOff.png";
