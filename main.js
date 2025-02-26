@@ -94,6 +94,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/UpGradeButton2.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/BattleBackgroundSnowing.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AutoButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/AutoButtonPressed1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/AutoButtonPressed2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FastButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FastButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/FastButtonPressed1.png");
