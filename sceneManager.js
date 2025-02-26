@@ -133,7 +133,7 @@ class SceneManager {
     roundWin() {
         this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
-        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 150));
+        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
 
         setTimeout(function() {
             gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
@@ -232,7 +232,7 @@ class SceneManager {
     roundLose() {
         this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
-        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 150));
+        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
 
         setTimeout(function() {
             gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
@@ -276,7 +276,7 @@ class SceneManager {
     roundDraw() {
         this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
-        gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 150));
+        gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 160));
         gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
 
         setTimeout(function() {
@@ -292,14 +292,16 @@ class SceneManager {
 
         gameState.inGame = false;
         setTimeout(function() {
-            gameEngine.addEntity(new Button(687, 900, "./UI_Assets/StartButton1.png", 546, 100, "./UI_Assets/StartButton2.png", () => { 
+            gameEngine.addEntity(new Button(722, 900, "./UI_Assets/NewAdventure1.png", 476, 100, "./UI_Assets/NewAdventure2.png", () => { 
                 scene = "Shop";
                 gameState.inGame = true;
         }));
           }, 1500);
 
         if (this.wins >= WINS_THRESHOLD) {
-            gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 150));
+            gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+
+            gameEngine.addEntity(new Display(625, 200, "./UI_Assets/WinGame.png", 710, 160));
             gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
             gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
             gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
@@ -325,7 +327,7 @@ class SceneManager {
             
         }
         else if (this.lives <= 0) {
-            gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 150));
+            gameEngine.addEntity(new Display(620, 200, "./UI_Assets/LoseGame.png", 720, 160));
             gameEngine.addEntity(new DisplayStill(860, 500, "./UI_Assets/HealthHeart.png", 200, 200));
             setTimeout(function() {
                 gameEngine.entities.pop();
