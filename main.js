@@ -139,6 +139,13 @@ ASSET_MANAGER.queueDownload("./UI_Assets/DrawDisplay.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidBlack.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidWhite.png");
 
+// Win, Lose game
+ASSET_MANAGER.queueDownload("./UI_Assets/WinGame.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/LoseGame.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure2.png");
+
+
 class GameState {
     constructor() {
         this.inGame = false;
