@@ -722,7 +722,8 @@ class SceneManager {
 
                     // Placeholder for animation
                     console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
-                    console.log(theAction[5]);
+                    gameEngine.addEntity(new Projectile(theAction[5].x, theAction[5].y, theAction[2].x, theAction[2].y, theAction[6]))
+                    console.log(theAction[4]);
                     console.log(theAction[2]);
 
 
@@ -920,6 +921,12 @@ class SceneManager {
                 ownerUnit = unit;
             }
         });
+        if (ownerUnit == null) {
+            console.log("no owner found, aborting");
+            return;
+        }
+
+        console.log("Ability tried to find ID " + owner + " and it registered the owner as: " + ownerUnit);
 
         if (team == 0) {
             theParty = this.activeTeam;
@@ -970,6 +977,11 @@ class SceneManager {
             if (ability.whoAffected == "FA") {
                 target = this.enemyTeam[0];
             }
+        }
+
+        if (target == null) {
+            console.log("no target found, aborting");
+            return;
         }
 
         // After finding the target and stats to be affected, the information is sent to this

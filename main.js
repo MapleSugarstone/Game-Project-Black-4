@@ -145,6 +145,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/LoseGame.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure2.png");
 
+// Projectiles
+ASSET_MANAGER.queueDownload("./Projectiles/SnowBall.png");
 
 class GameState {
     constructor() {
