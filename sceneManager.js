@@ -730,9 +730,12 @@ class SceneManager {
                 if (this.actionQueue.length > 0 && this.activeProjectiles === 0) {
                     let theAction = this.actionQueue.pop();
                     console.log("attempting action " + theAction[0] + theAction[1]);
-    
+
                     // Placeholder for animation
                     console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
+                    
+                    // Determine the appropriate projectile type based on the visual effect
+                    const projectileType = ProjectileManager.getProjectileTypeFromVisualEffect(theAction[6]);
                     
                     // Create projectile with callback for when it completes
                     this.activeProjectiles++;
@@ -741,7 +744,7 @@ class SceneManager {
                         theAction[5].y + theAction[5].height/2, 
                         theAction[2].x + theAction[2].width/2, 
                         theAction[2].y + theAction[2].height/2, 
-                        theAction[6],
+                        projectileType,
                         {
                             onHit: () => {
                                 // Effect after animation completes
@@ -756,7 +759,7 @@ class SceneManager {
                             }
                         }
                     );
-                } 
+                }
                 // Then check if there are any events to parse (only if no projectiles are active)
                 else if (this.eventQueue.length > 0 && this.activeProjectiles === 0) {
                     console.log("parsing events" + this.eventQueue);
