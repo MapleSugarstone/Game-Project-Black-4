@@ -186,19 +186,22 @@ ASSET_MANAGER.downloadAll(() => {
     }));
 
     // Add audio button
-    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 100, 100, "./UI_Assets/AudioOff.png", () => {
+    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOff.png", 100, 100, "./UI_Assets/AudioOn.png", () => {
         SOUND_ENGINE.toggleAudio();
-        if (audioButton.sprite === "./UI_Assets/AudioOn.png") {
-            audioButton.sprite = "./UI_Assets/AudioOff.png";
-            audioButton.hoversprite = "./UI_Assets/AudioOff.png";
-        } else {
+        if (audioButton.sprite === "./UI_Assets/AudioOff.png") {
             audioButton.sprite = "./UI_Assets/AudioOn.png";
             audioButton.hoversprite = "./UI_Assets/AudioOn.png";
+        } else {
+            audioButton.sprite = "./UI_Assets/AudioOff.png";
+            audioButton.hoversprite = "./UI_Assets/AudioOff.png";
         }
         audioButton.truesprite = audioButton.sprite;
     });
 
     gameEngine.addEntity(audioButton);
+
+    // Make sure audio starts muted
+    // SOUND_ENGINE.toggleAudio();
 
     // Stats display
     class StatsDisplay {
