@@ -882,8 +882,14 @@ class SceneManager {
             // For combat deaths - start the launch animation
             unit.animator.startDeath();
         } else {
-            // For passive ability deaths - remove unit immediately
-            // Later we'll add smoke puff effect here
+            // For passive ability deaths - create smoke puff effect
+            const deathEffect = new DeathParticleManager(
+                unit.x + unit.width / 2, 
+                unit.y + unit.height / 2
+            );
+            gameEngine.addEntity(deathEffect);
+            
+            // Remove unit immediately
             gameEngine.entities = gameEngine.entities.filter(entity => entity !== unit);
         }
         

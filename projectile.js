@@ -713,3 +713,116 @@ class ProjectileManager {
         return effectToProjectile[visualEffect] || "snowball";
     }
 }
+class DeathParticleManager {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.particles = [];
+        this.layer = 6;  // Above units
+        this.lifespan = 0.8;  // How long the entire effect lasts
+        this.elapsedTime = 0;
+        
+        // Create initial particles
+        this.initializeParticles();
+    }
+    
+    initializeParticles() {
+        // Create smoke particles
+        const particleCount = 20 + Math.floor(Math.random() * 10);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 30 + Math.random() * 50;
+            
+            this.particles.push({
+                x: this.x,
+                y: this.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 30, // Bias upward
+                size: 5 + Math.random() * 15,
+                alpha: 0.8,
+                color: `rgba(200, 200, 200, ${0.5 + Math.random() * 0.5})`,
+                life: 0.3 + Math.random() * 0.5,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 2
+            });
+        }
+    }
+    
+    update() {
+        const clockTick = gameEngine.clockTick;
+        this.elapsedTime += clockTick;
+        
+        // Update all particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            
+            // Update position
+            p.x += p.vx * clockTick;
+            p.y += p.vy * clockTick;
+            
+            // Apply gentle deceleration
+            p.vx *= 0.95;
+            p.vy *= 0.95;
+            
+            // Apply gravity
+            p.vy += 15 * clockTick;
+            
+            // Update rotation
+            p.rotation += p.rotationSpeed * clockTick;
+            
+            // Update life
+            p.life -= clockTick;
+            
+            // Remove dead particles
+            if (p.life <= 0) {
+                this.particles.splice(i, 1);
+            } else {
+                // Fade out as life decreases
+                p.alpha = p.life * 2;
+                
+                // Grow particle size slightly
+                p.size *= 1.03;
+            }
+        }
+        
+        // Remove the manager if effect duration is over or no particles remain
+        if (this.elapsedTime >= this.lifespan || this.particles.length === 0) {
+            this.removeFromWorld = true;
+        }
+    }
+    
+    draw(ctx) {
+        ctx.save();
+        
+        // Draw each particle
+        for (const p of this.particles) {
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = p.color;
+            
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            
+            // Draw an irregular cloud-like shape
+            ctx.beginPath();
+            if (Math.random() > 0.5) {
+                // Circle
+                ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+            } else {
+                // Puffy cloud shape
+                const cloudSize = p.size * 0.7;
+                ctx.arc(-cloudSize/2, -cloudSize/2, cloudSize, 0, Math.PI * 2);
+                ctx.arc(cloudSize/2, -cloudSize/2, cloudSize * 0.8, 0, Math.PI * 2);
+                ctx.arc(0, cloudSize/2, cloudSize * 0.9, 0, Math.PI * 2);
+                ctx.arc(-cloudSize/2, cloudSize/2, cloudSize * 0.7, 0, Math.PI * 2);
+                ctx.arc(cloudSize/2, cloudSize/2, cloudSize * 0.6, 0, Math.PI * 2);
+            }
+            ctx.fill();
+            
+            ctx.rotate(-p.rotation);
+            ctx.translate(-p.x, -p.y);
+        }
+        
+        ctx.restore();
+    }
+}
