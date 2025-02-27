@@ -478,7 +478,7 @@ class ProjectileManager {
             "snowball": {
                 width: 32,
                 height: 32,
-                speed: 300, // Slowed down for visibility
+                speed: 800,
                 trajectoryType: "arc",
                 arcHeight: 120,
                 rotationSpeed: 0,
