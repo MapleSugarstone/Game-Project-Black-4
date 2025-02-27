@@ -1,5 +1,3 @@
-// projectile.js - Complete projectile system for Frost Arena
-
 class Projectile {
     constructor(sourceX, sourceY, targetX, targetY, type, options = {}) {
         // Base properties
@@ -818,6 +816,109 @@ class DeathParticleManager {
                 ctx.arc(cloudSize/2, cloudSize/2, cloudSize * 0.6, 0, Math.PI * 2);
             }
             ctx.fill();
+            
+            ctx.rotate(-p.rotation);
+            ctx.translate(-p.x, -p.y);
+        }
+        
+        ctx.restore();
+    }
+}
+class StarParticleManager {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.particles = [];
+        this.layer = 6;  // Above units
+        this.lifespan = 1.5;  // How long the entire effect lasts
+        this.elapsedTime = 0;
+        this.removeFromWorld = false;
+        
+        // Create initial particles
+        this.initializeParticles();
+    }
+    
+    initializeParticles() {
+        // Create star particles in an explosion pattern
+        const particleCount = 15 + Math.floor(Math.random() * 10);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 100 + Math.random() * 200;
+            
+            this.particles.push({
+                x: this.x,
+                y: this.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 50, // Bias upward
+                size: 15 + Math.random() * 15,
+                alpha: 1.0,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 10,
+                life: 0.5 + Math.random() * 1.0
+            });
+        }
+    }
+    
+    update() {
+        const clockTick = gameEngine.clockTick;
+        this.elapsedTime += clockTick;
+        
+        // Update all particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            
+            // Update position
+            p.x += p.vx * clockTick;
+            p.y += p.vy * clockTick;
+            
+            // Apply gentle deceleration
+            p.vx *= 0.95;
+            p.vy *= 0.95;
+            
+            // Apply gravity
+            p.vy += 200 * clockTick;
+            
+            // Update rotation
+            p.rotation += p.rotationSpeed * clockTick;
+            
+            // Update life
+            p.life -= clockTick;
+            
+            // Remove dead particles
+            if (p.life <= 0) {
+                this.particles.splice(i, 1);
+            } else {
+                // Fade out as life decreases
+                p.alpha = p.life;
+            }
+        }
+        
+        // Remove the manager if effect duration is over or no particles remain
+        if (this.elapsedTime >= this.lifespan || this.particles.length === 0) {
+            this.removeFromWorld = true;
+        }
+    }
+    
+    draw(ctx) {
+        ctx.save();
+        
+        // Draw each particle
+        for (const p of this.particles) {
+            ctx.globalAlpha = p.alpha;
+            
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            
+            // Draw the star image
+            const starImage = ASSET_MANAGER.getAsset("./Projectiles/Star.png");
+            ctx.drawImage(
+                starImage,
+                -p.size / 2,
+                -p.size / 2,
+                p.size,
+                p.size
+            );
             
             ctx.rotate(-p.rotation);
             ctx.translate(-p.x, -p.y);
