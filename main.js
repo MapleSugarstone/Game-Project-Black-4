@@ -147,6 +147,14 @@ ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure2.png");
 
 // Projectiles
 ASSET_MANAGER.queueDownload("./Projectiles/SnowBall.png");
+ASSET_MANAGER.queueDownload("./Projectiles/IceShard.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Dagger.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Fireball.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Poison.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Arrow.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Magic.png");
+ASSET_MANAGER.queueDownload("./Projectiles/HealOrb.png");
+ASSET_MANAGER.queueDownload("./Projectiles/FrostBolt.png");
 
 class GameState {
     constructor() {
