@@ -830,7 +830,7 @@ class StarParticleManager {
         this.y = y;
         this.particles = [];
         this.layer = 6;  // Above units
-        this.lifespan = 1.5;  // How long the entire effect lasts
+        this.lifespan = 2.5;  // How long the entire effect lasts
         this.elapsedTime = 0;
         this.removeFromWorld = false;
         
@@ -839,26 +839,27 @@ class StarParticleManager {
     }
     
     initializeParticles() {
-        // Create star particles in an explosion pattern
-        const particleCount = 15 + Math.floor(Math.random() * 10);
+        // Create star particles in an explosion pattern - INCREASED COUNT AND SIZE
+        const particleCount = 80 + Math.floor(Math.random() * 20);
         
         for (let i = 0; i < particleCount; i++) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = 100 + Math.random() * 200;
+            const speed = 150 + Math.random() * 250;
             
             this.particles.push({
                 x: this.x,
                 y: this.y,
                 vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed - 50, // Bias upward
-                size: 15 + Math.random() * 15,
+                vy: Math.sin(angle) * speed - 80, // Stronger upward bias
+                size: 30 + Math.random() * 30, // MUCH LARGER STARS
                 alpha: 1.0,
                 rotation: Math.random() * Math.PI * 2,
-                rotationSpeed: (Math.random() - 0.5) * 10,
-                life: 0.5 + Math.random() * 1.0
+                rotationSpeed: (Math.random() - 0.5) * 15,
+                life: 0.8 + Math.random() * 1.5 // Longer life
             });
         }
     }
+    
     
     update() {
         const clockTick = gameEngine.clockTick;

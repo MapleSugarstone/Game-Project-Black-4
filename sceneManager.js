@@ -737,7 +737,7 @@ class SceneManager {
                 if (this.actionQueue.length > 0 && this.activeProjectiles === 0) {
                     let theAction = this.actionQueue.pop();
                     console.log("attempting action " + theAction[0] + theAction[1]);
-
+    
                     // Placeholder for animation
                     console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
                     
@@ -824,6 +824,9 @@ class SceneManager {
                     }
                 }
             }
+            
+            // ADD THIS LINE - Check for units that have flown off screen and need star explosions
+            this.checkAndCleanupDeadUnits();
         } 
         // If one team is empty, battle is over
         else {
