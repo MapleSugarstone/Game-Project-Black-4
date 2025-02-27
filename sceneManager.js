@@ -685,22 +685,29 @@ class SceneManager {
         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
         this.ParseEvents();
     }
-
+    
     generateEnemyTeam() {
         // Decide how many units to create based on the current round
         const teamSize = this.currentRound === 1 ? 3 : 5;
         
-        // Set attack and health values to remain the same for all rounds
-        const attack = 1;
-        const health = 2;
-        
         // Array to hold generated units
         const team = [];
         
+        // Track which types we've already used to avoid duplicates
+        const usedTypes = [...this.monsterTypes]; // Copy all available types
+        
         // Create each unit and assign stats
         for (let i = 0; i < teamSize; i++) {
-            // Randomly pick a monster type
-            const type = this.monsterTypes[Math.floor(Math.random() * this.monsterTypes.length)];
+            // Select a random type from remaining unused types
+            const randomIndex = Math.floor(Math.random() * usedTypes.length);
+            const type = usedTypes[randomIndex];
+            
+            // Remove the selected type from available types
+            usedTypes.splice(randomIndex, 1);
+            
+            // Set attack and health values
+            const attack = 1;
+            const health = 2;
             
             // Construct the unit with given stats
             const unit = new Unit(0, 0, type, {

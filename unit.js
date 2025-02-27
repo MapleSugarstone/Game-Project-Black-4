@@ -34,7 +34,7 @@ class Unit {
         // Ability
         this.getAbility(sprite);
     }
-
+    
     getAbility(sprite) {
         switch (sprite) {
             case "./Units/Unit1.png":
@@ -53,7 +53,19 @@ class Unit {
                 this.ability = new Passive("D", "I", "FE", "HP.-1", true, "Magic", "When this unit dies, it deals 1 damage to the enemy in front.");
                 break;
             case "./Units/Unit6.png":
-                this.ability = new Passive("H", "EE", "T", "AT.-1", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 1.");
+                this.ability = new Passive("H", "E", "T", "AT.-1", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 1.");
+                break;
+            case "./Units/Unit7.png":
+                this.ability = new Passive("SB", "N", "FA", "AT.1", false, "BuffAlly", "Increase the front ally's attack by 1 at the start of battle.");
+                break;
+            case "./Units/Unit8.png":
+                this.ability = new Passive("D", "A", "RE", "HP.-1", false, "Lightning", "When an ally dies, deal 1 damage to a random enemy.");
+                break;
+            case "./Units/Unit9.png":
+                this.ability = new Passive("A", "E", "FA", "HP.1", false, "Healing", "When an enemy attacks, heal the front ally for 1.");
+                break;
+            case "./Units/Unit10.png":
+                this.ability = new Passive("H", "I", "I", "AT.1", false, "Rage", "When this unit is hurt, increase its attack by 1.");
                 break;
             default:
                 this.ability = new Passive("N", "N", "N", "N", false, "N", "This unit has no passive.");
