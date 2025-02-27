@@ -26,6 +26,8 @@ class SceneManager {
         this.fastToggle = 0;
         this.autoToggle = 1;
         this.isNextApproved = true;
+        this.activeProjectiles = 0;
+
         
 
         // Shop state
@@ -725,31 +727,43 @@ class SceneManager {
             // Check if enough time has passed since last battle action
             if (this.battleTimer < (gameEngine.timestamp/10000) * this.battleAnimationSpeed) {
                 // First check if there are any queued actions to process
-                if (this.actionQueue.length > 0) {
+                if (this.actionQueue.length > 0 && this.activeProjectiles === 0) {
                     let theAction = this.actionQueue.pop();
                     console.log("attempting action " + theAction[0] + theAction[1]);
-
+    
                     // Placeholder for animation
                     console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
-                    gameEngine.addEntity(new Projectile(theAction[5].x, theAction[5].y, theAction[2].x, theAction[2].y, theAction[6]))
-                    console.log(theAction[4]);
-                    console.log(theAction[2]);
-
-
-                    // Effect after animation
-                    this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
-                    // Check for passive ability deaths after applying the action
-                    if (theAction[2].health <= 0) {
-                        this.killUnit(theAction[2], true);
-                    }
+                    
+                    // Create projectile with callback for when it completes
+                    this.activeProjectiles++;
+                    const projectile = ProjectileManager.createProjectileAtPosition(
+                        theAction[5].x + theAction[5].width/2, 
+                        theAction[5].y + theAction[5].height/2, 
+                        theAction[2].x + theAction[2].width/2, 
+                        theAction[2].y + theAction[2].height/2, 
+                        theAction[6],
+                        {
+                            onHit: () => {
+                                // Effect after animation completes
+                                this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
+                                
+                                // Check for passive ability deaths after applying the action
+                                if (theAction[2].health <= 0) {
+                                    this.killUnit(theAction[2], true);
+                                }
+                                
+                                this.activeProjectiles--;
+                            }
+                        }
+                    );
                 } 
-                // Then check if there are any events to parse
-                else if (this.eventQueue.length > 0) {
+                // Then check if there are any events to parse (only if no projectiles are active)
+                else if (this.eventQueue.length > 0 && this.activeProjectiles === 0) {
                     console.log("parsing events" + this.eventQueue);
                     this.ParseEvents();
                 } 
-                // If no queued actions/events, proceed with combat
-                else if (this.isNextApproved){   
+                // If no queued actions/events and no active projectiles, proceed with combat
+                else if (this.isNextApproved && this.activeProjectiles === 0) {   
                     console.log("attempting attack");
                     const playerUnit = playerTeam[0];
                     const enemyUnit = enemyTeam[0];
@@ -833,8 +847,6 @@ class SceneManager {
                 } else if (scene === "Draw round") {
                     this.roundDraw();
                 }
-                // scene = "Shop";
-                // console.log(scene);
             }
         }
     }
