@@ -5,6 +5,7 @@ const BUY_COST = 3;
 const UPGRADE_COST = 5;
 const ROLL_COST = 1;
 const SELL_PRICE = 1;
+const BUTTON_TOGGLE = ["", "Pressed"];
 class SceneManager {
     constructor() {
 
@@ -22,9 +23,9 @@ class SceneManager {
         this.abilityQueue = [];
         this.sortingList = [];
         this.battleAnimationSpeed = 1;
-        this.fastToggle = false;
-        this.autoToggle = false;
-        this.isNextApproved = false;
+        this.fastToggle = 0;
+        this.autoToggle = 1;
+        this.isNextApproved = true;
         
 
         // Shop state
@@ -657,35 +658,26 @@ class SceneManager {
             gameEngine.addEntity(unit);
         });
     
-        gameEngine.addEntity(this.autoButton = new Button(760, 100, "./UI_Assets/AutoButton1.png", 100, 100, "./UI_Assets/AutoButton2.png", () => {
-            this.autoToggle = !this.autoToggle;
+        gameEngine.addEntity(this.autoButton = new Button(760, 100, `./UI_Assets/AutoButton${BUTTON_TOGGLE[this.autoToggle]}1.png`,
+                                                            100, 100, `./UI_Assets/AutoButton${BUTTON_TOGGLE[this.autoToggle]}2.png`, () => {
+            this.autoToggle = (this.autoToggle+1)%2;
             this.isNextApproved = true;
-            if(this.autoToggle) {
-                this.autoButton.sprite = "./UI_Assets/AutoButtonPressed1.png";
-                this.autoButton.hoversprite = "./UI_Assets/AutoButtonPressed2.png";
-            } else {
-                this.autoButton.sprite = "./UI_Assets/AutoButton1.png";
-                this.autoButton.hoversprite = "./UI_Assets/AutoButton2.png";
-            }
+            this.autoButton.sprite = `./UI_Assets/AutoButton${BUTTON_TOGGLE[this.autoToggle]}1.png`;
+            this.autoButton.hoversprite = `./UI_Assets/AutoButton${BUTTON_TOGGLE[this.autoToggle]}2.png`;
             this.autoButton.truesprite = this.autoButton.sprite;
         }));
         gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
                 this.isNextApproved = true;
-                //if(this.autoToggle) this.isNextApproved = false; ///put this line on where you want the battle paused
         }));
-        gameEngine.addEntity(this.fastButton = new Button(910, 100, "./UI_Assets/FastButton1.png", 100, 100, "./UI_Assets/FastButton2.png", () => {
+        gameEngine.addEntity(this.fastButton = new Button(910, 100, `./UI_Assets/FastButton${BUTTON_TOGGLE[this.fastToggle]}1.png`, 
+                                                            100, 100, `./UI_Assets/FastButton${BUTTON_TOGGLE[this.fastToggle]}2.png`, () => {
             this.battleAnimationSpeed = (this.battleAnimationSpeed % 2) + 1;
             this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
             this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
 
-            this.fastToggle = !this.fastToggle;
-            if(this.fastToggle) {
-                this.fastButton.sprite = "./UI_Assets/FastButtonPressed1.png";
-                this.fastButton.hoversprite = "./UI_Assets/FastButtonPressed2.png";
-            } else {
-                this.fastButton.sprite = "./UI_Assets/FastButton1.png";
-                this.fastButton.hoversprite = "./UI_Assets/FastButton2.png";
-            }
+            this.fastToggle = (this.fastToggle+1) % 2;
+            this.fastButton.sprite = `./UI_Assets/FastButton${BUTTON_TOGGLE[this.fastToggle]}1.png`;
+            this.fastButton.hoversprite = `./UI_Assets/FastButton${BUTTON_TOGGLE[this.fastToggle]}2.png`;
             this.fastButton.truesprite = this.fastButton.sprite;
         }));
         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
@@ -763,7 +755,7 @@ class SceneManager {
                     
                     // Check if attack sequence is complete
                     if (attackTime >= 1.0) {
-                        if(!this.autoToggle) this.isNextApproved = false;
+                        if(this.autoToggle == 0) this.isNextApproved = false;
                         // Reset attack states
                         playerUnit.animator.isAttacking = false;
                         enemyUnit.animator.isAttacking = false;
@@ -798,6 +790,7 @@ class SceneManager {
             this.battleAnimationSpeed = 1;
             this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = 1);
             this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = 1);
+            this.fastToggle = 0;
             // Handle victory conditions
             if (playerTeam.length > 0) {
                 this.wins++;
@@ -816,9 +809,6 @@ class SceneManager {
             } else {
                 this.currentRound++;
                 this.gold = STARTING_GOLD;
-                this.fastToggle = false;
-                this.autoToggle = false;
-                this.isNextApproved = false;
                 if (scene === "Win round") {
                     this.roundWin();
                 } else if (scene === "Lose round") {
