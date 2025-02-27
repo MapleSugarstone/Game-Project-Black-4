@@ -155,6 +155,8 @@ ASSET_MANAGER.queueDownload("./Projectiles/Arrow.png");
 ASSET_MANAGER.queueDownload("./Projectiles/Magic.png");
 ASSET_MANAGER.queueDownload("./Projectiles/HealOrb.png");
 ASSET_MANAGER.queueDownload("./Projectiles/FrostBolt.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Star.png");
+
 
 class GameState {
     constructor() {
