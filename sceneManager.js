@@ -685,20 +685,37 @@ class SceneManager {
     }
 
     generateEnemyTeam() {
-        const teamSize = Math.min(Math.max(3, Math.floor(this.currentRound/2) + 1), 5);
+        // Decide how many units to create based on the current round
+        const teamSize = this.currentRound === 1 ? 3 : 5;
+        
+        // Set attack and health values to remain the same for all rounds
+        const attack = 1;
+        const health = 2;
+        
+        // Array to hold generated units
         const team = [];
         
+        // Create each unit and assign stats
         for (let i = 0; i < teamSize; i++) {
+            // Randomly pick a monster type
             const type = this.monsterTypes[Math.floor(Math.random() * this.monsterTypes.length)];
-            const stats = {
-                attack: Math.floor(Math.random() * 2), //+ this.currentRound,
-                health: Math.floor(Math.random() * 2) //+ this.currentRound + 1
-            };
-            const unit = new Unit(0, 0, type, stats);
-            unit.facingLeft = true;  // Make enemy units face left
+            
+            // Construct the unit with given stats
+            const unit = new Unit(0, 0, type, {
+                attack: attack,
+                health: health
+            });
+            
+            // Make the unit face left
+            unit.facingLeft = true;
+            // Set maximum health
+            unit.maxHealth = health;
+            
+            // Add the unit to the team
             team.push(unit);
         }
         
+        // Return the final team
         return team;
     }
     
