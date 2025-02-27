@@ -385,7 +385,7 @@ class Projectile {
             "dagger": "./Projectiles/Dagger.png",
             "healOrb": "./Projectiles/HealOrb.png",
             "frostBolt": "./Projectiles/FrostBolt.png",
-            "fireball": "./Projectiles/Fireball.png",
+            "fireball": "./Projectiles/FireBall.png",
             "arrow": "./Projectiles/Arrow.png",
             "poison": "./Projectiles/Poison.png",
             "magic": "./Projectiles/Magic.png"
@@ -486,7 +486,87 @@ class ProjectileManager {
                 impactEffect: "splash",
                 trailFrequency: 0.02
             },
-            // Other projectile types remain the same...
+            "iceShard": {
+                width: 28,
+                height: 28,
+                speed: 450,
+                trajectoryType: "linear",
+                rotationSpeed: 5,
+                trailEffect: "ice",
+                impactEffect: "splash",
+                trailFrequency: 0.03
+            },
+            "dagger": {
+                width: 24,
+                height: 24,
+                speed: 600,
+                trajectoryType: "linear",
+                rotationSpeed: 8,
+                trailEffect: null,
+                impactEffect: null
+            },
+            "healOrb": {
+                width: 32,
+                height: 32,
+                speed: 250,
+                trajectoryType: "arc",
+                arcHeight: 150,
+                rotationSpeed: 3,
+                trailEffect: "sparkle",
+                impactEffect: "heal",
+                trailFrequency: 0.04,
+                scale: 1.2
+            },
+            "frostBolt": {
+                width: 36,
+                height: 36,
+                speed: 350,
+                trajectoryType: "linear",
+                rotationSpeed: 0,
+                trailEffect: "ice",
+                impactEffect: "splash",
+                trailFrequency: 0.02
+            },
+            "fireball": {
+                width: 40,
+                height: 40,
+                speed: 400,
+                trajectoryType: "linear",
+                rotationSpeed: 0,
+                trailEffect: "fire",
+                impactEffect: "explosion",
+                trailFrequency: 0.01
+            },
+            "arrow": {
+                width: 30,
+                height: 30,
+                speed: 700,
+                trajectoryType: "linear",
+                rotationSpeed: 0,
+                trailEffect: null,
+                impactEffect: null
+            },
+            "poison": {
+                width: 28,
+                height: 28,
+                speed: 300,
+                trajectoryType: "bounce",
+                rotationSpeed: 2,
+                trailEffect: "smoke",
+                impactEffect: "splash",
+                scale: 0.9,
+                trailFrequency: 0.05
+            },
+            "magic": {
+                width: 36,
+                height: 36,
+                speed: 350,
+                trajectoryType: "spiral",
+                rotationSpeed: 4,
+                trailEffect: "sparkle",
+                impactEffect: "explosion",
+                trailFrequency: 0.02
+            }
         };
         
         // Merge default options with provided options
@@ -517,7 +597,87 @@ class ProjectileManager {
                 impactEffect: "splash",
                 trailFrequency: 0.02
             },
-            // Other projectile types remain the same...
+            "iceShard": {
+                width: 28,
+                height: 28,
+                speed: 450,
+                trajectoryType: "linear",
+                rotationSpeed: 5,
+                trailEffect: "ice",
+                impactEffect: "splash",
+                trailFrequency: 0.03
+            },
+            "dagger": {
+                width: 24,
+                height: 24,
+                speed: 600,
+                trajectoryType: "linear",
+                rotationSpeed: 8,
+                trailEffect: null,
+                impactEffect: null
+            },
+            "healOrb": {
+                width: 32,
+                height: 32,
+                speed: 250,
+                trajectoryType: "arc",
+                arcHeight: 150,
+                rotationSpeed: 3,
+                trailEffect: "sparkle",
+                impactEffect: "heal",
+                trailFrequency: 0.04,
+                scale: 1.2
+            },
+            "frostBolt": {
+                width: 36,
+                height: 36,
+                speed: 350,
+                trajectoryType: "linear",
+                rotationSpeed: 0,
+                trailEffect: "ice",
+                impactEffect: "splash",
+                trailFrequency: 0.02
+            },
+            "fireball": {
+                width: 40,
+                height: 40,
+                speed: 400,
+                trajectoryType: "linear",
+                rotationSpeed: 0,
+                trailEffect: "fire",
+                impactEffect: "explosion",
+                trailFrequency: 0.01
+            },
+            "arrow": {
+                width: 30,
+                height: 30,
+                speed: 700,
+                trajectoryType: "linear",
+                rotationSpeed: 0,
+                trailEffect: null,
+                impactEffect: null
+            },
+            "poison": {
+                width: 28,
+                height: 28,
+                speed: 300,
+                trajectoryType: "bounce",
+                rotationSpeed: 2,
+                trailEffect: "smoke",
+                impactEffect: "splash",
+                scale: 0.9,
+                trailFrequency: 0.05
+            },
+            "magic": {
+                width: 36,
+                height: 36,
+                speed: 350,
+                trajectoryType: "spiral",
+                rotationSpeed: 4,
+                trailEffect: "sparkle",
+                impactEffect: "explosion",
+                trailFrequency: 0.02
+            }
         };
         
         // Merge default options with provided options
@@ -534,4 +694,22 @@ class ProjectileManager {
         return projectile;
     }
     
+    static getProjectileTypeFromVisualEffect(visualEffect) {
+        // Map visual effects to specific projectile types
+        const effectToProjectile = {
+            "Projectile": "snowball",     // Default projectile
+            "BuffAlly": "healOrb",
+            "Damage": "fireball",
+            "Poison": "poison",
+            "Ice": "iceShard",
+            "Frost": "frostBolt",
+            "Fire": "fireball",
+            "Magic": "magic",
+            "Physical": "dagger",
+            "Arrow": "arrow",
+            "N": "snowball"   // Fallback for no effect specified
+        };
+        
+        return effectToProjectile[visualEffect] || "snowball";
+    }
 }
