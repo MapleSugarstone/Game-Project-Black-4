@@ -1,5 +1,3 @@
-// projectile.js - Complete projectile system for Frost Arena
-
 class Projectile {
     constructor(sourceX, sourceY, targetX, targetY, type, options = {}) {
         // Base properties
