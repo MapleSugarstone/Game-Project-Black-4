@@ -906,15 +906,21 @@ class SceneManager {
     }
     
     checkAndCleanupDeadUnits() {
-        // Remove dead units once they go off screen
-        gameEngine.entities = gameEngine.entities.filter(entity => {
+        // Check each entity for dying units that have gone off screen
+        gameEngine.entities.forEach(entity => {
             if (entity instanceof Unit && entity.animator.isDying) {
-                // Keep unit until it goes sufficiently off screen
-                return entity.x > -200 && entity.x < gameEngine.ctx.canvas.width + 200 
-                    && entity.y > -200 && entity.y < gameEngine.ctx.canvas.height + 200;
+                // Check if unit has gone far enough off screen
+                if (entity.x < -100 || entity.x > gameEngine.ctx.canvas.width + 100 || 
+                    entity.y > gameEngine.ctx.canvas.height + 100) {
+                    
+                    // Trigger star explosion effect
+                    entity.animator.triggerStarExplosion();
+                }
             }
-            return true;
         });
+        
+        // Remove entities marked for removal
+        gameEngine.entities = gameEngine.entities.filter(entity => !entity.removeFromWorld);
     }
 
     clearEntities() {
