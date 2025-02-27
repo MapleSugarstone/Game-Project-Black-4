@@ -589,7 +589,7 @@ class ProjectileManager {
             "snowball": {
                 width: 32,
                 height: 32,
-                speed: 300,
+                speed: 800,
                 trajectoryType: "arc",
                 arcHeight: 120,
                 rotationSpeed: 0,
@@ -611,7 +611,7 @@ class ProjectileManager {
                 width: 24,
                 height: 24,
                 speed: 600,
-                trajectoryType: "linear",
+                trajectoryType: "spiral",
                 rotationSpeed: 8,
                 trailEffect: null,
                 impactEffect: null
