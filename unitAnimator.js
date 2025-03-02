@@ -167,9 +167,18 @@ class UnitAnimator {
         this.deathY = this.unit.y;
         this.deathRotation = 0;
         
-        // Set launch velocities
+        // Set launch velocities - more dramatic for better effect
         this.deathVelocityY = -30;  // Initial upward velocity
-        this.deathVelocityX = this.unit.facingLeft ? 20 : -20;  // Direction based on team
+        
+        // Direction based on team with more force
+        this.deathVelocityX = this.unit.facingLeft ? 30 : -30;
+        
+        // Add slight random variation to make deaths look unique
+        this.deathVelocityX += (Math.random() - 0.5) * 10;
+        this.deathVelocityY += (Math.random() - 0.5) * 10;
+        
+        // Higher gravity for faster arc
+        this.gravity = 1.5;
     }
 
     moveTo(x, y) {
@@ -194,5 +203,16 @@ class UnitAnimator {
             rotation: this.rotation,
             scale: this.scale
         };
+    }
+    triggerStarExplosion() {
+        // Create star explosion at the unit's current position
+        const starEffect = new StarParticleManager(
+            this.unit.x + this.unit.width / 2, 
+            this.unit.y + this.unit.height / 2
+        );
+        gameEngine.addEntity(starEffect);
+        
+        // Mark the unit for removal
+        this.unit.removeFromWorld = true;
     }
 }

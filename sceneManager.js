@@ -5,6 +5,7 @@ const BUY_COST = 3;
 const UPGRADE_COST = 5;
 const ROLL_COST = 1;
 const SELL_PRICE = 1;
+const BUTTON_TOGGLE = ["", "Pressed"];
 class SceneManager {
     constructor() {
 
@@ -22,9 +23,11 @@ class SceneManager {
         this.abilityQueue = [];
         this.sortingList = [];
         this.battleAnimationSpeed = 1;
-        this.fastToggle = false;
-        this.autoToggle = false;
-        this.isNextApproved = false;
+        this.fastToggle = 0;
+        this.autoToggle = 1;
+        this.isNextApproved = true;
+        this.activeProjectiles = 0;
+
         
 
         // Shop state
@@ -657,56 +660,71 @@ class SceneManager {
             gameEngine.addEntity(unit);
         });
     
-        gameEngine.addEntity(this.autoButton = new Button(760, 100, "./UI_Assets/AutoButton1.png", 100, 100, "./UI_Assets/AutoButton2.png", () => {
-            this.autoToggle = !this.autoToggle;
+        gameEngine.addEntity(this.autoButton = new Button(760, 100, `./UI_Assets/AutoButton${BUTTON_TOGGLE[this.autoToggle]}1.png`,
+                                                            100, 100, `./UI_Assets/AutoButton${BUTTON_TOGGLE[this.autoToggle]}2.png`, () => {
+            this.autoToggle = (this.autoToggle+1)%2;
             this.isNextApproved = true;
-            if(this.autoToggle) {
-                this.autoButton.sprite = "./UI_Assets/AutoButtonPressed1.png";
-                this.autoButton.hoversprite = "./UI_Assets/AutoButtonPressed2.png";
-            } else {
-                this.autoButton.sprite = "./UI_Assets/AutoButton1.png";
-                this.autoButton.hoversprite = "./UI_Assets/AutoButton2.png";
-            }
+            this.autoButton.sprite = `./UI_Assets/AutoButton${BUTTON_TOGGLE[this.autoToggle]}1.png`;
+            this.autoButton.hoversprite = `./UI_Assets/AutoButton${BUTTON_TOGGLE[this.autoToggle]}2.png`;
             this.autoButton.truesprite = this.autoButton.sprite;
         }));
         gameEngine.addEntity(new Button(1060, 100, "./UI_Assets/NextButton1.png", 100, 100, "./UI_Assets/NextButton2.png", () => {
                 this.isNextApproved = true;
-                //if(this.autoToggle) this.isNextApproved = false; ///put this line on where you want the battle paused
         }));
-        gameEngine.addEntity(this.fastButton = new Button(910, 100, "./UI_Assets/FastButton1.png", 100, 100, "./UI_Assets/FastButton2.png", () => {
+        gameEngine.addEntity(this.fastButton = new Button(910, 100, `./UI_Assets/FastButton${BUTTON_TOGGLE[this.fastToggle]}1.png`, 
+                                                            100, 100, `./UI_Assets/FastButton${BUTTON_TOGGLE[this.fastToggle]}2.png`, () => {
             this.battleAnimationSpeed = (this.battleAnimationSpeed % 2) + 1;
             this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
             this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = (unit.animator.battleAnimationSpeed % 2) + 1);
 
-            this.fastToggle = !this.fastToggle;
-            if(this.fastToggle) {
-                this.fastButton.sprite = "./UI_Assets/FastButtonPressed1.png";
-                this.fastButton.hoversprite = "./UI_Assets/FastButtonPressed2.png";
-            } else {
-                this.fastButton.sprite = "./UI_Assets/FastButton1.png";
-                this.fastButton.hoversprite = "./UI_Assets/FastButton2.png";
-            }
+            this.fastToggle = (this.fastToggle+1) % 2;
+            this.fastButton.sprite = `./UI_Assets/FastButton${BUTTON_TOGGLE[this.fastToggle]}1.png`;
+            this.fastButton.hoversprite = `./UI_Assets/FastButton${BUTTON_TOGGLE[this.fastToggle]}2.png`;
             this.fastButton.truesprite = this.fastButton.sprite;
         }));
         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
         this.ParseEvents();
     }
-
+    
     generateEnemyTeam() {
-        const teamSize = Math.min(Math.max(3, Math.floor(this.currentRound/2) + 1), 5);
+        // Decide how many units to create based on the current round
+        const teamSize = this.currentRound === 1 ? 3 : 5;
+        
+        // Array to hold generated units
         const team = [];
         
+        // Track which types we've already used to avoid duplicates
+        const usedTypes = [...this.monsterTypes]; // Copy all available types
+        
+        // Create each unit and assign stats
         for (let i = 0; i < teamSize; i++) {
-            const type = this.monsterTypes[Math.floor(Math.random() * this.monsterTypes.length)];
-            const stats = {
-                attack: Math.floor(Math.random() * 2), //+ this.currentRound,
-                health: Math.floor(Math.random() * 2) //+ this.currentRound + 1
-            };
-            const unit = new Unit(0, 0, type, stats);
-            unit.facingLeft = true;  // Make enemy units face left
+            // Select a random type from remaining unused types
+            const randomIndex = Math.floor(Math.random() * usedTypes.length);
+            const type = usedTypes[randomIndex];
+            
+            // Remove the selected type from available types
+            usedTypes.splice(randomIndex, 1);
+            
+            // Set attack and health values
+            const attack = 1;
+            const health = 2;
+            
+            // Construct the unit with given stats
+            const unit = new Unit(0, 0, type, {
+                attack: attack,
+                health: health
+            });
+            
+            // Make the unit face left
+            unit.facingLeft = true;
+            // Set maximum health
+            unit.maxHealth = health;
+            
+            // Add the unit to the team
             team.push(unit);
         }
         
+        // Return the final team
         return team;
     }
     
@@ -716,31 +734,46 @@ class SceneManager {
             // Check if enough time has passed since last battle action
             if (this.battleTimer < (gameEngine.timestamp/10000) * this.battleAnimationSpeed) {
                 // First check if there are any queued actions to process
-                if (this.actionQueue.length > 0) {
+                if (this.actionQueue.length > 0 && this.activeProjectiles === 0) {
                     let theAction = this.actionQueue.pop();
                     console.log("attempting action " + theAction[0] + theAction[1]);
-
+    
                     // Placeholder for animation
                     console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
-                    gameEngine.addEntity(new Projectile(theAction[5].x, theAction[5].y, theAction[2].x, theAction[2].y, theAction[6]))
-                    console.log(theAction[4]);
-                    console.log(theAction[2]);
-
-
-                    // Effect after animation
-                    this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
-                    // Check for passive ability deaths after applying the action
-                    if (theAction[2].health <= 0) {
-                        this.killUnit(theAction[2], true);
-                    }
-                } 
-                // Then check if there are any events to parse
-                else if (this.eventQueue.length > 0) {
+                    
+                    // Determine the appropriate projectile type based on the visual effect
+                    const projectileType = ProjectileManager.getProjectileTypeFromVisualEffect(theAction[6]);
+                    
+                    // Create projectile with callback for when it completes
+                    this.activeProjectiles++;
+                    const projectile = ProjectileManager.createProjectileAtPosition(
+                        theAction[5].x + theAction[5].width/2, 
+                        theAction[5].y + theAction[5].height/2, 
+                        theAction[2].x + theAction[2].width/2, 
+                        theAction[2].y + theAction[2].height/2, 
+                        projectileType,
+                        {
+                            onHit: () => {
+                                // Effect after animation completes
+                                this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
+                                
+                                // Check for passive ability deaths after applying the action
+                                if (theAction[2].health <= 0) {
+                                    this.killUnit(theAction[2], true);
+                                }
+                                
+                                this.activeProjectiles--;
+                            }
+                        }
+                    );
+                }
+                // Then check if there are any events to parse (only if no projectiles are active)
+                else if (this.eventQueue.length > 0 && this.activeProjectiles === 0) {
                     console.log("parsing events" + this.eventQueue);
                     this.ParseEvents();
                 } 
-                // If no queued actions/events, proceed with combat
-                else if (this.isNextApproved){   
+                // If no queued actions/events and no active projectiles, proceed with combat
+                else if (this.isNextApproved && this.activeProjectiles === 0) {   
                     console.log("attempting attack");
                     const playerUnit = playerTeam[0];
                     const enemyUnit = enemyTeam[0];
@@ -763,7 +796,7 @@ class SceneManager {
                     
                     // Check if attack sequence is complete
                     if (attackTime >= 1.0) {
-                        if(!this.autoToggle) this.isNextApproved = false;
+                        if(this.autoToggle == 0) this.isNextApproved = false;
                         // Reset attack states
                         playerUnit.animator.isAttacking = false;
                         enemyUnit.animator.isAttacking = false;
@@ -791,6 +824,9 @@ class SceneManager {
                     }
                 }
             }
+            
+            // ADD THIS LINE - Check for units that have flown off screen and need star explosions
+            this.checkAndCleanupDeadUnits();
         } 
         // If one team is empty, battle is over
         else {
@@ -798,6 +834,7 @@ class SceneManager {
             this.battleAnimationSpeed = 1;
             this.activeTeam.forEach((unit) => unit.animator.battleAnimationSpeed = 1);
             this.enemyTeam.forEach((unit) => unit.animator.battleAnimationSpeed = 1);
+            this.fastToggle = 0;
             // Handle victory conditions
             if (playerTeam.length > 0) {
                 this.wins++;
@@ -816,9 +853,6 @@ class SceneManager {
             } else {
                 this.currentRound++;
                 this.gold = STARTING_GOLD;
-                this.fastToggle = false;
-                this.autoToggle = false;
-                this.isNextApproved = false;
                 if (scene === "Win round") {
                     this.roundWin();
                 } else if (scene === "Lose round") {
@@ -826,8 +860,6 @@ class SceneManager {
                 } else if (scene === "Draw round") {
                     this.roundDraw();
                 }
-                // scene = "Shop";
-                // console.log(scene);
             }
         }
     }
@@ -853,8 +885,14 @@ class SceneManager {
             // For combat deaths - start the launch animation
             unit.animator.startDeath();
         } else {
-            // For passive ability deaths - remove unit immediately
-            // Later we'll add smoke puff effect here
+            // For passive ability deaths - create smoke puff effect
+            const deathEffect = new DeathParticleManager(
+                unit.x + unit.width / 2, 
+                unit.y + unit.height / 2
+            );
+            gameEngine.addEntity(deathEffect);
+            
+            // Remove unit immediately
             gameEngine.entities = gameEngine.entities.filter(entity => entity !== unit);
         }
         
@@ -871,15 +909,21 @@ class SceneManager {
     }
     
     checkAndCleanupDeadUnits() {
-        // Remove dead units once they go off screen
-        gameEngine.entities = gameEngine.entities.filter(entity => {
+        // Check each entity for dying units that have gone off screen
+        gameEngine.entities.forEach(entity => {
             if (entity instanceof Unit && entity.animator.isDying) {
-                // Keep unit until it goes sufficiently off screen
-                return entity.x > -200 && entity.x < gameEngine.ctx.canvas.width + 200 
-                    && entity.y > -200 && entity.y < gameEngine.ctx.canvas.height + 200;
+                // Check if unit has gone far enough off screen
+                if (entity.x < -100 || entity.x > gameEngine.ctx.canvas.width + 100 || 
+                    entity.y > gameEngine.ctx.canvas.height + 100) {
+                    
+                    // Trigger star explosion effect
+                    entity.animator.triggerStarExplosion();
+                }
             }
-            return true;
         });
+        
+        // Remove entities marked for removal
+        gameEngine.entities = gameEngine.entities.filter(entity => !entity.removeFromWorld);
     }
 
     clearEntities() {

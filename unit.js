@@ -34,37 +34,41 @@ class Unit {
         // Ability
         this.getAbility(sprite);
     }
-
+    
     getAbility(sprite) {
-        // Triggers: H - Hurt, SB - Start of Battle, A - Attack
-        // Who triggers?: I - Myself, N - None, AA - Ally Ahead, RA - Random Ally, RE - Random Enemy, FE - Front Enemy, FA - Front Ally
-        // EE - Every Enemy
-        // Who is Affected?: ^ Same notation
-        //
-        //
-
         switch (sprite) {
             case "./Units/Unit1.png":
                 this.ability = new Passive("H", "I", "RA", "HP.1", false, "BuffAlly", "Heal a random ally's HP by 1 when hurt.");
                 break;
             case "./Units/Unit2.png":
-                this.ability = new Passive("SB", "N", "RE", "HP.-2", false, "Projectile", "Deal 2 damage to random enemy at the start of the battle.");
+                this.ability = new Passive("SB", "N", "RE", "HP.-2", false, "Ice", "Deal 2 damage to random enemy at the start of the battle.");
                 break;
             case "./Units/Unit3.png":
-                this.ability = new Passive("A", "I", "RE", "AT.-1", false, "Projectile", "Deal 1 damage to a random enemy after attacking.");
+                this.ability = new Passive("A", "I", "RE", "AT.-1", false, "Fire", "Deal 1 damage to a random enemy after attacking.");
                 break;
             case "./Units/Unit4.png":
                 this.ability = new Passive("A", "AA", "I", "AT.1", false, "BuffAlly", "When the ally ahead attacks, increase attack by 1.");
                 break;
             case "./Units/Unit5.png":
-                this.ability = new Passive("D", "I", "FE", "HP.-1", true, "Projectile", "When this unit dies, it deals 1 damage to the enemy in front.");
+                this.ability = new Passive("D", "I", "FE", "HP.-1", true, "Magic", "When this unit dies, it deals 1 damage to the enemy in front.");
                 break;
             case "./Units/Unit6.png":
-                this.ability = new Passive("H", "EE", "T", "AT.-1", false, "Projectile", "Whenever an enemy is hurt, reduce their attack by 1.");
+                this.ability = new Passive("H", "E", "T", "AT.-1", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 1.");
+                break;
+            case "./Units/Unit7.png":
+                this.ability = new Passive("SB", "N", "FA", "AT.1", false, "BuffAlly", "Increase the front ally's attack by 1 at the start of battle.");
+                break;
+            case "./Units/Unit8.png":
+                this.ability = new Passive("D", "A", "RE", "HP.-1", false, "Lightning", "When an ally dies, deal 1 damage to a random enemy.");
+                break;
+            case "./Units/Unit9.png":
+                this.ability = new Passive("A", "E", "FA", "HP.1", false, "Healing", "When an enemy attacks, heal the front ally for 1.");
+                break;
+            case "./Units/Unit10.png":
+                this.ability = new Passive("H", "I", "I", "AT.1", false, "Rage", "When this unit is hurt, increase its attack by 1.");
                 break;
             default:
                 this.ability = new Passive("N", "N", "N", "N", false, "N", "This unit has no passive.");
-                
         }
     }
 
