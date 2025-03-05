@@ -2,9 +2,9 @@ class SoundEngine {
     constructor() {
         // Core audio state properties
         this.currentMusic = null;        // Currently playing background music
-        this.audioEnabled = true;        // Global audio mute/unmute state
+        this.audioEnabled = false;       // Global audio mute/unmute state
         this.musicVolume = 0.3;          // Background music volume (0-1)
-        this.sfxVolume = 0.5;           // Sound effects volume (0-1)
+        this.sfxVolume = 0.5;            // Sound effects volume (0-1)
         this.currentScene = null;        // Tracks current game scene for music changes
         
         // Maps scenes to their background music files
@@ -19,7 +19,7 @@ class SoundEngine {
             // "Draw round": "./Sounds/drawMusic.mp3",
             // "End Game": "./Sounds/endMusic.mp3"
         };
-
+    
         // Maps sound effect names to their audio files
         // Add new sound effects here
         this.soundEffects = {
@@ -36,7 +36,6 @@ class SoundEngine {
             // "click": "./Sounds/click.mp3"
         };
     }
-
     // Initialize sound engine by queuing all audio files for loading
     init() {
         // Queue background music tracks

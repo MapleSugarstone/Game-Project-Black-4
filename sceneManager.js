@@ -18,6 +18,7 @@ class SceneManager {
         this.currentRound = 1;
         this.activeTeam = [null, null, null, null, null];
         this.enemyTeam = [null, null, null, null, null];
+
         this.eventQueue = [];
         this.actionQueue = [];
         this.abilityQueue = [];
@@ -26,6 +27,8 @@ class SceneManager {
         this.fastToggle = 0;
         this.autoToggle = 1;
         this.isNextApproved = true;
+        this.activeProjectiles = 0;
+
         
 
         // Shop state
@@ -474,7 +477,8 @@ class SceneManager {
                         this.shopPositions[i].x,
                         this.shopPositions[i].y,
                         type,
-                        stats
+                        stats,
+                        true
                     );
                 }
             }
@@ -611,6 +615,8 @@ class SceneManager {
         this.eventQueue = ["SB.N"];
         this.abilityQueue = [];
         this.actionQueue = [];
+        this.deadEnemies = [];
+        this.deadAllies = [];
         
         // Add background
         gameEngine.addEntity(new BattleBackground(gameEngine));
@@ -635,14 +641,14 @@ class SceneManager {
             let tempAbility = unit.ability;
             tempAbility.team = 0;
             tempAbility.CID = unit.ID;
-            this.abilityQueue.push(unit.ability);
+            this.abilityQueue.push(tempAbility);
             this.sortingList.push(unit.attack);
         });
         this.enemyTeam.forEach((unit, i) => {
             let tempAbility = unit.ability;
             tempAbility.team = 1;
             tempAbility.CID = unit.ID;
-            this.abilityQueue.push(unit.ability);
+            this.abilityQueue.push(tempAbility);
             this.sortingList.push(unit.attack);
         });
     
@@ -683,22 +689,46 @@ class SceneManager {
         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
         this.ParseEvents();
     }
-
+    
     generateEnemyTeam() {
-        const teamSize = Math.min(Math.max(3, Math.floor(this.currentRound/2) + 1), 5);
+        // Decide how many units to create based on the current round
+        const teamSize = this.currentRound === 1 ? 3 : 5;
+        
+        // Array to hold generated units
         const team = [];
         
+        // Track which types we've already used to avoid duplicates
+        const usedTypes = [...this.monsterTypes]; // Copy all available types
+        
+        // Create each unit and assign stats
         for (let i = 0; i < teamSize; i++) {
-            const type = this.monsterTypes[Math.floor(Math.random() * this.monsterTypes.length)];
-            const stats = {
-                attack: Math.floor(Math.random() * 2), //+ this.currentRound,
-                health: Math.floor(Math.random() * 2) //+ this.currentRound + 1
-            };
-            const unit = new Unit(0, 0, type, stats);
-            unit.facingLeft = true;  // Make enemy units face left
+            // Select a random type from remaining unused types
+            const randomIndex = Math.floor(Math.random() * usedTypes.length);
+            const type = usedTypes[randomIndex];
+            
+            // Remove the selected type from available types
+            usedTypes.splice(randomIndex, 1);
+            
+            // Set attack and health values
+            const attack = 1;
+            const health = 2;
+            
+            // Construct the unit with given stats
+            const unit = new Unit(0, 0, type, {
+                attack: attack,
+                health: health
+            }, true);
+            
+            // Make the unit face left
+            unit.facingLeft = true;
+            // Set maximum health
+            unit.maxHealth = health;
+            
+            // Add the unit to the team
             team.push(unit);
         }
         
+        // Return the final team
         return team;
     }
     
@@ -708,31 +738,46 @@ class SceneManager {
             // Check if enough time has passed since last battle action
             if (this.battleTimer < (gameEngine.timestamp/10000) * this.battleAnimationSpeed) {
                 // First check if there are any queued actions to process
-                if (this.actionQueue.length > 0) {
+                if (this.actionQueue.length > 0 && this.activeProjectiles === 0) {
                     let theAction = this.actionQueue.pop();
                     console.log("attempting action " + theAction[0] + theAction[1]);
-
+    
                     // Placeholder for animation
                     console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
-                    gameEngine.addEntity(new Projectile(theAction[5].x, theAction[5].y, theAction[2].x, theAction[2].y, theAction[6]))
-                    console.log(theAction[4]);
-                    console.log(theAction[2]);
-
-
-                    // Effect after animation
-                    this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
-                    // Check for passive ability deaths after applying the action
-                    if (theAction[2].health <= 0) {
-                        this.killUnit(theAction[2], true);
-                    }
-                } 
-                // Then check if there are any events to parse
-                else if (this.eventQueue.length > 0) {
+                    
+                    // Determine the appropriate projectile type based on the visual effect
+                    const projectileType = ProjectileManager.getProjectileTypeFromVisualEffect(theAction[6]);
+                    
+                    // Create projectile with callback for when it completes
+                    this.activeProjectiles++;
+                    const projectile = ProjectileManager.createProjectileAtPosition(
+                        theAction[5].x + theAction[5].width/2, 
+                        theAction[5].y + theAction[5].height/2, 
+                        theAction[2].x + theAction[2].width/2, 
+                        theAction[2].y + theAction[2].height/2, 
+                        projectileType,
+                        {
+                            onHit: () => {
+                                // Effect after animation completes
+                                this.affectStat(theAction[0], theAction[1], theAction[2], theAction[3], theAction[4]);
+                                
+                                // Check for passive ability deaths after applying the action
+                                if (theAction[2].health <= 0) {
+                                    this.killUnit(theAction[2], true);
+                                }
+                                
+                                this.activeProjectiles--;
+                            }
+                        }
+                    );
+                }
+                // Then check if there are any events to parse (only if no projectiles are active)
+                else if (this.eventQueue.length > 0 && this.activeProjectiles === 0) {
                     console.log("parsing events" + this.eventQueue);
                     this.ParseEvents();
                 } 
-                // If no queued actions/events, proceed with combat
-                else if (this.isNextApproved){   
+                // If no queued actions/events and no active projectiles, proceed with combat
+                else if (this.isNextApproved && this.activeProjectiles === 0) {   
                     console.log("attempting attack");
                     const playerUnit = playerTeam[0];
                     const enemyUnit = enemyTeam[0];
@@ -783,6 +828,9 @@ class SceneManager {
                     }
                 }
             }
+            
+            // ADD THIS LINE - Check for units that have flown off screen and need star explosions
+            this.checkAndCleanupDeadUnits();
         } 
         // If one team is empty, battle is over
         else {
@@ -816,8 +864,6 @@ class SceneManager {
                 } else if (scene === "Draw round") {
                     this.roundDraw();
                 }
-                // scene = "Shop";
-                // console.log(scene);
             }
         }
     }
@@ -829,10 +875,12 @@ class SceneManager {
     
         // Check if unit is from player team or enemy team
         if (this.activeTeam.includes(unit)) {
+            this.deadAllies.push(unit);
             tempTeam = this.activeTeam;
             tempBattlePos = this.battlePositionsPlayer;
         } else {
             tempTeam = this.enemyTeam;
+            this.deadEnemies.push(unit);
             tempBattlePos = this.battlePositionsEnemy;
         }
     
@@ -843,10 +891,19 @@ class SceneManager {
             // For combat deaths - start the launch animation
             unit.animator.startDeath();
         } else {
-            // For passive ability deaths - remove unit immediately
-            // Later we'll add smoke puff effect here
+            // For passive ability deaths - create smoke puff effect
+            const deathEffect = new DeathParticleManager(
+                unit.x + unit.width / 2, 
+                unit.y + unit.height / 2
+            );
+            gameEngine.addEntity(deathEffect);
+            
+            // Remove unit immediately
             gameEngine.entities = gameEngine.entities.filter(entity => entity !== unit);
         }
+
+        // Remove dead unit from queues
+        this.removeFromQueues(unit.ID);
         
         // Remove unit from its team array
         const index = tempTeam.indexOf(unit);
@@ -861,15 +918,21 @@ class SceneManager {
     }
     
     checkAndCleanupDeadUnits() {
-        // Remove dead units once they go off screen
-        gameEngine.entities = gameEngine.entities.filter(entity => {
+        // Check each entity for dying units that have gone off screen
+        gameEngine.entities.forEach(entity => {
             if (entity instanceof Unit && entity.animator.isDying) {
-                // Keep unit until it goes sufficiently off screen
-                return entity.x > -200 && entity.x < gameEngine.ctx.canvas.width + 200 
-                    && entity.y > -200 && entity.y < gameEngine.ctx.canvas.height + 200;
+                // Check if unit has gone far enough off screen
+                if (entity.x < -100 || entity.x > gameEngine.ctx.canvas.width + 100 || 
+                    entity.y > gameEngine.ctx.canvas.height + 100) {
+                    
+                    // Trigger star explosion effect
+                    entity.animator.triggerStarExplosion();
+                }
             }
-            return true;
         });
+        
+        // Remove entities marked for removal
+        gameEngine.entities = gameEngine.entities.filter(entity => !entity.removeFromWorld);
     }
 
     clearEntities() {
@@ -901,6 +964,10 @@ class SceneManager {
 
     applyEffect(ability, eventTriggerer, team, owner) {
         let abilityInfo = ability.effect.split(".");
+        console.log(ability);
+        let targets = ability.whoAffected.split(".");
+        let tempWhoAffected = (targets[0]);
+        targets = (targets[1]);
         let target = null;
         let theParty = null;
         let theBattlePositions = null;
@@ -926,57 +993,73 @@ class SceneManager {
             theBattlePositions = this.battlePositionsEnemy;
         }
 
-        if (ability.whoAffected == "I") {
-            target = ownerUnit;
-        }
+        let i = 0;
+        let cap = 0
+        let usedTargets = new Set();
+        console.log("targets: " + targets);
 
-        if (ability.whoAffected == "T") {
-            [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
-                if (unit.ID == eventTriggerer) {
-                    target = unit;
+        while (i < targets && cap < 9999) {
+
+            if (tempWhoAffected == "I") {
+                target = ownerUnit;
+            }
+
+            if (tempWhoAffected == "T") {
+                [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
+                    if (unit.ID == eventTriggerer) {
+                        target = unit;
+                    }
+                });
+            }
+            
+            
+            if (team == 0) {
+                if (tempWhoAffected == "RE") {
+                    target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
                 }
-            });
-        }
-        
-        
-        if (team == 0) {
-            if (ability.whoAffected == "RE") {
-                target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
+                if (tempWhoAffected == "RA") {
+                    target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
+                }
+                if (tempWhoAffected == "FE") {
+                    target = this.enemyTeam[0];
+                }
+                if (tempWhoAffected == "FA") {
+                    target = this.activeTeam[0];
+                }
             }
-            if (ability.whoAffected == "RA") {
-                target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
-            }
-            if (ability.whoAffected == "FE") {
-                target = this.enemyTeam[0];
-            }
-            if (ability.whoAffected == "FA") {
-                target = this.activeTeam[0];
-            }
-        }
 
-        if (team == 1) {
-            if (ability.whoAffected == "RE") {
-                target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
+            if (team == 1) {
+                if (tempWhoAffected == "RE") {
+                    target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
+                }
+                if (tempWhoAffected == "RA") {
+                    target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
+                }
+                if (tempWhoAffected == "FE") {
+                    target = this.activeTeam[0];
+                }
+                if (tempWhoAffected == "FA") {
+                    target = this.enemyTeam[0];
+                }
             }
-            if (ability.whoAffected == "RA") {
-                target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
+
+            if (target == null) {
+                console.log("no target found, aborting");
+                console.log("no target found, aborting");
+                return;
             }
-            if (ability.whoAffected == "FE") {
-                target = this.activeTeam[0];
-            }
-            if (ability.whoAffected == "FA") {
-                target = this.enemyTeam[0];
+
+            console.log("target found "+ target);
+            if (usedTargets.has(target)) {
+                cap++;
+            } else {
+                // After finding the target and stats to be affected, the information is sent to this
+                // queue to be processed after every ability is checked for an event.
+                usedTargets.add(target);
+                i++;
+                this.actionQueue.unshift([abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions, ownerUnit, ability.visualEffect]);
             }
         }
-
-        if (target == null) {
-            console.log("no target found, aborting");
-            return;
-        }
-
-        // After finding the target and stats to be affected, the information is sent to this
-        // queue to be processed after every ability is checked for an event.
-        this.actionQueue.unshift([abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions, ownerUnit, ability.visualEffect]);
     }
 
     affectStat(stat, amount, unit, team, teampos) {
@@ -984,7 +1067,7 @@ class SceneManager {
         console.log("affecting stats" + stat + " " + amount + " " + unit);
      
         // Handle HP changes
-        if (stat == "HP") {
+        if (stat == "HP" || stat == "B") {
             // Apply HP change
             unit.health += Number(amount);
             
@@ -995,7 +1078,7 @@ class SceneManager {
         }
      
         // Handle Attack changes 
-        if (stat == "AT") {
+        if (stat == "AT" || stat == "B") {
             // Apply attack change, ensuring it doesn't go below 1
             unit.attack = Math.max(1, unit.attack + Number(amount));
         }
@@ -1014,10 +1097,10 @@ class SceneManager {
         // Team is ally
         if (Team == 0) {
             if (whoTriggers == "E") {
-                return this.teamContainsID(TID, this.enemyTeam);
+                return this.teamContainsID(TID, this.enemyTeam.concat(this.deadEnemies));
             }
             if (whoTriggers == "A") {
-                return this.teamContainsID(TID, this.activeTeam);
+                return this.teamContainsID(TID, this.activeTeam.concat(this.deadAllies));
             }
             if (whoTriggers == "AA") {
                 let tempIndex = this.indexOfID(TID, this.activeTeam);
@@ -1029,10 +1112,10 @@ class SceneManager {
       // Team is enemy
         if (Team == 1) {
             if (whoTriggers == "E") {
-                return this.teamContainsID(TID, this.activeTeam);
+                return this.teamContainsID(TID, this.activeTeam.concat(this.deadAllies));
             }
             if (whoTriggers == "A") {
-                return this.teamContainsID(TID, this.enemyTeam);
+                return this.teamContainsID(TID, this.enemyTeam.concat(this.deadEnemies));
             }
             if (whoTriggers == "AA") {
                 let tempIndex = this.indexOfID(TID, this.enemyTeam);
@@ -1043,21 +1126,20 @@ class SceneManager {
     }
 
     teamContainsID(ID, team) {
-        team.forEach((unit) => {
-            if (unit.ID == ID) {
-                return true;
-            } 
-        });
-            return false;
+        return team.some(e => e.ID == ID);
     }
 
     indexOfID(ID, team) {
-        team.forEach((unit, i) => {
-            if (unit.ID == ID) {
-                return i;
-            } 
-        });
-            return -99;
+        let ind = team.findIndex(e => e.ID == ID);
+        if (ind == -1) {
+            ind = -99;
+        }
+        return ind;
+    }
+
+    removeFromQueues(removeID) {
+        this.actionQueue = this.actionQueue.filter(item => item[2].ID !== removeID && item[5].ID !== removeID);
+        this.abilityQueue = this.abilityQueue.filter(item => item.CID !== removeID);
     }
 
 }

@@ -147,6 +147,16 @@ ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure2.png");
 
 // Projectiles
 ASSET_MANAGER.queueDownload("./Projectiles/SnowBall.png");
+ASSET_MANAGER.queueDownload("./Projectiles/IceShard.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Dagger.png");
+ASSET_MANAGER.queueDownload("./Projectiles/FireBall.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Poison.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Arrow.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Magic.png");
+ASSET_MANAGER.queueDownload("./Projectiles/HealOrb.png");
+ASSET_MANAGER.queueDownload("./Projectiles/FrostBolt.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Star.png");
+
 
 class GameState {
     constructor() {
@@ -178,19 +188,22 @@ ASSET_MANAGER.downloadAll(() => {
     }));
 
     // Add audio button
-    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 100, 100, "./UI_Assets/AudioOff.png", () => {
+    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOff.png", 100, 100, "./UI_Assets/AudioOn.png", () => {
         SOUND_ENGINE.toggleAudio();
-        if (audioButton.sprite === "./UI_Assets/AudioOn.png") {
-            audioButton.sprite = "./UI_Assets/AudioOff.png";
-            audioButton.hoversprite = "./UI_Assets/AudioOff.png";
-        } else {
+        if (audioButton.sprite === "./UI_Assets/AudioOff.png") {
             audioButton.sprite = "./UI_Assets/AudioOn.png";
             audioButton.hoversprite = "./UI_Assets/AudioOn.png";
+        } else {
+            audioButton.sprite = "./UI_Assets/AudioOff.png";
+            audioButton.hoversprite = "./UI_Assets/AudioOff.png";
         }
         audioButton.truesprite = audioButton.sprite;
     });
 
     gameEngine.addEntity(audioButton);
+
+    // Make sure audio starts muted
+    // SOUND_ENGINE.toggleAudio();
 
     // Stats display
     class StatsDisplay {
