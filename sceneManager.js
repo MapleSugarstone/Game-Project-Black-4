@@ -97,6 +97,10 @@ class SceneManager {
             this.clearEntities();
             this.setupShop();
             scene = "LoadedShop";
+        } else if (scene === "UpgradeShop") {
+            this.clearEntities();
+            this.upgradeShop();
+            scene = "LoadedUpgradeShop";
         } else if (scene === "Battle") {
             this.clearEntities();
             this.startBattle();
@@ -134,16 +138,35 @@ class SceneManager {
         
     }
 
+    upgradeShop() {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        gameEngine.addEntity(new Display(463, 200, "./UI_Assets/UpgradeShop.png", 994, 238));
+
+        setTimeout(function() {
+            gameEngine.addEntity(new Button(790, 900, "./UI_Assets/UpgradeButton1.png", 360, 100, "./UI_Assets/UpgradeButton2.png", () => {
+                scene = "Shop";
+            }));
+          }, 1500);
+    }
+
     roundWin() {
         this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
 
-        setTimeout(function() {
-            gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-                scene = "Shop";
-            }));
-          }, 1500);
+        if (this.currentRound % 3 === 0) {
+            setTimeout(function() {
+                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                    scene = "UpgradeShop";
+                }));
+              }, 1500);
+        } else {
+            setTimeout(function() {
+                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                    scene = "Shop";
+                }));
+            }, 1500);
+        }
 
         gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
         gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
@@ -238,11 +261,19 @@ class SceneManager {
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
 
-        setTimeout(function() {
-            gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-                scene = "Shop";
-            }));
-          }, 1500);
+        if (this.currentRound % 3 === 0) {
+            setTimeout(function() {
+                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                    scene = "UpgradeShop";
+                }));
+              }, 1500);
+        } else {
+            setTimeout(function() {
+                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                    scene = "Shop";
+                }));
+            }, 1500);
+        }
 
         if (this.lives === 4) {
             gameEngine.addEntity(new DisplayStill(424, 500, "./UI_Assets/HealthHeart.png", 200, 200));
@@ -283,11 +314,19 @@ class SceneManager {
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 160));
         gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
 
-        setTimeout(function() {
-            gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-                scene = "Shop";
-            }));
-          }, 1500);
+        if (this.currentRound % 3 === 0) {
+            setTimeout(function() {
+                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                    scene = "UpgradeShop";
+                }));
+              }, 1500);
+        } else {
+            setTimeout(function() {
+                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                    scene = "Shop";
+                }));
+            }, 1500);
+        }
     }
 
     endGame() {
@@ -415,7 +454,7 @@ class SceneManager {
             }
         }));
 
-        gameEngine.addEntity(new Button(890, 920, "./UI_Assets/UpGradeButton1.png", 400, 100, "./UI_Assets/UpGradeButton2.png", () => {
+        gameEngine.addEntity(new Button(890, 920, "./UI_Assets/UpgradeButton1.png", 360, 100, "./UI_Assets/UpgradeButton2.png", () => {
             console.log(gameEngine.SelectedUnitGlobal);
             console.log(this.teamSlots.includes(null));
             console.log(this.gold);
@@ -534,27 +573,6 @@ class SceneManager {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
                     console.log("Selected team unit");
-
-
-                    // Idea for having up grade button appear ontop of purchase button, but isn't the best method
-                    // gameEngine.addEntity(new Button(410, 900, "./UI_Assets/UpGradeButton1.png", 400, 100, "./UI_Assets/UpGradeButton2.png", () => {
-                    //     // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-                    //     if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
-                    //         this.gold -= UPGRADE_COST;
-                    //         this.selectedUnit.levelUp();
-                    //         gameEngine.SelectedUnitGlobal = null;
-                    //         this.selectedUnit = null;
-                    //         console.log("Up grade team unit");
-
-                    //         // Timer function used to delay removing the up grade button after 1 second
-                    //         setTimeout(function() {
-                    //             console.log("timer started");
-                    //             gameEngine.entities.pop();
-                    //         }, 1000);
-                    //     } 
-                    // }));
-
-
 
                     //this.dragStartSlot.index = null;
                 }
@@ -857,6 +875,9 @@ class SceneManager {
             } else {
                 this.currentRound++;
                 this.gold = STARTING_GOLD;
+
+                console.log("Current Round: " + this.currentRound)
+
                 if (scene === "Win round") {
                     this.roundWin();
                 } else if (scene === "Lose round") {

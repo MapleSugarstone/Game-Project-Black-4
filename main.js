@@ -87,8 +87,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/TurnDisplay1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/SwapButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/SwapButton2.png");
-ASSET_MANAGER.queueDownload("./UI_Assets/UpGradeButton1.png");
-ASSET_MANAGER.queueDownload("./UI_Assets/UpGradeButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/UpgradeButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/UpgradeButton2.png");
 
 // Battle Scene
 ASSET_MANAGER.queueDownload("./Backgrounds/BattleBackgroundSnowing.png");
@@ -144,6 +144,9 @@ ASSET_MANAGER.queueDownload("./UI_Assets/WinGame.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/LoseGame.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NewAdventure2.png");
+
+// Upgrade shop
+ASSET_MANAGER.queueDownload("./UI_Assets/UpgradeShop.png");
 
 // Projectiles
 ASSET_MANAGER.queueDownload("./Projectiles/SnowBall.png");
