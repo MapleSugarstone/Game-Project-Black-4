@@ -18,6 +18,7 @@ class SceneManager {
         this.currentRound = 1;
         this.activeTeam = [null, null, null, null, null];
         this.enemyTeam = [null, null, null, null, null];
+
         this.eventQueue = [];
         this.actionQueue = [];
         this.abilityQueue = [];
@@ -614,6 +615,8 @@ class SceneManager {
         this.eventQueue = ["SB.N"];
         this.abilityQueue = [];
         this.actionQueue = [];
+        this.deadEnemies = [];
+        this.deadAllies = [];
         
         // Add background
         gameEngine.addEntity(new BattleBackground(gameEngine));
@@ -638,14 +641,14 @@ class SceneManager {
             let tempAbility = unit.ability;
             tempAbility.team = 0;
             tempAbility.CID = unit.ID;
-            this.abilityQueue.push(unit.ability);
+            this.abilityQueue.push(tempAbility);
             this.sortingList.push(unit.attack);
         });
         this.enemyTeam.forEach((unit, i) => {
             let tempAbility = unit.ability;
             tempAbility.team = 1;
             tempAbility.CID = unit.ID;
-            this.abilityQueue.push(unit.ability);
+            this.abilityQueue.push(tempAbility);
             this.sortingList.push(unit.attack);
         });
     
@@ -714,7 +717,7 @@ class SceneManager {
             const unit = new Unit(0, 0, type, {
                 attack: attack,
                 health: health
-            });
+            }, true);
             
             // Make the unit face left
             unit.facingLeft = true;
@@ -872,10 +875,12 @@ class SceneManager {
     
         // Check if unit is from player team or enemy team
         if (this.activeTeam.includes(unit)) {
+            this.deadAllies.push(unit);
             tempTeam = this.activeTeam;
             tempBattlePos = this.battlePositionsPlayer;
         } else {
             tempTeam = this.enemyTeam;
+            this.deadEnemies.push(unit);
             tempBattlePos = this.battlePositionsEnemy;
         }
     
@@ -896,6 +901,9 @@ class SceneManager {
             // Remove unit immediately
             gameEngine.entities = gameEngine.entities.filter(entity => entity !== unit);
         }
+
+        // Remove dead unit from queues
+        this.removeFromQueues(unit.ID);
         
         // Remove unit from its team array
         const index = tempTeam.indexOf(unit);
@@ -1089,10 +1097,10 @@ class SceneManager {
         // Team is ally
         if (Team == 0) {
             if (whoTriggers == "E") {
-                return this.teamContainsID(TID, this.enemyTeam);
+                return this.teamContainsID(TID, this.enemyTeam.concat(this.deadEnemies));
             }
             if (whoTriggers == "A") {
-                return this.teamContainsID(TID, this.activeTeam);
+                return this.teamContainsID(TID, this.activeTeam.concat(this.deadAllies));
             }
             if (whoTriggers == "AA") {
                 let tempIndex = this.indexOfID(TID, this.activeTeam);
@@ -1104,10 +1112,10 @@ class SceneManager {
       // Team is enemy
         if (Team == 1) {
             if (whoTriggers == "E") {
-                return this.teamContainsID(TID, this.activeTeam);
+                return this.teamContainsID(TID, this.activeTeam.concat(this.deadAllies));
             }
             if (whoTriggers == "A") {
-                return this.teamContainsID(TID, this.enemyTeam);
+                return this.teamContainsID(TID, this.enemyTeam.concat(this.deadEnemies));
             }
             if (whoTriggers == "AA") {
                 let tempIndex = this.indexOfID(TID, this.enemyTeam);
@@ -1118,21 +1126,20 @@ class SceneManager {
     }
 
     teamContainsID(ID, team) {
-        team.forEach((unit) => {
-            if (unit.ID == ID) {
-                return true;
-            } 
-        });
-            return false;
+        return team.some(e => e.ID == ID);
     }
 
     indexOfID(ID, team) {
-        team.forEach((unit, i) => {
-            if (unit.ID == ID) {
-                return i;
-            } 
-        });
-            return -99;
+        let ind = team.findIndex(e => e.ID == ID);
+        if (ind == -1) {
+            ind = -99;
+        }
+        return ind;
+    }
+
+    removeFromQueues(removeID) {
+        this.actionQueue = this.actionQueue.filter(item => item[2].ID !== removeID && item[5].ID !== removeID);
+        this.abilityQueue = this.abilityQueue.filter(item => item.CID !== removeID);
     }
 
 }
