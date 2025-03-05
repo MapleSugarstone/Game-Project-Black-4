@@ -955,6 +955,10 @@ class SceneManager {
 
     applyEffect(ability, eventTriggerer, team, owner) {
         let abilityInfo = ability.effect.split(".");
+        console.log(ability);
+        let targets = ability.whoAffected.split(".");
+        let tempWhoAffected = (targets[0]);
+        targets = (targets[1]);
         let target = null;
         let theParty = null;
         let theBattlePositions = null;
@@ -980,57 +984,73 @@ class SceneManager {
             theBattlePositions = this.battlePositionsEnemy;
         }
 
-        if (ability.whoAffected == "I") {
-            target = ownerUnit;
-        }
+        let i = 0;
+        let cap = 0
+        let usedTargets = new Set();
+        console.log("targets: " + targets);
 
-        if (ability.whoAffected == "T") {
-            [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
-                if (unit.ID == eventTriggerer) {
-                    target = unit;
+        while (i < targets && cap < 9999) {
+
+            if (tempWhoAffected == "I") {
+                target = ownerUnit;
+            }
+
+            if (tempWhoAffected == "T") {
+                [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
+                    if (unit.ID == eventTriggerer) {
+                        target = unit;
+                    }
+                });
+            }
+            
+            
+            if (team == 0) {
+                if (tempWhoAffected == "RE") {
+                    target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
                 }
-            });
-        }
-        
-        
-        if (team == 0) {
-            if (ability.whoAffected == "RE") {
-                target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
+                if (tempWhoAffected == "RA") {
+                    target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
+                }
+                if (tempWhoAffected == "FE") {
+                    target = this.enemyTeam[0];
+                }
+                if (tempWhoAffected == "FA") {
+                    target = this.activeTeam[0];
+                }
             }
-            if (ability.whoAffected == "RA") {
-                target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
-            }
-            if (ability.whoAffected == "FE") {
-                target = this.enemyTeam[0];
-            }
-            if (ability.whoAffected == "FA") {
-                target = this.activeTeam[0];
-            }
-        }
 
-        if (team == 1) {
-            if (ability.whoAffected == "RE") {
-                target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
+            if (team == 1) {
+                if (tempWhoAffected == "RE") {
+                    target = this.activeTeam[Math.floor(Math.random() * this.activeTeam.length)];
+                }
+                if (tempWhoAffected == "RA") {
+                    target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
+                }
+                if (tempWhoAffected == "FE") {
+                    target = this.activeTeam[0];
+                }
+                if (tempWhoAffected == "FA") {
+                    target = this.enemyTeam[0];
+                }
             }
-            if (ability.whoAffected == "RA") {
-                target = this.enemyTeam[Math.floor(Math.random() * this.enemyTeam.length)];
+
+            if (target == null) {
+                console.log("no target found, aborting");
+                console.log("no target found, aborting");
+                return;
             }
-            if (ability.whoAffected == "FE") {
-                target = this.activeTeam[0];
-            }
-            if (ability.whoAffected == "FA") {
-                target = this.enemyTeam[0];
+
+            console.log("target found "+ target);
+            if (usedTargets.has(target)) {
+                cap++;
+            } else {
+                // After finding the target and stats to be affected, the information is sent to this
+                // queue to be processed after every ability is checked for an event.
+                usedTargets.add(target);
+                i++;
+                this.actionQueue.unshift([abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions, ownerUnit, ability.visualEffect]);
             }
         }
-
-        if (target == null) {
-            console.log("no target found, aborting");
-            return;
-        }
-
-        // After finding the target and stats to be affected, the information is sent to this
-        // queue to be processed after every ability is checked for an event.
-        this.actionQueue.unshift([abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions, ownerUnit, ability.visualEffect]);
     }
 
     affectStat(stat, amount, unit, team, teampos) {

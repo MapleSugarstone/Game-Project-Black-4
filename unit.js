@@ -32,10 +32,59 @@ class Unit {
         this.hitAnim = 0;
         
         // Ability
-        this.getAbility(sprite);
+        this.getAbility(sprite, this.level);
     }
     
-    getAbility(sprite) {
+    getAbility(sprite, level) {
+        switch (sprite) {
+            case "./Units/Unit1.png":
+                if (level == 1) {
+                    this.ability = new Passive("H", "I", "RA.1", "HP.1", false, "BuffAlly", "Heal a random ally's HP by 1 when hurt.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("H", "I", "RA.2", "HP.1", false, "BuffAlly", "Heal 2 random ally's HP by 1 when hurt.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("H", "I", "RA.3", "HP.1", false, "BuffAlly", "Heal 3 random ally's HP by 1 when hurt.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("H", "I", "RA.4", "HP.1", false, "BuffAlly", "Heal 4 random ally's HP by 1 when hurt.");
+                }
+                break;
+            case "./Units/Unit2.png":
+                this.ability = new Passive("SB", "N", "RE.1", "HP.-2", false, "Snowball", "Deal 2 damage to random enemy at the start of the battle.");
+                break;
+            case "./Units/Unit3.png":
+                this.ability = new Passive("A", "I", "RE.1", "AT.-1", false, "Fire", "Deal 1 damage to a random enemy after attacking.");
+                break;
+            case "./Units/Unit4.png":
+                this.ability = new Passive("A", "AA", "I.1", "AT.1", false, "BuffAlly", "When the ally ahead attacks, increase attack by 1.");
+                break;
+            case "./Units/Unit5.png":
+                this.ability = new Passive("D", "I", "FE.1", "HP.-1", true, "Magic", "When this unit dies, it deals 1 damage to the enemy in front.");
+                break;
+            case "./Units/Unit6.png":
+                this.ability = new Passive("H", "E", "T.1", "AT.-1", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 1.");
+                break;
+            case "./Units/Unit7.png":
+                this.ability = new Passive("SB", "N", "FA.1", "AT.1", false, "BuffAlly", "Increase the front ally's attack by 1 at the start of battle.");
+                break;
+            case "./Units/Unit8.png":
+                this.ability = new Passive("D", "A", "RE.1", "HP.-1", false, "Lightning", "When an ally dies, deal 1 damage to a random enemy.");
+                break;
+            case "./Units/Unit9.png":
+                this.ability = new Passive("A", "E", "FA.1", "HP.1", false, "Healing", "When an enemy attacks, heal the front ally for 1.");
+                break;
+            case "./Units/Unit10.png":
+                this.ability = new Passive("H", "I", "I.1", "AT.1", false, "Rage", "When this unit is hurt, increase its attack by 1.");
+                break;
+            default:
+                this.ability = new Passive("N", "N", "N.1", "N", false, "N", "This unit has no passive.");
+        }
+    }
+
+
+    getStats(sprite) {
         switch (sprite) {
             case "./Units/Unit1.png":
                 this.ability = new Passive("H", "I", "RA", "HP.1", false, "BuffAlly", "Heal a random ally's HP by 1 when hurt.");
@@ -73,8 +122,9 @@ class Unit {
     }
 
     levelUp() {
-        if (this.level < MAX_LEVEL) {
+        if (this.level < MAX_LEVEL) {  
             this.level++;
+            this.getAbility(this.sprite, this.level);
             this.attack++;
             this.health++;
             this.maxHealth++;
@@ -123,6 +173,7 @@ class Unit {
         // Draw stats (not affected by transformations)
         this.drawStats(ctx, 32, 16);
 
+        this.Selected = gameEngine.SelectedUnitGlobal == this.ID;
         if (this.Selected) this.drawDescription(ctx);
     }
 
@@ -165,7 +216,7 @@ class Unit {
         }
         ctx.fillRect(left, bottom, 300, 180);
 
-        const lines = this.splitText(this.ability.description);
+        let lines = this.splitText(this.ability.description);
 
         ctx.fillStyle = "cyan";
         ctx.font = "bold 20px Arial";
