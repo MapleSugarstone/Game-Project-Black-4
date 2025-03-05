@@ -1,7 +1,7 @@
 // unit.js
 const MAX_LEVEL = 4;
 class Unit {
-    constructor(x, y, sprite, stats = {}) {
+    constructor(x, y, sprite, stats = {}, fresh) {
         this.newName();
         this.x = x;
         this.y = y;
@@ -10,8 +10,13 @@ class Unit {
         this.height = 128;
         
         // Stats
-        this.attack = stats.attack || 2;
-        this.health = stats.health || 2;
+        if (fresh) {
+            this.getStats(sprite, this.level);
+        } else {
+            this.attack = stats.attack || 2;
+            this.health = stats.health || 2;
+        }
+
         this.maxHealth = this.health;
         this.maxHealth = stats.maxHealth || this.health;
         this.level = stats.level || 1;
@@ -52,16 +57,38 @@ class Unit {
                 }
                 break;
             case "./Units/Unit2.png":
-                this.ability = new Passive("SB", "N", "RE.1", "HP.-2", false, "Snowball", "Deal 2 damage to random enemy at the start of the battle.");
+                if (level == 1) {
+                    this.ability = new Passive("SB", "N", "RE.1", "HP.-2", false, "Snowball", "Deal 2 damage to random enemy at the start of the battle.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("SB", "N", "RE.1", "HP.-3", false, "Snowball", "Deal 3 damage to random enemy at the start of the battle.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("SB", "N", "RE.1", "HP.-4", false, "Snowball", "Deal 4 damage to random enemy at the start of the battle.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("SB", "N", "RE.1", "HP.-2", false, "Snowball", "Deal 5 damage to random enemy at the start of the battle.");
+                }
                 break;
             case "./Units/Unit3.png":
-                this.ability = new Passive("A", "I", "RE.1", "AT.-1", false, "Fire", "Deal 1 damage to a random enemy after attacking.");
+                if (level == 1) {
+                    this.ability = new Passive("A", "I", "RE.1", "HP.-1", false, "Snowball", "Deal 1 damage to a random enemy after attacking.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("A", "I", "RE.2", "HP.-1", false, "Snowball", "Deal 1 damage to 2 random enemies after attacking.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("A", "I", "RE.3", "HP.-1", false, "Snowball", "Deal 1 damage to 3 random enemies after attacking.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("A", "I", "RE.4", "HP.-1", false, "Snowball", "Deal 1 damage to 4 random enemies after attacking.");
+                }
                 break;
             case "./Units/Unit4.png":
-                this.ability = new Passive("A", "AA", "I.1", "AT.1", false, "BuffAlly", "When the ally ahead attacks, increase attack by 1.");
+                this.ability = new Passive("A", "AA", "I.1", "B.1", false, "BuffAlly", "When the ally ahead attacks, increase attack and hp by 1.");
                 break;
             case "./Units/Unit5.png":
-                this.ability = new Passive("D", "I", "FE.1", "HP.-1", true, "Magic", "When this unit dies, it deals 1 damage to the enemy in front.");
+                this.ability = new Passive("D", "AA", "RE.1", "HP.-1", true, "Magic", "When an ally dies, it deals 1 damage to a random enemy.");
                 break;
             case "./Units/Unit6.png":
                 this.ability = new Passive("H", "E", "T.1", "AT.-1", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 1.");
@@ -87,37 +114,48 @@ class Unit {
     getStats(sprite) {
         switch (sprite) {
             case "./Units/Unit1.png":
-                this.ability = new Passive("H", "I", "RA", "HP.1", false, "BuffAlly", "Heal a random ally's HP by 1 when hurt.");
+                this.attack = 2;
+                this.health = 6;
                 break;
             case "./Units/Unit2.png":
-                this.ability = new Passive("SB", "N", "RE", "HP.-2", false, "Ice", "Deal 2 damage to random enemy at the start of the battle.");
+                this.attack = 2;
+                this.health = 4;
                 break;
             case "./Units/Unit3.png":
-                this.ability = new Passive("A", "I", "RE", "AT.-1", false, "Fire", "Deal 1 damage to a random enemy after attacking.");
+                this.attack = 3;
+                this.health = 5;
                 break;
             case "./Units/Unit4.png":
-                this.ability = new Passive("A", "AA", "I", "AT.1", false, "BuffAlly", "When the ally ahead attacks, increase attack by 1.");
+                this.attack = 1;
+                this.health = 4;
                 break;
             case "./Units/Unit5.png":
-                this.ability = new Passive("D", "I", "FE", "HP.-1", true, "Magic", "When this unit dies, it deals 1 damage to the enemy in front.");
+                this.attack = 2;
+                this.health = 3;
                 break;
             case "./Units/Unit6.png":
-                this.ability = new Passive("H", "E", "T", "AT.-1", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 1.");
+                this.attack = 3;
+                this.health = 5;
                 break;
             case "./Units/Unit7.png":
-                this.ability = new Passive("SB", "N", "FA", "AT.1", false, "BuffAlly", "Increase the front ally's attack by 1 at the start of battle.");
+                this.attack = 3;
+                this.health = 5;
                 break;
             case "./Units/Unit8.png":
-                this.ability = new Passive("D", "A", "RE", "HP.-1", false, "Lightning", "When an ally dies, deal 1 damage to a random enemy.");
+                this.attack = 5;
+                this.health = 6;
                 break;
             case "./Units/Unit9.png":
-                this.ability = new Passive("A", "E", "FA", "HP.1", false, "Healing", "When an enemy attacks, heal the front ally for 1.");
+                this.attack = 6;
+                this.health = 4;
                 break;
             case "./Units/Unit10.png":
-                this.ability = new Passive("H", "I", "I", "AT.1", false, "Rage", "When this unit is hurt, increase its attack by 1.");
+                this.attack = 5;
+                this.health = 5;
                 break;
             default:
-                this.ability = new Passive("N", "N", "N", "N", false, "N", "This unit has no passive.");
+                this.attack = 2;
+                this.health = 4;
         }
     }
 

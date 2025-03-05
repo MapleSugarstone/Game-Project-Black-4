@@ -476,7 +476,8 @@ class SceneManager {
                         this.shopPositions[i].x,
                         this.shopPositions[i].y,
                         type,
-                        stats
+                        stats,
+                        true
                     );
                 }
             }
@@ -1058,7 +1059,7 @@ class SceneManager {
         console.log("affecting stats" + stat + " " + amount + " " + unit);
      
         // Handle HP changes
-        if (stat == "HP") {
+        if (stat == "HP" || stat == "B") {
             // Apply HP change
             unit.health += Number(amount);
             
@@ -1069,7 +1070,7 @@ class SceneManager {
         }
      
         // Handle Attack changes 
-        if (stat == "AT") {
+        if (stat == "AT" || stat == "B") {
             // Apply attack change, ensuring it doesn't go below 1
             unit.attack = Math.max(1, unit.attack + Number(amount));
         }
