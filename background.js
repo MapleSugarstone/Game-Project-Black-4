@@ -1,9 +1,7 @@
 class Background {
     constructor(x, y, sprite) {
         // Position
-        this.x = x;
-        this.y = y;
-        this.sprite = sprite;
+        Object.assign(this, {x, y, sprite});
 
         // Animation properties
         this.alpha = 0;
