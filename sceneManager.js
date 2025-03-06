@@ -141,6 +141,7 @@ class SceneManager {
     upgradeShop() {
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(463, 200, "./UI_Assets/UpgradeShop.png", 994, 238));
+        this.shopLevel++;
 
         setTimeout(function() {
             gameEngine.addEntity(new Button(790, 900, "./UI_Assets/UpgradeButton1.png", 360, 100, "./UI_Assets/UpgradeButton2.png", () => {
@@ -154,106 +155,19 @@ class SceneManager {
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
 
-        if (this.currentRound % 3 === 0) {
-            setTimeout(function() {
-                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-                    scene = "UpgradeShop";
-                }));
-              }, 1500);
-        } else {
-            setTimeout(function() {
-                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-                    scene = "Shop";
-                }));
-            }, 1500);
-        }
+        this.endRound();
 
-        gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-        gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-        gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-        gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-        gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-        gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-        gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-        gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-        gameEngine.addEntity(new DisplayStill(1295, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-        gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+        for (let i = 0; i < WINS_THRESHOLD; i++) gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
 
         console.log("Total wins: " + this.wins);
-
-        if (this.wins === 1) {
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-        } else if (this.wins === 2) {
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-        } else if (this.wins === 3) {
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-        } else if (this.wins === 4) {
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-        } else if (this.wins === 5) {
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-        } else if (this.wins === 6) {
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-        } else if (this.wins === 7) {
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-        } else if (this.wins === 8) {
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-        } else if (this.wins === 9) {
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/Win.png", 100, 100));
-            setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(1295, 500, "./UI_Assets/Win.png", 100, 100));
-              }, 1000);
-        } 
+        let x = 415;
+        for (let i = 1; i < this.wins; i++) {
+            gameEngine.addEntity(new DisplayStill(x , 500, "./UI_Assets/Win.png", 100, 100));
+            x += 110;
+        }
+        setTimeout(function() {
+            gameEngine.addEntity(new DisplayStill(x, 500, "./UI_Assets/Win.png", 100, 100));
+          }, 1000);
     }
 
     roundLose() {
@@ -261,51 +175,12 @@ class SceneManager {
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
 
-        if (this.currentRound % 3 === 0) {
-            setTimeout(function() {
-                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-                    scene = "UpgradeShop";
-                }));
-              }, 1500);
-        } else {
-            setTimeout(function() {
-                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
-                    scene = "Shop";
-                }));
-            }, 1500);
-        }
+        this.endRound();
 
-        if (this.lives === 4) {
-            gameEngine.addEntity(new DisplayStill(424, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(648, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(872, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(1096, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(1320, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            setTimeout(function() {
-                gameEngine.entities.pop();
-              }, 1000);
-        } else if (this.lives === 3) {
-            gameEngine.addEntity(new DisplayStill(548, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(772, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(996, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(1220, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            setTimeout(function() {
-                gameEngine.entities.pop();
-              }, 1000);
-        } else if (this.lives === 2) {
-            gameEngine.addEntity(new DisplayStill(672, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(896, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(1120, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            setTimeout(function() {
-                gameEngine.entities.pop();
-              }, 1000);
-        } else if (this.lives === 1) {
-            gameEngine.addEntity(new DisplayStill(796, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            gameEngine.addEntity(new DisplayStill(1020, 500, "./UI_Assets/HealthHeart.png", 200, 200));
-            setTimeout(function() {
-                gameEngine.entities.pop();
-              }, 1000);
-        }
+        for (let i = 0; i <= this.lives;i++) gameEngine.addEntity(new DisplayStill((920 - 124 * this.lives) + 224 * i, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+        setTimeout(function() {
+            gameEngine.entities.pop();
+          }, 1000);
     }
 
     roundDraw() {
@@ -313,8 +188,11 @@ class SceneManager {
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 160));
         gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
+        this.endRound();
+    }
 
-        if (this.currentRound % 3 === 0) {
+    endRound() {
+        if ((this.currentRound-1) % 2 === 0) {
             setTimeout(function() {
                 gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
                     scene = "UpgradeShop";
@@ -343,31 +221,12 @@ class SceneManager {
 
         if (this.wins >= WINS_THRESHOLD) {
             gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-
             gameEngine.addEntity(new Display(625, 200, "./UI_Assets/WinGame.png", 710, 160));
-            gameEngine.addEntity(new DisplayStill(415, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(525, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(635, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(745, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(855, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(965, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(1075, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(1185, 500, "./UI_Assets/Win.png", 100, 100));
-            gameEngine.addEntity(new DisplayStill(1295, 500, "./UI_Assets/Win.png", 100, 100));
+            for (let i = 0; i < WINS_THRESHOLD; i++) gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/Win.png", 100, 100));
             setTimeout(function() {
                 gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
               }, 1000);
             console.log("You Win!");
-            this.lives = STARTING_LIVES;
-                this.gold = STARTING_GOLD;
-                this.index = 0;
-                this.wins = 0;
-                this.shopLevel = 1;
-                this.currentRound = 1;
-                this.frozenSlots = [false, false, false];
-                this.teamSlots = [null, null, null, null, null];
-                this.selectedUnit = null;
-            
         }
         else if (this.lives <= 0) {
             gameEngine.addEntity(new Display(620, 200, "./UI_Assets/LoseGame.png", 720, 160));
@@ -376,17 +235,16 @@ class SceneManager {
                 gameEngine.entities.pop();
               }, 1000);
             console.log("You Lose!");
-            this.lives = STARTING_LIVES;
-                this.gold = STARTING_GOLD;
-                this.index = 0;
-                this.wins = 0;
-                this.shopLevel = 1;
-                this.currentRound = 1;
-                this.frozenSlots = [false, false, false];
-                this.teamSlots = [null, null, null, null, null];
-                this.selectedUnit = null;
         }
-        
+        this.lives = STARTING_LIVES;
+        this.gold = STARTING_GOLD;
+        this.index = 0;
+        this.wins = 0;
+        this.shopLevel = 1;
+        this.currentRound = 1;
+        this.frozenSlots = [false, false, false];
+        this.teamSlots = [null, null, null, null, null];
+        this.selectedUnit = null;
     }
 
     setupShop() {
@@ -551,15 +409,10 @@ class SceneManager {
         for (let i = 0; i < this.shopSlots.length; i++) {
             const unit = this.shopSlots[i];
             if (unit && this.isClickInUnit(x, y, unit)) {
-                //this.draggedUnit = unit;
-                //this.dragStartSlot = {type: 'shop', index: i};
                 if (unit.isInShop && gameEngine.SelectedUnitGlobal != unit.ID) {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
-                    //this.dragStartSlot.index = null;
                 }
- 
-                //unit.startDrag(x, y);
             }
         }
 
@@ -573,8 +426,6 @@ class SceneManager {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
                     console.log("Selected team unit");
-
-                    //this.dragStartSlot.index = null;
                 }
             }
         }
@@ -583,11 +434,6 @@ class SceneManager {
 
 
     handleMouseMove(x, y) {
-        //if (this.draggedUnit) {
-        //    this.draggedUnit.dragTo(x, y);
-        //}
-            
-
         // Update hover states
         [...this.shopSlots, ...this.teamSlots].forEach(unit => {
             if (unit) {
@@ -1065,7 +911,6 @@ class SceneManager {
             }
 
             if (target == null) {
-                console.log("no target found, aborting");
                 console.log("no target found, aborting");
                 return;
             }
