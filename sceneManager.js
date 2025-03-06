@@ -29,8 +29,6 @@ class SceneManager {
         this.isNextApproved = true;
         this.activeProjectiles = 0;
 
-        
-
         // Shop state
         this.goldDisplayer = new Display(20, 20, "./UI_Assets/CoinDisplay10.png", 131, 61);
         this.livesDisplayer = new Display(170, 20, "./UI_Assets/HealthDisplay5.png", 131, 61);
@@ -121,21 +119,14 @@ class SceneManager {
             this.endGame();
         }
 
-        
-
         // Handle dragging
         if (gameEngine.click) {
             this.handleClick(gameEngine.click.x, gameEngine.click.y);
         }
 
-        
-
         if (gameEngine.mouse) {
             this.handleMouseMove(gameEngine.mouse.x, gameEngine.mouse.y);
         }
-            
-
-        
     }
 
     upgradeShop() {
@@ -151,15 +142,12 @@ class SceneManager {
     }
 
     roundWin() {
-        this.clearEntities();
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
-
         this.endRound();
-
-        for (let i = 0; i < WINS_THRESHOLD; i++) gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
-
         console.log("Total wins: " + this.wins);
+
+        for (let i = 0; i < WINS_THRESHOLD; i++)
+            gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
         let x = 415;
         for (let i = 1; i < this.wins; i++) {
             gameEngine.addEntity(new DisplayStill(x , 500, "./UI_Assets/Win.png", 100, 100));
@@ -171,36 +159,36 @@ class SceneManager {
     }
 
     roundLose() {
-        this.clearEntities();
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
-
         this.endRound();
 
-        for (let i = 0; i <= this.lives;i++) gameEngine.addEntity(new DisplayStill((920 - 124 * this.lives) + 224 * i, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+        for (let i = 0; i <= this.lives;i++) 
+            gameEngine.addEntity(new DisplayStill((920 - 124 * this.lives) + 224 * i, 500, "./UI_Assets/HealthHeart.png", 200, 200));
         setTimeout(function() {
             gameEngine.entities.pop();
           }, 1000);
     }
 
     roundDraw() {
-        this.clearEntities();
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 160));
         gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
         this.endRound();
     }
 
     endRound() {
+        this.clearEntities();
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
         if ((this.currentRound-1) % 2 === 0) {
             setTimeout(function() {
-                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png",
+                                                400, 100, "./UI_Assets/NextTurnButton2.png", () => {
                     scene = "UpgradeShop";
                 }));
               }, 1500);
         } else {
             setTimeout(function() {
-                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png", 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
+                gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png",
+                                                400, 100, "./UI_Assets/NextTurnButton2.png", () => {
                     scene = "Shop";
                 }));
             }, 1500);
@@ -213,7 +201,8 @@ class SceneManager {
 
         gameState.inGame = false;
         setTimeout(function() {
-            gameEngine.addEntity(new Button(722, 900, "./UI_Assets/NewAdventure1.png", 476, 100, "./UI_Assets/NewAdventure2.png", () => { 
+            gameEngine.addEntity(new Button(722, 900, "./UI_Assets/NewAdventure1.png",
+                                            476, 100, "./UI_Assets/NewAdventure2.png", () => { 
                 scene = "Shop";
                 gameState.inGame = true;
         }));
@@ -222,7 +211,8 @@ class SceneManager {
         if (this.wins >= WINS_THRESHOLD) {
             gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
             gameEngine.addEntity(new Display(625, 200, "./UI_Assets/WinGame.png", 710, 160));
-            for (let i = 0; i < WINS_THRESHOLD; i++) gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/Win.png", 100, 100));
+            for (let i = 0; i < WINS_THRESHOLD; i++)
+                gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/Win.png", 100, 100));
             setTimeout(function() {
                 gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
               }, 1000);
@@ -279,7 +269,6 @@ class SceneManager {
 
         gameEngine.addEntity(new Button(680, 920, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
             if (!(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit)) {
-
                 this.gold = Math.min(20, this.gold+SELL_PRICE);
                 this.index = this.teamSlots.indexOf(this.selectedUnit);
                 this.selectedUnit.x = gameEngine.ctx.canvas.width;
@@ -296,8 +285,8 @@ class SceneManager {
             console.log(this.gold);
             console.log(this.teamSlots);
             console.log(this.selectedUnit);
-            // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-            if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null)) && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
+            if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null))
+                && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
                 this.gold -= BUY_COST;
                 this.index = this.teamSlots.indexOf(null);
                 this.selectedUnit.isInShop = false;
@@ -305,10 +294,8 @@ class SceneManager {
                 this.teamSlots[this.index] = this.selectedUnit;
                 this.index2 = this.shopSlots.indexOf(this.selectedUnit);
                 this.shopSlots[this.index2] = null;
-                //this.shopSlots[this.dragStartSlot.index] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
-                //this.updateUnitDisplay();
             }
         }));
 
@@ -318,8 +305,8 @@ class SceneManager {
             console.log(this.gold);
             console.log(this.teamSlots);
             console.log(this.selectedUnit);
-            // && (!gameEngine.SelectedUnitGlobal == null) && (this.teamSlots.includes(null))
-            if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null) && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
+            if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null)
+                && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
                 this.gold -= UPGRADE_COST;
                 this.selectedUnit.levelUp();
                 gameEngine.SelectedUnitGlobal = null;
@@ -336,19 +323,17 @@ class SceneManager {
 
 
         for (let i = 0; i < 4; i++) {
-        gameEngine.addEntity(new Button(990-200*i, 400, "./UI_Assets/SwapButton1.png", 106, 51, "./UI_Assets/SwapButton2.png", () => {
-            this.teamSlots[i]?.moveTo(this.teamPositions[i+1].x, this.teamPositions[i+1].y);
-            this.teamSlots[i+1]?.moveTo(this.teamPositions[i].x, this.teamPositions[i].y);
-            let temp1 = this.teamSlots[i];
-            this.teamSlots[i] = this.teamSlots[i+1];
-            this.teamSlots[i+1] = temp1;
-        }));
+            gameEngine.addEntity(new Button(990-200*i, 400, "./UI_Assets/SwapButton1.png", 106, 51, "./UI_Assets/SwapButton2.png", () => {
+                this.teamSlots[i]?.moveTo(this.teamPositions[i+1].x, this.teamPositions[i+1].y);
+                this.teamSlots[i+1]?.moveTo(this.teamPositions[i].x, this.teamPositions[i].y);
+                let temp1 = this.teamSlots[i];
+                this.teamSlots[i] = this.teamSlots[i+1];
+                this.teamSlots[i+1] = temp1;
+            }));
         }
 
         // Initialize shop if empty
-        //if (!this.shopSlots.some(slot => slot !== null)) {
         this.rollShop();
-        //}
 
         // Add existing units to display
         this.updateUnitDisplay();
@@ -416,7 +401,6 @@ class SceneManager {
             }
         }
 
-
         // Check team slots
         for (let i = 0; i < this.teamSlots.length; i++) {
             const unit = this.teamSlots[i];
@@ -431,8 +415,6 @@ class SceneManager {
         }
     }
 
-
-
     handleMouseMove(x, y) {
         // Update hover states
         [...this.shopSlots, ...this.teamSlots].forEach(unit => {
@@ -442,15 +424,11 @@ class SceneManager {
             }
         });
     }
-    
-
 
     isClickInUnit(x, y, unit) {
         return x >= unit.x && x <= unit.x + unit.width &&
                y >= unit.y && y <= unit.y + unit.height;
     }
-
-
     
     findTargetSlot(x, y) {
         // Check team slots
@@ -472,8 +450,6 @@ class SceneManager {
         }
         return null;
     }
-        
-
 
     startBattle() {
         this.eventQueue = ["SB.N"];
@@ -923,7 +899,8 @@ class SceneManager {
                 // queue to be processed after every ability is checked for an event.
                 usedTargets.add(target);
                 i++;
-                this.actionQueue.unshift([abilityInfo[0], abilityInfo[1], target, theParty, theBattlePositions, ownerUnit, ability.visualEffect]);
+                this.actionQueue.unshift([abilityInfo[0], abilityInfo[1], target, theParty,
+                    theBattlePositions, ownerUnit, ability.visualEffect]);
             }
         }
     }
@@ -951,14 +928,8 @@ class SceneManager {
      }
 
     checkTriggerValidity(whoTriggers, TID, Team, Owner) {
-
-        if (whoTriggers == "N") {
-            return true;
-        }
-
-        if (whoTriggers == "I") {
-            return TID == Owner;
-        }
+        if (whoTriggers == "N") return true;
+        if (whoTriggers == "I") return TID == Owner;
 
         // Team is ally
         if (Team == 0) {
@@ -991,15 +962,11 @@ class SceneManager {
         }
     }
 
-    teamContainsID(ID, team) {
-        return team.some(e => e.ID == ID);
-    }
+    teamContainsID(ID, team) { return team.some(e => e.ID == ID); }
 
     indexOfID(ID, team) {
         let ind = team.findIndex(e => e.ID == ID);
-        if (ind == -1) {
-            ind = -99;
-        }
+        if (ind == -1) ind = -99;
         return ind;
     }
 
@@ -1009,5 +976,3 @@ class SceneManager {
     }
 
 }
-
-    
