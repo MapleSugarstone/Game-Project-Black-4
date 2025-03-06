@@ -1,11 +1,6 @@
 class Display {
     constructor(x, y, sprite, width, height, method) {
-        this.x = x;
-        this.y = y;
-        this.sprite = sprite;
-        this.width = width;
-        this.height = height;
-        this.method = method;
+        Object.assign(this, {x, y, sprite, width, height, method});
 
         // Visual state
         this.hovering = false;

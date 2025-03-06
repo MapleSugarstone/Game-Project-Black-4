@@ -1,13 +1,7 @@
 class Button {
     constructor(x, y, sprite, width, height, hoversprite, method) {
-        this.x = x;
-        this.y = y;
-        this.sprite = sprite;
-        this.width = width;
-        this.height = height;
-        this.hoversprite = hoversprite;
+        Object.assign(this, {x, y, sprite, width, height, hoversprite, method});
         this.truesprite = sprite;
-        this.method = method;
 
         // Visual state
         this.hovering = false;
