@@ -142,8 +142,8 @@ class SceneManager {
     }
 
     roundWin() {
-        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
         this.endRound();
+        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
         console.log("Total wins: " + this.wins);
 
         for (let i = 0; i < WINS_THRESHOLD; i++)
@@ -159,8 +159,8 @@ class SceneManager {
     }
 
     roundLose() {
-        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
         this.endRound();
+        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
 
         for (let i = 0; i <= this.lives;i++) 
             gameEngine.addEntity(new DisplayStill((920 - 124 * this.lives) + 224 * i, 500, "./UI_Assets/HealthHeart.png", 200, 200));
@@ -170,9 +170,9 @@ class SceneManager {
     }
 
     roundDraw() {
+        this.endRound();
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 160));
         gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
-        this.endRound();
     }
 
     endRound() {
