@@ -8,16 +8,20 @@ class Unit {
         this.sprite = sprite;
         this.width = 128; // Display at half size (256/2)
         this.height = 128;
+
+        
         
         // Stats
         if (fresh) {
+            this.name = "none";
+            this.rarity = 0
             this.getStats(sprite, this.level);
         } else {
             this.attack = stats.attack || 2;
             this.health = stats.health || 2;
+            this.rarity = stats.rarity;
         }
         this.maxHealth = this.health;
-        this.maxHealth = stats.maxHealth || this.health;
         this.level = stats.level || 1;
         this.type = sprite; // Use sprite path as type identifier
         this.animator = new UnitAnimator(this);
@@ -176,42 +180,122 @@ class Unit {
             case "./Units/Unit1.png":
                 this.attack = 2;
                 this.health = 6;
+                this.rarity = 1;
+                this.name = "Soupsmith";
                 break;
             case "./Units/Unit2.png":
                 this.attack = 2;
                 this.health = 4;
+                this.rarity = 1;
+                this.name = "Snowpelter";
                 break;
             case "./Units/Unit3.png":
                 this.attack = 3;
                 this.health = 5;
+                this.rarity = 1;
+                this.name = "Frostman";
                 break;
             case "./Units/Unit4.png":
                 this.attack = 1;
                 this.health = 1;
+                this.rarity = 1;
+                this.name = "Apprentice";
                 break;
             case "./Units/Unit5.png":
                 this.attack = 1;
                 this.health = 2;
+                this.rarity = 1;
+                this.name = "Knower";
                 break;
             case "./Units/Unit6.png":
                 this.attack = 3;
                 this.health = 5;
+                this.rarity = 1;
+                this.name = "Ratman";
                 break;
             case "./Units/Unit7.png":
                 this.attack = 3;
                 this.health = 5;
+                this.rarity = 1;
+                this.name = "Shelly";
                 break;
             case "./Units/Unit8.png":
                 this.attack = 5;
                 this.health = 6;
+                this.rarity = 1;
+                this.name = "Stabotron";
                 break;
             case "./Units/Unit9.png":
                 this.attack = 6;
                 this.health = 4;
+                this.rarity = 1;
+                this.name = "Pikal";
                 break;
             case "./Units/Unit10.png":
                 this.attack = 6;
                 this.health = 10;
+                this.rarity = 1;
+                this.name = "Fistt";
+                break;
+            case "./Units/Unit11.png":
+                this.attack = 6;
+                this.health = 13;
+                this.rarity = 2;
+                this.name = "Skiever";
+                break;
+            case "./Units/Unit12.png":
+                this.attack = 8;
+                this.health = 8;
+                this.rarity = 2;
+                this.name = "Occulant";
+                break;
+            case "./Units/Unit13.png":
+                this.attack = 10;
+                this.health = 7;
+                this.rarity = 2;
+                this.name = "Skealax";
+                break;
+            case "./Units/Unit14.png":
+                this.attack = 4;
+                this.health = 15;
+                this.rarity = 2;
+                this.name = "Harvar";
+                break;
+            case "./Units/Unit15.png":
+                this.attack = 5;
+                this.health = 10;
+                this.rarity = 2;
+                this.name = "Eblinex";
+                break;
+            case "./Units/Unit16.png":
+                this.attack = 4;
+                this.health = 10;
+                this.rarity = 2;
+                this.name = "SoupMaster";
+                break;
+            case "./Units/Unit17.png":
+                this.attack = 7;
+                this.health = 10;
+                this.rarity = 2;
+                this.name = "Helix";
+                break;
+            case "./Units/Unit18.png":
+                this.attack = 8;
+                this.health = 7;
+                this.rarity = 2;
+                this.name = "Crash";
+                break;
+            case "./Units/Unit19.png":
+                this.attack = 1;
+                this.health = 10;
+                this.rarity = 2;
+                this.name = "Plague";
+                break;
+            case "./Units/Unit20.png":
+                this.attack = 2;
+                this.health = 8;
+                this.rarity = 2;
+                this.name = "Likene";
                 break;
             default:
                 this.attack = 2;
@@ -301,14 +385,39 @@ class Unit {
             }
         }
 
-        // Ability indicator if unit has one
-        if (this.ability) {
-            ctx.fillStyle = 'purple';
-            ctx.fillText("✧", this.x + this.width - 20, this.y + 20);
+        // Rarity
+        let rareText = "None"
+        if (this.rarity == 1) {
+            ctx.fillStyle = 'rgba(157, 157, 157, 0.9)';
+            rareText = "common";
+        } else if (this.rarity == 2) {
+            ctx.fillStyle = 'rgba(152, 241, 119, 0.9)';
+            rareText = "uncommon";
+        } else if (this.rarity == 3) {
+            ctx.fillStyle = 'rgba(101, 179, 251, 0.9)';
+            rareText = "rare";
+        } else if (this.rarity == 4) {
+            ctx.fillStyle = 'rgba(0, 34, 255, 0.9)';
+            rareText = "super rare";
+        } else if (this.rarity == 5) {
+            ctx.fillStyle = 'rgba(200, 0, 255, 0.9)';
+            rareText = "epic";
+        } else if (this.rarity == 6) {
+            ctx.fillStyle = 'rgba(255, 247, 0, 0.9)';
+            rareText = "legendary";
         }
+        
+        ctx.fillRect(this.x + statx-30, this.y + this.height-2, 120, 13);
+        ctx.font = "bold 20px Arial";
+        ctx.fillStyle = 'rgb(255, 255, 255)';
+        ctx.textAlign = 'center';
+        ctx.fillText(rareText, this.x + 25 + offset + statx, this.y + this.height+11);
+        ctx.restore();
+
     }
 
     drawDescription(ctx) {
+        ctx.save();
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         let left = 1240;
         let bottom = 200;
@@ -322,8 +431,9 @@ class Unit {
 
         ctx.fillStyle = "cyan";
         ctx.font = "bold 20px Arial";
-
+        ctx.textAlign = 'left';
         for (let i = 0; i < lines.length; i++) ctx.fillText(lines[i], left + 20, bottom + 35 + (25 * i));
+        ctx.restore();
     }
 
     splitText(text) {

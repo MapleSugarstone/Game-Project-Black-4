@@ -53,6 +53,72 @@ class SceneManager {
             "./Units/Unit10.png",
         ];
 
+        this.uncommonMonsterTypes = [
+            "./Units/Unit11.png",
+            "./Units/Unit12.png",
+            "./Units/Unit13.png",
+            "./Units/Unit14.png",
+            "./Units/Unit15.png",
+            "./Units/Unit16.png",
+            "./Units/Unit17.png",
+            "./Units/Unit18.png",
+            "./Units/Unit19.png",
+            "./Units/Unit20.png",
+        ];
+
+        this.rareMonsterTypes = [
+            "./Units/Unit21.png",
+            "./Units/Unit22.png",
+            "./Units/Unit23.png",
+            "./Units/Unit24.png",
+            "./Units/Unit25.png",
+            "./Units/Unit26.png",
+            "./Units/Unit27.png",
+            "./Units/Unit28.png",
+            "./Units/Unit29.png",
+            "./Units/Unit30.png",
+        ];
+
+        this.superRareMonsterTypes = [
+            "./Units/Unit31.png",
+            "./Units/Unit32.png",
+            "./Units/Unit33.png",
+            "./Units/Unit34.png",
+            "./Units/Unit35.png",
+            "./Units/Unit36.png",
+            "./Units/Unit37.png",
+            "./Units/Unit38.png",
+            "./Units/Unit39.png",
+            "./Units/Unit40.png",
+        ];
+
+        this.epicMonsterTypes = [
+            "./Units/Unit41.png",
+            "./Units/Unit42.png",
+            "./Units/Unit43.png",
+            "./Units/Unit44.png",
+            "./Units/Unit45.png",
+            "./Units/Unit46.png",
+            "./Units/Unit47.png",
+            "./Units/Unit48.png",
+            "./Units/Unit49.png",
+            "./Units/Unit50.png",
+        ];
+
+        this.legendaryMonsterTypes = [
+            "./Units/Unit51.png",
+            "./Units/Unit52.png",
+            "./Units/Unit53.png",
+            "./Units/Unit54.png",
+            "./Units/Unit55.png",
+            "./Units/Unit56.png",
+            "./Units/Unit57.png",
+            "./Units/Unit58.png",
+            "./Units/Unit59.png",
+            "./Units/Unit60.png",
+        ];
+
+
         // Shop coordinates
         this.shopPositions = [
             {x: 280, y: 650},
@@ -142,8 +208,8 @@ class SceneManager {
     }
 
     roundWin() {
-        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
         this.endRound();
+        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
         console.log("Total wins: " + this.wins);
 
         for (let i = 0; i < WINS_THRESHOLD; i++)
@@ -159,8 +225,8 @@ class SceneManager {
     }
 
     roundLose() {
-        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
         this.endRound();
+        gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
 
         for (let i = 0; i <= this.lives;i++) 
             gameEngine.addEntity(new DisplayStill((920 - 124 * this.lives) + 224 * i, 500, "./UI_Assets/HealthHeart.png", 200, 200));
@@ -170,9 +236,9 @@ class SceneManager {
     }
 
     roundDraw() {
+        this.endRound();
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 160));
         gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
-        this.endRound();
     }
 
     endRound() {
@@ -340,12 +406,22 @@ class SceneManager {
     }
 
     rollShop() {
+        let usedTypes = [...this.monsterTypes];
+
+        if (this.shopLevel > 1) { usedTypes = usedTypes.concat(this.uncommonMonsterTypes);}
+        if (this.shopLevel > 2) { usedTypes = usedTypes.concat(this.rareMonsterTypes);}
+        if (this.shopLevel > 3) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
+        if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
+        if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
+
         if (this.gold >= ROLL_COST) {
             this.gold -= ROLL_COST;
             
             for (let i = 0; i < this.shopSlots.length; i++) {
                 if (!this.frozenSlots[i]) {
-                    const type = this.monsterTypes[Math.floor(Math.random() * this.monsterTypes.length)];
+
+
+                    const type = usedTypes[Math.floor(Math.random() * usedTypes.length)];
                     const stats = {
                         attack: Math.floor(Math.random() * 2) + 1,
                         health: Math.floor(Math.random() * 2) + 2
@@ -470,7 +546,8 @@ class SceneManager {
                 attack: unit.attack,
                 health: unit.health,
                 maxHealth: unit.maxHealth,
-                level: unit.level
+                level: unit.level,
+                rarity: unit.rarity
             });
             gameEngine.addEntity(battleUnit);
             return battleUnit;
@@ -538,7 +615,13 @@ class SceneManager {
         const team = [];
         
         // Track which types we've already used to avoid duplicates
-        const usedTypes = [...this.monsterTypes]; // Copy all available types
+        let usedTypes = [...this.monsterTypes]; // Copy all available types
+
+        if (this.shopLevel > 1) { usedTypes = usedTypes.concat(this.uncommonMonsterTypes);}
+        if (this.shopLevel > 2) { usedTypes = usedTypes.concat(this.rareMonsterTypes);}
+        if (this.shopLevel > 3) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
+        if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
+        if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
         
         // Create each unit and assign stats
         for (let i = 0; i < teamSize; i++) {

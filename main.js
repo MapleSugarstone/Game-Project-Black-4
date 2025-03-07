@@ -105,26 +105,10 @@ ASSET_MANAGER.queueDownload("./UI_Assets/NextButton2.png");
 
 // Monster Sprites
 ASSET_MANAGER.queueDownload("./UI_Assets/Select.png");
-ASSET_MANAGER.queueDownload("./Units/Unit1.png");
-ASSET_MANAGER.queueDownload("./Units/Unit2.png");
-ASSET_MANAGER.queueDownload("./Units/Unit3.png");
-ASSET_MANAGER.queueDownload("./Units/Unit4.png");
-ASSET_MANAGER.queueDownload("./Units/Unit5.png");
-ASSET_MANAGER.queueDownload("./Units/Unit6.png");
-ASSET_MANAGER.queueDownload("./Units/Unit7.png");
-ASSET_MANAGER.queueDownload("./Units/Unit8.png");
-ASSET_MANAGER.queueDownload("./Units/Unit9.png");
-ASSET_MANAGER.queueDownload("./Units/Unit10.png");
-ASSET_MANAGER.queueDownload("./Units/Chewy.png");
-ASSET_MANAGER.queueDownload("./Units/Chopper.png");
-ASSET_MANAGER.queueDownload("./Units/Cthulhu.png");
-ASSET_MANAGER.queueDownload("./Units/Ghost.png");
-ASSET_MANAGER.queueDownload("./Units/Goldie.png");
-ASSET_MANAGER.queueDownload("./Units/Pinky.png");
-ASSET_MANAGER.queueDownload("./Units/Puffer.png");
-ASSET_MANAGER.queueDownload("./Units/Slug.png");
-ASSET_MANAGER.queueDownload("./Units/Spider.png");
-ASSET_MANAGER.queueDownload("./Units/Stink.png");
+for (let i = 1; i < 21; i++) {
+    ASSET_MANAGER.queueDownload("./Units/Unit" + i + ".png");
+}
+
 
 // Win, Lose, Draw round
 ASSET_MANAGER.queueDownload("./UI_Assets/WinRound.png");
