@@ -173,6 +173,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/MainMenuButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/MainMenuButton2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NextSlideButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NextSlideButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/PrevSlideButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/PrevSlideButton2.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel1.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel2.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel3.png");
