@@ -125,6 +125,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/WinPlaceHolder.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/DrawDisplay.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidBlack.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidWhite.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/MountainBackground.png");
 
 // Win, Lose game
 ASSET_MANAGER.queueDownload("./UI_Assets/WinGame.png");

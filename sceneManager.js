@@ -202,7 +202,7 @@ class SceneManager {
     }
 
     upgradeShop() {
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/MountainBackground.png"));
         gameEngine.addEntity(new Display(463, 200, "./UI_Assets/UpgradeShop.png", 994, 238));
         this.shopLevel++;
 
@@ -251,7 +251,7 @@ class SceneManager {
 
     endRound() {
         this.clearEntities();
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/MountainBackground.png"));
         if (((this.currentRound-1) % 2 === 0) && this.shopLevel<4) {
             setTimeout(function() {
                 gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png",
@@ -271,7 +271,7 @@ class SceneManager {
 
     endGame() {
         scene = "End Game";
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/MountainBackground.png"));
 
         gameState.inGame = false;
         setTimeout(function() {
