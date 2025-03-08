@@ -487,7 +487,7 @@ class ProjectileManager {
             "iceShard": {
                 width: 28,
                 height: 28,
-                speed: 450,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 5,
                 trailEffect: "ice",
@@ -497,7 +497,7 @@ class ProjectileManager {
             "dagger": {
                 width: 24,
                 height: 24,
-                speed: 600,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 8,
                 trailEffect: null,
@@ -506,7 +506,7 @@ class ProjectileManager {
             "healOrb": {
                 width: 32,
                 height: 32,
-                speed: 250,
+                speed: 800,
                 trajectoryType: "arc",
                 arcHeight: 150,
                 rotationSpeed: 3,
@@ -518,7 +518,7 @@ class ProjectileManager {
             "frostBolt": {
                 width: 36,
                 height: 36,
-                speed: 350,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: "ice",
@@ -528,7 +528,7 @@ class ProjectileManager {
             "fireball": {
                 width: 40,
                 height: 40,
-                speed: 400,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: "fire",
@@ -538,7 +538,7 @@ class ProjectileManager {
             "arrow": {
                 width: 30,
                 height: 30,
-                speed: 700,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: null,
@@ -547,7 +547,7 @@ class ProjectileManager {
             "poison": {
                 width: 28,
                 height: 28,
-                speed: 300,
+                speed: 800,
                 trajectoryType: "bounce",
                 rotationSpeed: 2,
                 trailEffect: "smoke",
@@ -558,7 +558,7 @@ class ProjectileManager {
             "magic": {
                 width: 36,
                 height: 36,
-                speed: 350,
+                speed: 800,
                 trajectoryType: "spiral",
                 rotationSpeed: 4,
                 trailEffect: "sparkle",
@@ -598,7 +598,7 @@ class ProjectileManager {
             "iceShard": {
                 width: 28,
                 height: 28,
-                speed: 450,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 5,
                 trailEffect: "ice",
@@ -608,7 +608,7 @@ class ProjectileManager {
             "dagger": {
                 width: 24,
                 height: 24,
-                speed: 600,
+                speed: 800,
                 trajectoryType: "spiral",
                 rotationSpeed: 8,
                 trailEffect: null,
@@ -617,7 +617,7 @@ class ProjectileManager {
             "healOrb": {
                 width: 32,
                 height: 32,
-                speed: 250,
+                speed: 800,
                 trajectoryType: "arc",
                 arcHeight: 150,
                 rotationSpeed: 3,
@@ -629,7 +629,7 @@ class ProjectileManager {
             "frostBolt": {
                 width: 36,
                 height: 36,
-                speed: 350,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: "ice",
@@ -639,7 +639,7 @@ class ProjectileManager {
             "fireball": {
                 width: 40,
                 height: 40,
-                speed: 400,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: "fire",
@@ -649,7 +649,7 @@ class ProjectileManager {
             "arrow": {
                 width: 30,
                 height: 30,
-                speed: 700,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: null,
@@ -658,7 +658,7 @@ class ProjectileManager {
             "poison": {
                 width: 28,
                 height: 28,
-                speed: 300,
+                speed: 800,
                 trajectoryType: "bounce",
                 rotationSpeed: 2,
                 trailEffect: "smoke",
@@ -669,7 +669,7 @@ class ProjectileManager {
             "magic": {
                 width: 36,
                 height: 36,
-                speed: 350,
+                speed: 800,
                 trajectoryType: "spiral",
                 rotationSpeed: 4,
                 trailEffect: "sparkle",
