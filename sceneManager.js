@@ -158,6 +158,7 @@ class SceneManager {
 
     update() {
         if (scene === "Shop") {
+            SOUND_ENGINE.updateScene("MainMenu");
             this.clearEntities();
             this.setupShop();
             scene = "LoadedShop";
@@ -166,6 +167,7 @@ class SceneManager {
             this.upgradeShop();
             scene = "LoadedUpgradeShop";
         } else if (scene === "Battle") {
+            SOUND_ENGINE.updateScene("Battle");
             this.clearEntities();
             this.startBattle();
             scene = "LoadedBattle";
@@ -210,8 +212,7 @@ class SceneManager {
     roundWin() {
         this.endRound();
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
-        console.log("Total wins: " + this.wins);
-
+        //
         for (let i = 0; i < WINS_THRESHOLD; i++)
             gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
         let x = 415;
@@ -282,7 +283,7 @@ class SceneManager {
             setTimeout(function() {
                 gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
               }, 1000);
-            console.log("You Win!");
+            //console.log("You Win!");
         }
         else if (this.lives <= 0) {
             gameEngine.addEntity(new Display(620, 200, "./UI_Assets/LoseGame.png", 720, 160));
@@ -290,7 +291,7 @@ class SceneManager {
             setTimeout(function() {
                 gameEngine.entities.pop();
               }, 1000);
-            console.log("You Lose!");
+            //console.log("You Lose!");
         }
         this.lives = STARTING_LIVES;
         this.gold = STARTING_GOLD;
@@ -346,11 +347,11 @@ class SceneManager {
         }));
 
         gameEngine.addEntity(new Button(270, 920, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
-            console.log(gameEngine.SelectedUnitGlobal);
-            console.log(this.teamSlots.includes(null));
-            console.log(this.gold);
-            console.log(this.teamSlots);
-            console.log(this.selectedUnit);
+            //console.log(gameEngine.SelectedUnitGlobal);
+            //console.log(this.teamSlots.includes(null));
+            //console.log(this.gold);
+            //console.log(this.teamSlots);
+            //console.log(this.selectedUnit);
             if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null))
                 && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
                 this.gold -= BUY_COST;
@@ -362,22 +363,23 @@ class SceneManager {
                 this.shopSlots[this.index2] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
+                SOUND_ENGINE.playSFX("purchase");
             }
         }));
 
         gameEngine.addEntity(new Button(890, 920, "./UI_Assets/UpgradeButton1.png", 360, 100, "./UI_Assets/UpgradeButton2.png", () => {
-            console.log(gameEngine.SelectedUnitGlobal);
-            console.log(this.teamSlots.includes(null));
-            console.log(this.gold);
-            console.log(this.teamSlots);
-            console.log(this.selectedUnit);
+            //console.log(gameEngine.SelectedUnitGlobal);
+            //console.log(this.teamSlots.includes(null));
+            //console.log(this.gold);
+            //console.log(this.teamSlots);
+            //console.log(this.selectedUnit);
             if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null)
                 && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
                 this.gold -= UPGRADE_COST;
                 this.selectedUnit.levelUp();
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
-                console.log("Up grade team unit")
+                //console.log("Up grade team unit")
             }
         }));
 
@@ -442,7 +444,7 @@ class SceneManager {
             }
             this.updateUnitDisplay();
         }
-        console.log(this.gold);
+        //console.log(this.gold);
     }
 
     updateUnitDisplay() {
@@ -485,7 +487,7 @@ class SceneManager {
                 if (gameEngine.SelectedUnitGlobal != unit.ID) {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
-                    console.log("Selected team unit");
+                    //console.log("Selected team unit");
                 }
             }
         }
@@ -657,10 +659,10 @@ class SceneManager {
                 // First check if there are any queued actions to process
                 if (this.actionQueue.length > 0 && this.activeProjectiles === 0) {
                     let theAction = this.actionQueue.pop();
-                    console.log("attempting action " + theAction[0] + theAction[1]);
+                    //console.log("attempting action " + theAction[0] + theAction[1]);
     
                     // Placeholder for animation
-                    console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
+                    //console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
                     
                     // Determine the appropriate projectile type based on the visual effect
                     const projectileType = ProjectileManager.getProjectileTypeFromVisualEffect(theAction[6]);
@@ -690,12 +692,12 @@ class SceneManager {
                 }
                 // Then check if there are any events to parse (only if no projectiles are active)
                 else if (this.eventQueue.length > 0 && this.activeProjectiles === 0) {
-                    console.log("parsing events" + this.eventQueue);
+                    //console.log("parsing events" + this.eventQueue);
                     this.ParseEvents();
                 } 
                 // If no queued actions/events and no active projectiles, proceed with combat
                 else if (this.isNextApproved && this.activeProjectiles === 0) {   
-                    console.log("attempting attack");
+                    //console.log("attempting attack");
                     const playerUnit = playerTeam[0];
                     const enemyUnit = enemyTeam[0];
         
@@ -713,6 +715,7 @@ class SceneManager {
                     if (!playerUnit.animator.hasDealtDamage && attackTime >= 0.75) {
                         playerUnit.animator.hasDealtDamage = true;
                         enemyUnit.animator.hasDealtDamage = true;
+                        SOUND_ENGINE.playSFX("hurt");
                     }
                     
                     // Check if attack sequence is complete
@@ -728,6 +731,7 @@ class SceneManager {
                         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
                         
                         // Apply damage to both units
+                        
                         this.affectStat("HP", enemyUnit.attack*-1, playerUnit, this.activeTeam, this.battlePositionsPlayer);
                         this.affectStat("HP", playerUnit.attack*-1, enemyUnit, this.enemyTeam, this.battlePositionsEnemy);
                         
@@ -760,7 +764,7 @@ class SceneManager {
             if (playerTeam.length > 0) {
                 this.wins++;
                 scene = "Win round";
-                console.log(scene);
+                //console.log(scene);
             } else if (enemyTeam.length > 0) {
                 this.lives--;
                 scene = "Lose round";
@@ -775,7 +779,7 @@ class SceneManager {
                 this.currentRound++;
                 this.gold = STARTING_GOLD;
 
-                console.log("Current Round: " + this.currentRound)
+                //console.log("Current Round: " + this.currentRound)
 
                 if (scene === "Win round") {
                     this.roundWin();
@@ -812,6 +816,7 @@ class SceneManager {
             unit.animator.startDeath();
         } else {
             // For passive ability deaths - create smoke puff effect
+            
             const deathEffect = new DeathParticleManager(
                 unit.x + unit.width / 2, 
                 unit.y + unit.height / 2
@@ -846,7 +851,7 @@ class SceneManager {
                     entity.y > gameEngine.ctx.canvas.height + 100) {
                     
                     // Trigger star explosion effect
-                    entity.animator.triggerStarExplosion();
+                    // entity.animator.triggerStarExplosion();
                 }
             }
         });
@@ -860,8 +865,8 @@ class SceneManager {
     }
 
     ParseEvents() {
-        console.log("Events are being parsed");
-        console.log(this.eventQueue);
+        //console.log("Events are being parsed");
+        //console.log(this.eventQueue);
 
         while (this.eventQueue.length > 0) {
             this.currentEvent = this.eventQueue.pop();
@@ -884,7 +889,7 @@ class SceneManager {
 
     applyEffect(ability, eventTriggerer, team, owner) {
         let abilityInfo = ability.effect.split(".");
-        console.log(ability);
+        //console.log(ability);
         let targets = ability.whoAffected.split(".");
         let tempWhoAffected = (targets[0]);
         targets = (targets[1]);
@@ -899,11 +904,11 @@ class SceneManager {
             }
         });
         if (ownerUnit == null) {
-            console.log("no owner found, aborting");
+            //console.log("no owner found, aborting");
             return;
         }
 
-        console.log("Ability tried to find ID " + owner + " and it registered the owner as: " + ownerUnit);
+        //console.log("Ability tried to find ID " + owner + " and it registered the owner as: " + ownerUnit);
 
         if (team == 0) {
             theParty = this.activeTeam;
@@ -916,7 +921,7 @@ class SceneManager {
         let i = 0;
         let cap = 0
         let usedTargets = new Set();
-        console.log("targets: " + targets);
+        //console.log("targets: " + targets);
 
         while (i < targets && cap < 9999) {
 
@@ -978,11 +983,11 @@ class SceneManager {
             }
 
             if (target == null) {
-                console.log("no target found, aborting");
+                //console.log("no target found, aborting");
                 return;
             }
 
-            console.log("target found "+ target);
+            //console.log("target found "+ target);
             if (usedTargets.has(target)) {
                 cap++;
             } else {
@@ -998,7 +1003,7 @@ class SceneManager {
 
     affectStat(stat, amount, unit, team, teampos) {
         // Log debug info about stat change
-        console.log("affecting stats" + stat + " " + amount + " " + unit);
+        //console.log("affecting stats" + stat + " " + amount + " " + unit);
      
         // Handle HP changes
         if (stat == "HP" || stat == "B") {
@@ -1007,6 +1012,7 @@ class SceneManager {
             
             // If unit took damage, add hurt event to queue
             if (amount < 0) {
+                
                 this.eventQueue.unshift("H." + unit.ID);
             }
         }

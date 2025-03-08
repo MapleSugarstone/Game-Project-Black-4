@@ -51,7 +51,7 @@ class Projectile {
         // Start time - used for synchronized animations
         this.startTime = gameEngine.theTime;
 
-        console.log(`Projectile created: ${type} from (${sourceX}, ${sourceY}) to (${targetX}, ${targetY})`);
+        //console.log(`Projectile created: ${type} from (${sourceX}, ${sourceY}) to (${targetX}, ${targetY})`);
     }
     
     update() {
@@ -62,7 +62,7 @@ class Projectile {
         
         // Check for maximum lifetime (safety)
         if (this.elapsedTime > this.maxLifetime) {
-            console.log("Projectile reached maximum lifetime, completing");
+            //console.log("Projectile reached maximum lifetime, completing");
             this.hitTarget();
             return;
         }
@@ -186,7 +186,7 @@ class Projectile {
             this.onHit(this);
         }
         
-        console.log(`Projectile ${this.type} hit target`);
+        //console.log(`Projectile ${this.type} hit target`);
         
         // Mark for removal
         this.removeFromWorld = true;
