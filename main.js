@@ -13,7 +13,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/FrostArena.png");
 // Audio Assets
 ASSET_MANAGER.queueDownload("./UI_Assets/AudioOn.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AudioOff.png");
-ASSET_MANAGER.queueAudioDownload("./Sounds/menuMusic.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/menuMusic2.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/kaching.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Pyke.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/crit.wav");

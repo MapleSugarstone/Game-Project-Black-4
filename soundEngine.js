@@ -12,7 +12,7 @@ class SoundEngine {
         this.sceneMusicMap = {
             "MainMenu": "./Sounds/menuMusic.mp3",
             // Example additional scenes:
-            "Shop": "./Sounds/menuMusic.mp3", 
+            "Shop": "./Sounds/menuMusic2.mp3", 
             "Battle": "./Sounds/Pyke.mp3"
             // "Win round": "./Sounds/victoryMusic.mp3",
             // "Lose round": "./Sounds/defeatMusic.mp3",
