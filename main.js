@@ -150,8 +150,10 @@ ASSET_MANAGER.queueDownload("./Projectiles/Star.png");
 // Tutorial assets
 ASSET_MANAGER.queueDownload("./UI_Assets/TutorialButton1.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/TutorialButton2.png");
-ASSET_MANAGER.queueDownload("./UI_Assets/BackButton1.png");
-ASSET_MANAGER.queueDownload("./UI_Assets/BackButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/MainMenuButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/MainMenuButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NextSlideButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NextSlideButton2.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel1.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel2.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel3.png");
@@ -199,7 +201,7 @@ ASSET_MANAGER.downloadAll(() => {
     }));
 
     // Add tutorial button
-    gameEngine.addEntity(new Button(687, 920, "./UI_Assets/TutorialButton1.png", 546, 100, "./UI_Assets/TutorialButton2.png", () => { 
+    gameEngine.addEntity(new Button(809.5, 920, "./UI_Assets/TutorialButton1.png", 301, 100, "./UI_Assets/TutorialButton2.png", () => { 
         scene = "Tutorial";
     }));
 

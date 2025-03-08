@@ -1116,14 +1116,12 @@ class SceneManager {
         gameEngine.addEntity(tutorialPanels);
         
         // Add navigation buttons
-        gameEngine.addEntity(new Button(800, 950, "./UI_Assets/NextButton1.png", 100, 70, 
-            "./UI_Assets/NextButton2.png", () => { 
+        gameEngine.addEntity(new Button(800, 920, "./UI_Assets/NextSlideButton1.png", 364, 100, "./UI_Assets/NextSlideButton2.png", () => { 
                 tutorialPanels.nextPanel();
         }));
         
         // Add back button that refreshes the page
-        gameEngine.addEntity(new Button(100, 950, "./UI_Assets/BackButton1.png", 200, 70, 
-            "./UI_Assets/BackButton2.png", () => { 
+        gameEngine.addEntity(new Button(60, 920, "./UI_Assets/MainMenuButton1.png", 336, 100, "./UI_Assets/MainMenuButton2.png", () => { 
                 window.location.reload();
         }));
     }
