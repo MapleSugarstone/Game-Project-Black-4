@@ -210,6 +210,7 @@ class SceneManager {
     }
 
     roundWin() {
+        SOUND_ENGINE.fadeOut(1500);
         this.endRound();
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
         //
@@ -226,6 +227,7 @@ class SceneManager {
     }
 
     roundLose() {
+        SOUND_ENGINE.fadeOut(1500);
         this.endRound();
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
 
@@ -237,6 +239,7 @@ class SceneManager {
     }
 
     roundDraw() {
+        SOUND_ENGINE.fadeOut(1500);
         this.endRound();
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 160));
         gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
