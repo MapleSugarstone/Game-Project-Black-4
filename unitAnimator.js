@@ -36,6 +36,7 @@ class UnitAnimator {
         this.deathVelocityY = 0;
         this.deathRotation = 0;
         this.gravity = 1;  // Controls arc trajectory steepness
+        this.hasTriggeredStars = false;
     }
 
 

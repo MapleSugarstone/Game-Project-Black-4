@@ -845,13 +845,40 @@ class SceneManager {
     checkAndCleanupDeadUnits() {
         // Check each entity for dying units that have gone off screen
         gameEngine.entities.forEach(entity => {
-            if (entity instanceof Unit && entity.animator.isDying) {
+            if (entity instanceof Unit && entity.animator.isDying && !entity.animator.hasTriggeredStars) {
                 // Check if unit has gone far enough off screen
                 if (entity.x < -100 || entity.x > gameEngine.ctx.canvas.width + 100 || 
                     entity.y > gameEngine.ctx.canvas.height + 100) {
                     
-                    // Trigger star explosion effect
-                    // entity.animator.triggerStarExplosion();
+                    // Calculate edge position based on trajectory
+                    let starX = entity.x;
+                    let starY = entity.y;
+                    
+                    // Determine if unit is going left or right and calculate edge position
+                    if (entity.animator.deathVelocityX < 0) {
+                        // Left edge
+                        starX = 0;
+                        // Estimate Y position where it would hit the edge
+                        starY = entity.y + entity.animator.deathVelocityY * 
+                               (Math.abs(entity.x) / Math.abs(entity.animator.deathVelocityX));
+                    } else {
+                        // Right edge
+                        starX = gameEngine.ctx.canvas.width;
+                        // Estimate Y position where it would hit the edge
+                        starY = entity.y + entity.animator.deathVelocityY * 
+                               ((gameEngine.ctx.canvas.width - entity.x) / entity.animator.deathVelocityX);
+                    }
+                    
+                    // Clamp Y to visible area
+                    starY = Math.max(100, Math.min(starY, gameEngine.ctx.canvas.height - 100));
+                    
+                    // Create a single star explosion
+                    const starEffect = new StarParticleManager(starX, starY);
+                    gameEngine.addEntity(starEffect);
+                    
+                    // Mark unit for removal and set flag to prevent multiple explosions
+                    entity.removeFromWorld = true;
+                    entity.animator.hasTriggeredStars = true;
                 }
             }
         });

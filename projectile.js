@@ -834,36 +834,40 @@ class StarParticleManager {
         this.y = y;
         this.particles = [];
         this.layer = 6;  // Above units
-        this.lifespan = 2.5;  // How long the entire effect lasts
+        this.lifespan = 1.5;  // Shorter overall effect duration
         this.elapsedTime = 0;
         this.removeFromWorld = false;
         
-        // Create initial particles
+        // Create all particles at once for a single burst
         this.initializeParticles();
     }
     
     initializeParticles() {
-        // Create star particles in an explosion pattern - INCREASED COUNT AND SIZE
-        const particleCount = 80 + Math.floor(Math.random() * 20);
+        // Fewer particles for a more concentrated explosion
+        const particleCount = 50 + Math.floor(Math.random() * 15);
         
         for (let i = 0; i < particleCount; i++) {
+            // Create a more focused explosion pattern
             const angle = Math.random() * Math.PI * 2;
-            const speed = 150 + Math.random() * 250;
             
+            // More consistent initial speeds for a cleaner burst
+            const speed = 200 + Math.random() * 200;
+            
+            // More focused initial positions (all from same point)
             this.particles.push({
                 x: this.x,
                 y: this.y,
                 vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed - 80, // Stronger upward bias
-                size: 30 + Math.random() * 30, // MUCH LARGER STARS
+                vy: Math.sin(angle) * speed - 100, // Stronger upward bias
+                size: 40 + Math.random() * 40,
                 alpha: 1.0,
                 rotation: Math.random() * Math.PI * 2,
-                rotationSpeed: (Math.random() - 0.5) * 15,
-                life: 0.8 + Math.random() * 1.5 // Longer life
+                rotationSpeed: (Math.random() - 0.5) * 10,
+                // More consistent lifespans for a cleaner effect
+                life: 0.8 + Math.random() * 0.7  
             });
         }
     }
-    
     
     update() {
         const clockTick = gameEngine.clockTick;
@@ -878,12 +882,12 @@ class StarParticleManager {
             p.x += p.vx * clockTick * speedMultiplier;
             p.y += p.vy * clockTick * speedMultiplier;
             
-            // Apply gentle deceleration
-            p.vx *= 0.95;
-            p.vy *= 0.95;
+            // Stronger deceleration for more realistic physics
+            p.vx *= 0.92;
+            p.vy *= 0.92;
             
-            // Apply gravity
-            p.vy += 200 * clockTick * speedMultiplier;
+            // Higher gravity for faster fall
+            p.vy += 250 * clockTick * speedMultiplier;
             
             // Update rotation
             p.rotation += p.rotationSpeed * clockTick * speedMultiplier;
@@ -909,14 +913,12 @@ class StarParticleManager {
     draw(ctx) {
         ctx.save();
         
-        // Draw each particle
         for (const p of this.particles) {
             ctx.globalAlpha = p.alpha;
             
             ctx.translate(p.x, p.y);
             ctx.rotate(p.rotation);
             
-            // Draw the star image
             const starImage = ASSET_MANAGER.getAsset("./Projectiles/Star.png");
             ctx.drawImage(
                 starImage,
