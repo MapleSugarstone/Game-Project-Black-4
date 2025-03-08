@@ -952,6 +952,10 @@ class SceneManager {
                 if (tempWhoAffected == "FA") {
                     target = this.activeTeam[0];
                 }
+                if (tempWhoAffected == "BA") {
+                    let tempIndex = this.indexOfID(owner, this.activeTeam);
+                    target = this.activeTeam[tempIndex+1];
+                }
             }
 
             if (team == 1) {
@@ -966,6 +970,10 @@ class SceneManager {
                 }
                 if (tempWhoAffected == "FA") {
                     target = this.enemyTeam[0];
+                }
+                if (tempWhoAffected == "BA") {
+                    let tempIndex = this.indexOfID(owner, this.enemyTeam);
+                    target = this.enemyTeam[tempIndex+1];
                 }
             }
 
@@ -1027,6 +1035,7 @@ class SceneManager {
                 let tempIndex2 = this.indexOfID(Owner, this.activeTeam);
                 return tempIndex == tempIndex2-1
             }
+            
         }
 
       // Team is enemy
