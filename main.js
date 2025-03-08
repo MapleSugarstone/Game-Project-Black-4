@@ -105,7 +105,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/NextButton2.png");
 
 // Monster Sprites
 ASSET_MANAGER.queueDownload("./UI_Assets/Select.png");
-for (let i = 1; i < 21; i++) {
+for (let i = 1; i < 41; i++) {
     ASSET_MANAGER.queueDownload("./Units/Unit" + i + ".png");
 }
 

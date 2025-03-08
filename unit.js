@@ -48,10 +48,10 @@ class Unit {
                     this.ability = new Passive("H", "I", "RA.2", "HP.1", false, "BuffAlly", "Heal 2 random allies' HP by 1 when hurt.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "I", "RA.2", "HP.1", false, "BuffAlly", "Heal 2 random allies' HP by 1 when hurt.");
+                    this.ability = new Passive("H", "I", "RA.3", "HP.1", false, "BuffAlly", "Heal 3 random allies' HP by 1 when hurt.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "I", "RA.3", "HP.1", false, "BuffAlly", "Heal 3 random allies' HP by 1 when hurt.");
+                    this.ability = new Passive("H", "I", "RA.4", "HP.1", false, "BuffAlly", "Heal 4 random allies' HP by 1 when hurt.");
                 }
                 break;
             case "./Units/Unit2.png":
@@ -62,10 +62,10 @@ class Unit {
                     this.ability = new Passive("SB", "N", "RE.1", "HP.-3", false, "Snowball", "Deal 3 damage to random enemy at the start of the battle.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("SB", "N", "RE.1", "HP.-3", false, "Snowball", "Deal 3 damage to random enemy at the start of the battle.");
+                    this.ability = new Passive("SB", "N", "RE.1", "HP.-4", false, "Snowball", "Deal 4 damage to random enemy at the start of the battle.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("SB", "N", "RE.1", "HP.-4", false, "Snowball", "Deal 4 damage to random enemy at the start of the battle.");
+                    this.ability = new Passive("SB", "N", "RE.1", "HP.-2", false, "Snowball", "Deal 5 damage to random enemy at the start of the battle.");
                 }
                 break;
             case "./Units/Unit3.png":
@@ -76,10 +76,10 @@ class Unit {
                     this.ability = new Passive("A", "I", "RE.2", "HP.-1", false, "Snowball", "Deal 1 damage to 2 random enemies after attacking.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("A", "I", "RE.2", "HP.-1", false, "Snowball", "Deal 1 damage to 2 random enemies after attacking.");
+                    this.ability = new Passive("A", "I", "RE.3", "HP.-1", false, "Snowball", "Deal 1 damage to 3 random enemies after attacking.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("A", "I", "RE.3", "HP.-1", false, "Snowball", "Deal 1 damage to 3 random enemies after attacking.");
+                    this.ability = new Passive("A", "I", "RE.4", "HP.-1", false, "Snowball", "Deal 1 damage to 4 random enemies after attacking.");
                 }
                 break;
             case "./Units/Unit4.png":
@@ -90,10 +90,10 @@ class Unit {
                     this.ability = new Passive("A", "AA", "I.1", "B.2", false, "BuffAlly", "When the ally ahead attacks, increase attack and hp by 2.");                
                 }
                 if (level == 3) {
-                    this.ability = new Passive("A", "AA", "I.1", "B.2", false, "BuffAlly", "When the ally ahead attacks, increase attack and hp by 2.");                  
+                    this.ability = new Passive("A", "AA", "I.1", "B.3", false, "BuffAlly", "When the ally ahead attacks, increase attack and hp by 3.");                  
                 }
                 if (level == 4) {
-                    this.ability = new Passive("A", "AA", "I.1", "B.3", false, "BuffAlly", "When the ally ahead attacks, increase attack and hp by 3.");  
+                    this.ability = new Passive("A", "AA", "I.1", "B.4", false, "BuffAlly", "When the ally ahead attacks, increase attack and hp by 4.");  
                 }
                 break;
             case "./Units/Unit5.png":
@@ -104,10 +104,10 @@ class Unit {
                     this.ability = new Passive("D", "A", "RE.1", "HP.-2", true, "Magic", "When an ally dies, deal 2 damage to a random enemy.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("D", "A", "RE.1", "HP.-2", true, "Magic", "When an ally dies, deal 2 damage to a random enemy.");
+                    this.ability = new Passive("D", "A", "RE.1", "HP.-3", true, "Magic", "When an ally dies, deal 3 damage to a random enemy.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("D", "A", "RE.1", "HP.-3", true, "Magic", "When an ally dies, deal 3 damage to a random enemy.");
+                    this.ability = new Passive("D", "A", "RE.1", "HP.-4", true, "Magic", "When an ally dies, deal 4 damage to a random enemy.");
                 }
                 break;
             case "./Units/Unit6.png":
@@ -118,24 +118,24 @@ class Unit {
                     this.ability = new Passive("H", "E", "T.1", "AT.-2", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 2.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "E", "T.1", "AT.-2", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 2.");
+                    this.ability = new Passive("H", "E", "T.1", "AT.-3", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 3.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "E", "T.1", "AT.-3", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 3.");
+                    this.ability = new Passive("H", "E", "T.1", "AT.-4", false, "Poison", "Whenever an enemy is hurt, reduce their attack by 4.");
                 }
                 break;
             case "./Units/Unit7.png":
                 if (level == 1) {
-                    this.ability = new Passive("SB", "N", "FA.1", "AT.3", false, "BuffAlly", "Increase the front ally's attack by 3 at the start of battle.");
+                    this.ability = new Passive("SB", "N", "FA.1", "AT.1", false, "BuffAlly", "Increase the front ally's attack by 1 at the start of battle.");
                 }
                 if (level == 2) {
-                    this.ability = new Passive("SB", "N", "FA.1", "AT.4", false, "BuffAlly", "Increase the front ally's attack by 4 at the start of battle.");
+                    this.ability = new Passive("SB", "N", "FA.1", "AT.2", false, "BuffAlly", "Increase the front ally's attack by 2 at the start of battle.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("SB", "N", "FA.1", "AT.4", false, "BuffAlly", "Increase the front ally's attack by 4 at the start of battle.");
+                    this.ability = new Passive("SB", "N", "FA.1", "AT.3", false, "BuffAlly", "Increase the front ally's attack by 3 at the start of battle.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("SB", "N", "FA.1", "AT.6", false, "BuffAlly", "Increase the front ally's attack by 6 at the start of battle.");
+                    this.ability = new Passive("SB", "N", "FA.1", "AT.4", false, "BuffAlly", "Increase the front ally's attack by 4 at the start of battle.");
                 }
                 break;
             case "./Units/Unit8.png":
@@ -146,10 +146,10 @@ class Unit {
                     this.ability = new Passive("A", "I", "RA.2", "AT.1", false, "BuffAlly", "After attacking, increase 2 random allies' attack by 1.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("A", "I", "RA.2", "AT.1", false, "BuffAlly", "After attacking, increase 2 random allies' attack by 1.");
+                    this.ability = new Passive("A", "I", "RA.3", "AT.1", false, "BuffAlly", "After attacking, increase 3 random allies' attack by 1.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("A", "I", "RA.3", "AT.1", false, "BuffAlly", "After attacking, increase 3 random allies' attack by 1.");
+                    this.ability = new Passive("A", "I", "RA.4", "AT.1", false, "BuffAlly", "After attacking, increase 4 random allies' attack by 1.");
                 }
                 break;
             case "./Units/Unit9.png":
@@ -160,10 +160,10 @@ class Unit {
                     this.ability = new Passive("D", "E", "I.1", "AT.2", false, "BuffAlly", "Increase attack by 2 when an enemy dies.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("D", "E", "I.1", "AT.2", false, "BuffAlly", "Increase attack by 2 when an enemy dies.");
+                    this.ability = new Passive("D", "E", "I.1", "AT.3", false, "BuffAlly", "Increase attack by 3 when an enemy dies.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("D", "E", "I.1", "AT.3", false, "BuffAlly", "Increase attack by 3 when an enemy dies.");
+                    this.ability = new Passive("D", "E", "I.1", "AT.4", false, "BuffAlly", "Increase attack by 4 when an enemy dies.");
                 }
                 break;
             case "./Units/Unit10.png":
@@ -177,10 +177,10 @@ class Unit {
                     this.ability = new Passive("D", "E", "FA.1", "AT.2", false, "BuffAlly", "Increase front ally's attack by 2 when an enemy dies.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("D", "E", "FA.1", "AT.2", false, "BuffAlly", "Increase front ally's attack by 2 when an enemy dies.");
+                    this.ability = new Passive("D", "E", "FA.1", "AT.3", false, "BuffAlly", "Increase front ally's attack by 3 when an enemy dies.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("D", "E", "FA.1", "AT.3", false, "BuffAlly", "Increase front ally's attack by 3 when an enemy dies.");
+                    this.ability = new Passive("D", "E", "FA.1", "AT.4", false, "BuffAlly", "Increase front ally's attack by 4 when an enemy dies.");
                 }
                 break;
             case "./Units/Unit12.png":
@@ -191,10 +191,10 @@ class Unit {
                     this.ability = new Passive("H", "I", "RE.1", "HP.-2", false, "Damage", "Deal 2 damage to a random enemy when hurt.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "I", "RE.1", "HP.-2", false, "Damage", "Deal 2 damage to a random enemy when hurt.");
+                    this.ability = new Passive("H", "I", "RE.1", "HP.-3", false, "Damage", "Deal 3 damage to a random enemy when hurt.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "I", "RE.2", "HP.-2", false, "Damage", "Deal 2 damage to 2 random enemy when hurt.");
+                    this.ability = new Passive("H", "I", "RE.2", "HP.-4", false, "Damage", "Deal 4 damage to 2 random enemy when hurt.");
                 }
                 break;
             case "./Units/Unit13.png":
@@ -205,10 +205,10 @@ class Unit {
                     this.ability = new Passive("H", "I", "BA.1", "HP.2", false, "BuffAlly", "Heal the ally behind by 2 HP when hurt.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "I", "BA.1", "HP.2", false, "BuffAlly", "Heal the ally behind by 2 HP when hurt.");
+                    this.ability = new Passive("H", "I", "BA.1", "HP.3", false, "BuffAlly", "Heal the ally behind by 3 HP when hurt.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "I", "BA.1", "HP.3", false, "BuffAlly", "Heal the ally behind by 3 HP when hurt.");
+                    this.ability = new Passive("H", "I", "BA.1", "HP.4", false, "BuffAlly", "Heal the ally behind by 4 HP when hurt.");
                 }
                 break;
             case "./Units/Unit14.png":
@@ -219,7 +219,7 @@ class Unit {
                     this.ability = new Passive("D", "A", "I.1", "B.3", false, "BuffAlly", "Increase attack and HP by 3 when an ally dies.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("D", "A", "I.1", "B.3", false, "BuffAlly", "Increase attack and HP by 3 when an ally dies.");
+                    this.ability = new Passive("D", "A", "I.1", "B.4", false, "BuffAlly", "Increase attack and HP by 4 when an ally dies.");
                 }
                 if (level == 4) {
                     this.ability = new Passive("D", "A", "I.1", "B.5", false, "BuffAlly", "Increase attack and HP by 5 when an ally dies.");
@@ -233,7 +233,7 @@ class Unit {
                     this.ability = new Passive("H", "E", "RA.2", "HP.1", false, "Magic", "Increase 2 random allies' HP by 1 when an enemy gets hurt.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "E", "RA.2", "B.1", false, "Magic", "Increase 2 random ally's attack and HP by 1 when an enemy gets hurt.");
+                    this.ability = new Passive("H", "E", "RA.3", "B.1", false, "Magic", "Increase 3 random ally's attack and HP by 1 when an enemy gets hurt.");
                 }
                 if (level == 4) {
                     this.ability = new Passive("H", "E", "I.1", "B.3", false, "Magic", "Increase attack and HP by 3 when an enemy gets hurt.");
@@ -247,7 +247,7 @@ class Unit {
                     this.ability = new Passive("D", "E", "FA.1", "HP.3", false, "BuffAlly", "Heal the front ally's HP by 3 when an enemy dies.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("D", "E", "FA.1", "HP.3", false, "BuffAlly", "Heal the front ally's HP by 3 when an enemy dies.");
+                    this.ability = new Passive("D", "E", "FA.1", "HP.4", false, "BuffAlly", "Heal the front ally's HP by 4 when an enemy dies.");
                 }
                 if (level == 4) {
                     this.ability = new Passive("D", "E", "FA.1", "HP.5", false, "BuffAlly", "Heal the front ally's HP by 5 when an enemy dies.");
@@ -261,7 +261,7 @@ class Unit {
                     this.ability = new Passive("H", "I", "BA.1", "HP.-1", false, "Snowball", "Hit the ally behind by 1 HP when hurt.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "I", "BA.1", "HP.-1", false, "Snowball", "Hit the ally behind by 1 HP when hurt.");
+                    this.ability = new Passive("H", "I", "BA.2", "HP.-1", false, "Snowball", "Hit the ally behind twice by 1 HP when hurt.");
                 }
                 if (level == 4) {
                     this.ability = new Passive("H", "I", "BA.3", "HP.-1", false, "Snowball", "Hit the ally behind thrice by 1 HP when hurt.");
@@ -311,16 +311,16 @@ class Unit {
                 break;
             case "./Units/Unit21.png":
                 if (level == 1) {
-                    this.ability = new Passive("SB", "N", "RE.2", "HP.-2", false, "Arrow", "Increase 3 random allies' attack and HP by 2 at the start of battle.");
+                    this.ability = new Passive("SB", "N", "RE.2", "HP.-2", false, "Arrow", "Deal 2 damage to 2 random enemies at the start of battle.");
                 }
                 if (level == 2) {
-                    this.ability = new Passive("SB", "N", "RE.2", "HP.-3", false, "Arrow", "Increase 4 random allies' attack and HP by 3 at the start of battle.");
+                    this.ability = new Passive("SB", "N", "RE.2", "HP.-3", false, "Arrow", "Deal 3 damage to 2 random enemies at the start of battle.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("SB", "N", "RE.2", "HP.-3", false, "Arrow", "Increase 4 random allies' attack and HP by 3 at the start of battle.");
+                    this.ability = new Passive("SB", "N", "RE.3", "HP.-3", false, "Arrow", "Deal 3 damage to 3 random enemies at the start of battle.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("SB", "N", "RE.3", "HP.-5", false, "Arrow", "Increase 5 random allies' attack and HP by 5 at the start of battle.");
+                    this.ability = new Passive("SB", "N", "RE.3", "HP.-4", false, "Arrow", "Deal 3 damage to 4 random enemies at the start of battle.");
                 }
                 break;
             case "./Units/Unit22.png":
@@ -424,6 +424,146 @@ class Unit {
                 }
                 if (level == 4) {
                     this.ability = new Passive("H", "I", "RE.4", "HP.-5", false, "Ice", "Hit 4 random enemies for 5 when hit.");
+                }
+                break;
+            case "./Units/Unit31.png":
+                if (level == 1) {
+                    this.ability = new Passive("A", "I", "FE.1", "B.-1", false, "Frost", "Reduce front enemy's HP and Attack by 1 after attacking.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("A", "I", "FE.1", "B.-2", false, "Frost", "Reduce front enemy's HP and Attack by 2 after attacking.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("A", "I", "FE.1", "B.-3", false, "Frost", "Reduce front enemy's HP and Attack by 3 after attacking.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("A", "I", "FE.1", "B.-4", false, "Frost", "Reduce front enemy's HP and Attack by 4 after attacking.");
+                }
+                break;
+            case "./Units/Unit32.png":
+                if (level == 1) {
+                    this.ability = new Passive("D", "N", "FA.1", "B.5", false, "BuffAlly", "When an ally dies, buff the front ally's HP and Attack by 5.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("D", "N", "FA.1", "B.6", false, "BuffAlly", "When an ally dies, buff the front ally's HP and Attack by 6.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("D", "N", "FA.1", "B.7", false, "BuffAlly", "When an ally dies, buff the front ally's HP and Attack by 7.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("D", "N", "FA.1", "B.8", false, "BuffAlly", "When an ally dies, buff the front ally's HP and Attack by 8.");
+                }
+                break;
+            case "./Units/Unit33.png":
+                if (level == 1) {
+                    this.ability = new Passive("SB", "N", "FA.1", "B.6", false, "BuffAlly", "At the start of round, buff the front ally's HP and Attack by 6.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("SB", "N", "FA.1", "B.7", false, "BuffAlly", "At the start of round, buff the front ally's HP and Attack by 7.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("SB", "N", "FA.1", "B.8", false, "BuffAlly", "At the start of round, buff the front ally's HP and Attack by 8.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("SB", "N", "FA.1", "B.9", false, "BuffAlly", "At the start of round, buff the front ally's HP and Attack by 9.");
+                }
+                break;
+            case "./Units/34.png":
+                if (level == 1) {
+                    this.ability = new Passive("H", "N", "I.1", "AT.1", false, "Damage", "Gain 1 attack whenever anyone is hit.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("H", "N", "I.1", "AT.2", false, "Damage", "Gain 2 attack whenever anyone is hit.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("H", "N", "I.1", "AT.3", false, "Damage", "Gain 3 attack whenever anyone is hit.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("H", "N", "I.1", "AT.4", false, "Damage", "Gain 4 attack whenever anyone is hit.");
+                }
+                break;
+            case "./Units/Unit35.png":
+                if (level == 1) {
+                    this.ability = new Passive("SB", "N", "LE.1", "HP.-5", false, "Snowball", "Deal 5 damage to the last enemy at start of battle.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("SB", "N", "LE.1", "HP.-6", false, "Snowball", "Deal 6 damage to the last enemy at start of battle.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("SB", "N", "LE.1", "HP.-7", false, "Snowball", "Deal 7 damage to the last enemy at start of battle.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("SB", "N", "LE.1", "HP.-8", false, "Snowball", "Deal 8 damage to the last enemy at start of battle.");
+                }
+                break;
+            case "./Units/Unit36.png":
+                if (level == 1) {
+                    this.ability = new Passive("H", "E", "T.1", "HP.-1", false, "BuffAlly", "Whenever an enemy is hurt, deal 1 damage to them.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("H", "E", "T.1", "HP.-2", false, "BuffAlly", "Whenever an enemy is hurt, deal 2 damage to them.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("H", "E", "T.1", "HP.-3", false, "BuffAlly", "Whenever an enemy is hurt, deal 3 damage to them.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("H", "E", "T.1", "HP.-4", false, "BuffAlly", "Whenever an enemy is hurt, deal 4 damage to them.");
+                }
+                break;
+            case "./Units/37.png":
+                if (level == 1) {
+                    this.ability = new Passive("SB", "N", "RA.1", "AT.10", false, "BuffAlly", "Give a random ally 10 attack at start of battle.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("SB", "N", "RA.2", "AT.9", false, "BuffAlly", "Give 2 random allies 9 attack at start of battle.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("SB", "N", "RA.3", "AT.8", false, "BuffAlly", "Give 3 random allies 8 attack at start of battle.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("SB", "N", "RA.4", "AT.7", false, "BuffAlly", "Give 4 random allies 7 attack at start of battle.");
+                }
+                break;
+            case "./Units/Unit38.png":
+                if (level == 1) {
+                    this.ability = new Passive("SB", "N", "FA.1", "AT.-5", false, "Frost", "Reduce front enemy's attack by 5 at start of battle");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("SB", "N", "FA.1", "AT.-6", false, "Frost", "Reduce front enemy's attack by 6 at start of battle");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("SB", "N", "FA.1", "AT.-7", false, "Frost", "Reduce front enemy's attack by 7 at start of battle");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("SB", "N", "FA.1", "AT.-8", false, "Frost", "Reduce front enemy's attack by 8 at start of battle");
+                }
+                break;
+            case "./Units/Unit39.png":
+                if (level == 1) {
+                    this.ability = new Passive("N", "N", "N.1", "N", false, "N", "Has a powerful ability at level 4.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("N", "N", "N.1", "N", false, "N", "Has a powerful ability at level 4.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("N", "N", "N.1", "N", false, "N", "Has a powerful ability at level 4.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("SB", "N", "RE.1", "HP.-99", false, "Snowball", "Deal 99 damage to a random enemy at start of battle.");
+                }
+                break;
+            case "./Units/Unit40.png":
+                if (level == 1) {
+                    this.ability = new Passive("D", "N", "I.1", "B.4", false, "BuffAlly", "When anyone dies, gain 4 attack 4 hp.");
+                }
+                if (level == 2) {
+                    this.ability = new Passive("D", "N", "I.1", "B.5", false, "BuffAlly", "When anyone dies, gain 5 attack 5 hp.");
+                }
+                if (level == 3) {
+                    this.ability = new Passive("D", "N", "I.1", "B.6", false, "BuffAlly", "When anyone dies, gain 6 attack 6 hp.");
+                }
+                if (level == 4) {
+                    this.ability = new Passive("D", "N", "I.1", "B.7", false, "BuffAlly", "When anyone dies, gain 7 attack 7 hp.");
                 }
                 break;
             default:
@@ -543,16 +683,136 @@ class Unit {
                 this.name = "Crash";
                 break;
             case "./Units/Unit19.png":
-                this.attack = 1;
-                this.health = 10;
+                this.attack = 2;
+                this.health = 15;
                 this.rarity = 2;
                 this.name = "Plague";
                 break;
             case "./Units/Unit20.png":
                 this.attack = 2;
-                this.health = 8;
+                this.health = 3;
                 this.rarity = 2;
                 this.name = "Likene";
+                break;
+            case "./Units/Unit21.png":
+                this.attack = 6;
+                this.health = 14;
+                this.rarity = 3;
+                this.name = "Sogwa";
+                break;
+            case "./Units/Unit22.png":
+                this.attack = 18;
+                this.health = 16;
+                this.rarity = 3;
+                this.name = "Raven";
+                break;
+            case "./Units/Unit23.png":
+                this.attack = 12;
+                this.health = 15;
+                this.rarity = 3;
+                this.name = "Hatter";
+                break;
+            case "./Units/Unit24.png":
+                this.attack = 7;
+                this.health = 18;
+                this.rarity = 3;
+                this.name = "Helter";
+                break;
+            case "./Units/Unit25.png":
+                this.attack = 5;
+                this.health = 18;
+                this.rarity = 3;
+                this.name = "Skelter";
+                break;
+            case "./Units/Unit26.png":
+                this.attack = 3;
+                this.health = 24;
+                this.rarity = 3;
+                this.name = "Peebo";
+                break;
+            case "./Units/Unit27.png":
+                this.attack = 10;
+                this.health = 10;
+                this.rarity = 3;
+                this.name = "Mariam";
+                break;
+            case "./Units/Unit28.png":
+                this.attack = 8;
+                this.health = 14;
+                this.rarity = 3;
+                this.name = "Hubert";
+                break;
+            case "./Units/Unit29.png":
+                this.attack = 14;
+                this.health = 7;
+                this.rarity = 3;
+                this.name = "Reimmus";
+                break;
+            case "./Units/Unit30.png":
+                this.attack = 2;
+                this.health = 25;
+                this.rarity = 3;
+                this.name = "Coda";
+                break;
+            case "./Units/Unit31.png":
+                this.attack = 9;
+                this.health = 18;
+                this.rarity = 4;
+                this.name = "Slice";
+                break;
+            case "./Units/Unit32.png":
+                this.attack = 11;
+                this.health = 16;
+                this.rarity = 4;
+                this.name = "Vyiam";
+                break;
+            case "./Units/Unit33.png":
+                this.attack = 13;
+                this.health = 15;
+                this.rarity = 4;
+                this.name = "Soda";
+                break;
+            case "./Units/Unit34.png":
+                this.attack = 14;
+                this.health = 14;
+                this.rarity = 4;
+                this.name = "Kingale";
+                break;
+            case "./Units/Unit35.png":
+                this.attack = 8;
+                this.health = 20;
+                this.rarity = 4;
+                this.name = "Sherbert";
+                break;
+            case "./Units/Unit36.png":
+                this.attack = 19;
+                this.health = 4;
+                this.rarity = 4;
+                this.name = "Schism";
+                break;
+            case "./Units/Unit37.png":
+                this.attack = 6;
+                this.health = 21;
+                this.rarity = 4;
+                this.name = "Pepperwire";
+                break;
+            case "./Units/Unit38.png":
+                this.attack = 16;
+                this.health = 14;
+                this.rarity = 4;
+                this.name = "Spark";
+                break;
+            case "./Units/Unit39.png":
+                this.attack = 7;
+                this.health = 10;
+                this.rarity = 4;
+                this.name = "Lost";
+                break;
+            case "./Units/Unit40.png":
+                this.attack = 4;
+                this.health = 4;
+                this.rarity = 3;
+                this.name = "IO";
                 break;
             default:
                 this.attack = 2;
@@ -632,6 +892,8 @@ class Unit {
         offset = 5;
         if (this.health > 9) offset = 0;
         ctx.fillStyle = this.health < this.maxHealth ? "red" : "green";
+        if (this.health > this.maxHealth) {ctx.fillStyle = "blue";}
+
         ctx.fillText(this.health, this.x + 35 + offset + statx, this.y + this.height - 10);
 
         // Level stars if above level 1
@@ -653,13 +915,13 @@ class Unit {
         } else if (this.rarity == 3) {
             ctx.fillStyle = 'rgba(101, 179, 251, 0.9)';
             rareText = "rare";
-        } else if (this.rarity == 4) {
+        /*} else if (this.rarity == 4) {
             ctx.fillStyle = 'rgba(0, 34, 255, 0.9)';
-            rareText = "super rare";
-        } else if (this.rarity == 5) {
+            rareText = "super rare";*/
+        } else if (this.rarity == 4) {
             ctx.fillStyle = 'rgba(200, 0, 255, 0.9)';
             rareText = "epic";
-        } else if (this.rarity == 6) {
+        } else if (this.rarity == 5) {
             ctx.fillStyle = 'rgba(255, 247, 0, 0.9)';
             rareText = "legendary";
         }
@@ -688,14 +950,40 @@ class Unit {
 
         ctx.fillStyle = "cyan";
         ctx.font = "bold 20px Arial";
-        ctx.textAlign = 'left';
-        for (let i = 0; i < lines.length; i++) ctx.fillText(lines[i], left + 20, bottom + 35 + (25 * i));
+        ctx.textAlign = 'center';
+        for (let i = 0; i < lines.length; i++) ctx.fillText(lines[i], left + 150, bottom + 65 + (25 * i));
+        ctx.fillStyle = "cyan";
+        ctx.font = "bold 24px Arial";
+        ctx.textAlign = 'center';
+        ctx.fillText(this.name, left + 150, bottom+30);
+
+        let rareText = "None"
+        if (this.rarity == 1) {
+            ctx.fillStyle = 'rgba(157, 157, 157, 0.9)';
+            rareText = "common";
+        } else if (this.rarity == 2) {
+            ctx.fillStyle = 'rgba(152, 241, 119, 0.9)';
+            rareText = "uncommon";
+        } else if (this.rarity == 3) {
+            ctx.fillStyle = 'rgba(101, 179, 251, 0.9)';
+            rareText = "rare";
+        /*} else if (this.rarity == 4) {
+            ctx.fillStyle = 'rgba(0, 34, 255, 0.9)';
+            rareText = "super rare";*/
+        } else if (this.rarity == 4) {
+            ctx.fillStyle = 'rgba(200, 0, 255, 0.9)';
+            rareText = "epic";
+        } else if (this.rarity == 5) {
+            ctx.fillStyle = 'rgba(255, 247, 0, 0.9)';
+            rareText = "legendary";
+        }
+        ctx.fillText(rareText, left + 150, bottom+165);
         ctx.restore();
     }
 
     splitText(text) {
         let index = 0;
-        let end = 20;
+        let end = 27;
         let lines = []
         let textLeft = text;
 
@@ -704,7 +992,7 @@ class Unit {
             lines[index] = textLeft.substring(0, end);
             textLeft = textLeft.substring(end+1);
             index++;
-            end = 20;
+            end = 27;
         }
 
         lines[index] = textLeft;

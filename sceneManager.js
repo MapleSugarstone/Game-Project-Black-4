@@ -244,7 +244,7 @@ class SceneManager {
     endRound() {
         this.clearEntities();
         gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
-        if ((this.currentRound-1) % 2 === 0) {
+        if (((this.currentRound-1) % 2 === 0) && this.shopLevel<4) {
             setTimeout(function() {
                 gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png",
                                                 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
@@ -411,8 +411,8 @@ class SceneManager {
         if (this.shopLevel > 1) { usedTypes = usedTypes.concat(this.uncommonMonsterTypes);}
         if (this.shopLevel > 2) { usedTypes = usedTypes.concat(this.rareMonsterTypes);}
         if (this.shopLevel > 3) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
-        if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
-        if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
+        //if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
+        //if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
 
         if (this.gold >= ROLL_COST) {
             this.gold -= ROLL_COST;
@@ -620,8 +620,10 @@ class SceneManager {
         if (this.shopLevel > 1) { usedTypes = usedTypes.concat(this.uncommonMonsterTypes);}
         if (this.shopLevel > 2) { usedTypes = usedTypes.concat(this.rareMonsterTypes);}
         if (this.shopLevel > 3) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
-        if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
-        if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
+        //if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
+        //if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
+        if (this.currentRound > 9) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
+        if (this.currentRound > 12) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
         
         // Create each unit and assign stats
         for (let i = 0; i < teamSize; i++) {
@@ -632,20 +634,12 @@ class SceneManager {
             // Remove the selected type from available types
             usedTypes.splice(randomIndex, 1);
             
-            // Set attack and health values
-            const attack = 1;
-            const health = 2;
-            
             // Construct the unit with given stats
-            const unit = new Unit(0, 0, type, {
-                attack: attack,
-                health: health
-            }, true);
+            const unit = new Unit(2000, 400, type, undefined, true);
             
             // Make the unit face left
             unit.facingLeft = true;
             // Set maximum health
-            unit.maxHealth = health;
             
             // Add the unit to the team
             team.push(unit);
@@ -952,6 +946,9 @@ class SceneManager {
                 if (tempWhoAffected == "FA") {
                     target = this.activeTeam[0];
                 }
+                if (tempWhoAffected == "LE") {
+                    target = this.enemyTeam[this.enemyTeam.length-1];
+                }
                 if (tempWhoAffected == "BA") {
                     let tempIndex = this.indexOfID(owner, this.activeTeam);
                     target = this.activeTeam[tempIndex+1];
@@ -970,6 +967,9 @@ class SceneManager {
                 }
                 if (tempWhoAffected == "FA") {
                     target = this.enemyTeam[0];
+                }
+                if (tempWhoAffected == "LE") {
+                    target = this.activeTeam[this.activeTeam.length-1];
                 }
                 if (tempWhoAffected == "BA") {
                     let tempIndex = this.indexOfID(owner, this.enemyTeam);
