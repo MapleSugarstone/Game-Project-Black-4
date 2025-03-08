@@ -158,7 +158,7 @@ class SceneManager {
 
     update() {
         if (scene === "Shop") {
-            SOUND_ENGINE.updateScene("MainMenu");
+            SOUND_ENGINE.updateScene("Shop");
             this.clearEntities();
             this.setupShop();
             scene = "LoadedShop";
