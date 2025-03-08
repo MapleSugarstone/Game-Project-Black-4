@@ -629,8 +629,8 @@ class Unit {
                 this.name = "Pikal";
                 break;
             case "./Units/Unit10.png":
-                this.attack = 6;
-                this.health = 10;
+                this.attack = 4;
+                this.health = 9;
                 this.rarity = 1;
                 this.name = "Fistt";
                 break;
