@@ -554,7 +554,7 @@ class ProjectileManager {
                 trajectoryType: "bounce",
                 rotationSpeed: 2,
                 trailEffect: "smoke",
-                impactEffect: "splash",
+                impactEffect: "heal",
                 scale: 0.9,
                 trailFrequency: 0.05
             },
@@ -659,13 +659,13 @@ class ProjectileManager {
                 impactEffect: null
             },
             "poison": {
-                width: 28,
-                height: 28,
+                width: 40,
+                height: 40,
                 speed: 800,
                 trajectoryType: "bounce",
                 rotationSpeed: 2,
                 trailEffect: "smoke",
-                impactEffect: "splash",
+                impactEffect: "heal",
                 scale: 0.9,
                 trailFrequency: 0.05
             },

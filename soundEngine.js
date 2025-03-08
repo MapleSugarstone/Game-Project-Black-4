@@ -10,7 +10,7 @@ class SoundEngine {
         // Maps scenes to their background music files
         // Add new scenes and music files here
         this.sceneMusicMap = {
-            "MainMenu": "./Sounds/menuMusic.mp3",
+            "MainMenu": "./Sounds/menuMusic2.mp3",
             // Example additional scenes:
             "Shop": "./Sounds/menuMusic2.mp3", 
             "Battle": "./Sounds/Pyke.mp3"
@@ -112,14 +112,13 @@ class SoundEngine {
             // Load and setup new background music
             this.currentMusic = ASSET_MANAGER.getAsset(musicPath);
             console.log("Got audio asset:", this.currentMusic);
-            
+            this.currentMusic.loop = true;
             
             if (this.currentMusic && this.audioEnabled) {
                 console.log("Attempting to play music");
                 this.currentMusic.volume = this.musicVolume;
                 this.currentMusic.loop = true;
                 
-                this.volume = 0.3;
 
                 // Handle browser autoplay restrictions
                 const playPromise = this.currentMusic.play();

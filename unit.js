@@ -498,16 +498,16 @@ class Unit {
                 break;
             case "./Units/Unit36.png":
                 if (level == 1) {
-                    this.ability = new Passive("H", "E", "T.1", "HP.-1", false, "BuffAlly", "Whenever an enemy is hurt, deal 1 damage to them.");
+                    this.ability = new Passive("H", "E", "T.1", "HO.-1", false, "iceShard", "Whenever an enemy is hurt, reduce their hp total by 1.");
                 }
                 if (level == 2) {
-                    this.ability = new Passive("H", "E", "T.1", "HP.-2", false, "BuffAlly", "Whenever an enemy is hurt, deal 2 damage to them.");
+                    this.ability = new Passive("H", "E", "T.1", "HO.-2", false, "iceShard", "Whenever an enemy is hurt, reduce their hp total by 2.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "E", "T.1", "HP.-3", false, "BuffAlly", "Whenever an enemy is hurt, deal 3 damage to them.");
+                    this.ability = new Passive("H", "E", "T.1", "HO.-3", false, "iceShard", "Whenever an enemy is hurt, reduce their hp total by 3.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "E", "T.1", "HP.-4", false, "BuffAlly", "Whenever an enemy is hurt, deal 4 damage to them.");
+                    this.ability = new Passive("H", "E", "T.1", "HO.-4", false, "iceShard", "Whenever an enemy is hurt, reduce their hp total by 4.");
                 }
                 break;
             case "./Units/Unit37.png":
@@ -575,62 +575,62 @@ class Unit {
     getStats(sprite) {
         switch (sprite) {
             case "./Units/Unit1.png":
-                this.attack = 2;
-                this.health = 6;
+                this.attack = 3;
+                this.health = 7;
                 this.rarity = 1;
                 this.name = "Soupsmith";
                 break;
             case "./Units/Unit2.png":
-                this.attack = 2;
-                this.health = 4;
+                this.attack = 3;
+                this.health = 5;
                 this.rarity = 1;
                 this.name = "Snowpelter";
                 break;
             case "./Units/Unit3.png":
-                this.attack = 3;
-                this.health = 5;
+                this.attack = 4;
+                this.health = 6;
                 this.rarity = 1;
                 this.name = "Frostman";
                 break;
             case "./Units/Unit4.png":
-                this.attack = 1;
-                this.health = 1;
+                this.attack = 2;
+                this.health = 3;
                 this.rarity = 1;
                 this.name = "Apprentice";
                 break;
             case "./Units/Unit5.png":
-                this.attack = 1;
-                this.health = 2;
+                this.attack = 3;
+                this.health = 4;
                 this.rarity = 1;
                 this.name = "Knower";
                 break;
             case "./Units/Unit6.png":
-                this.attack = 3;
-                this.health = 5;
+                this.attack = 4;
+                this.health = 6;
                 this.rarity = 1;
                 this.name = "Ratman";
                 break;
             case "./Units/Unit7.png":
-                this.attack = 3;
+                this.attack = 4;
                 this.health = 5;
                 this.rarity = 1;
                 this.name = "Shelly";
                 break;
             case "./Units/Unit8.png":
-                this.attack = 5;
-                this.health = 6;
+                this.attack = 6;
+                this.health = 8;
                 this.rarity = 1;
                 this.name = "Stabotron";
                 break;
             case "./Units/Unit9.png":
-                this.attack = 6;
-                this.health = 4;
+                this.attack = 7;
+                this.health = 5;
                 this.rarity = 1;
                 this.name = "Pikal";
                 break;
             case "./Units/Unit10.png":
-                this.attack = 4;
-                this.health = 9;
+                this.attack = 5;
+                this.health = 8;
                 this.rarity = 1;
                 this.name = "Fistt";
                 break;

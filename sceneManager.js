@@ -1040,12 +1040,17 @@ class SceneManager {
         //console.log("affecting stats" + stat + " " + amount + " " + unit);
      
         // Handle HP changes
+
+        if (stat == "HO") {
+            unit.health += Number(amount);
+        }
+
         if (stat == "HP" || stat == "B") {
             // Apply HP change
             unit.health += Number(amount);
             
             // If unit took damage, add hurt event to queue
-            if (amount < 0) {
+            if (Number(amount) < 0) {
                 
                 this.eventQueue.unshift("H." + unit.ID);
             }
