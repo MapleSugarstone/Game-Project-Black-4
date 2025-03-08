@@ -10,10 +10,10 @@ class SoundEngine {
         // Maps scenes to their background music files
         // Add new scenes and music files here
         this.sceneMusicMap = {
-            "MainMenu": "./Sounds/menuMusic.mp3"
+            "MainMenu": "./Sounds/menuMusic.mp3",
             // Example additional scenes:
-            // "Shop": "./Sounds/shopMusic.mp3", 
-            // "Battle": "./Sounds/battleMusic.mp3",
+            "Shop": "./Sounds/menuMusic2.mp3", 
+            "Battle": "./Sounds/Pyke.mp3"
             // "Win round": "./Sounds/victoryMusic.mp3",
             // "Lose round": "./Sounds/defeatMusic.mp3",
             // "Draw round": "./Sounds/drawMusic.mp3",
@@ -24,12 +24,12 @@ class SoundEngine {
         // Add new sound effects here
         this.soundEffects = {
             // Example sound effects:
-            // "purchase": "./Sounds/purchase.mp3",
+            "purchase": "./Sounds/kaching.mp3",
             // "sell": "./Sounds/sell.mp3",
             // "upgrade": "./Sounds/upgrade.mp3",
             // "roll": "./Sounds/roll.mp3",
             // "attack": "./Sounds/attack.mp3",
-            // "hurt": "./Sounds/hurt.mp3",
+            "hurt": "./Sounds/crit.wav",
             // "death": "./Sounds/death.mp3",
             // "victory": "./Sounds/victory.mp3",
             // "defeat": "./Sounds/defeat.mp3",
@@ -91,6 +91,8 @@ class SoundEngine {
         }
     }
 
+    
+
     // Play the background music for a given scene
     playSceneMusic(scene) {
         console.log("Playing scene music for:", scene);
@@ -111,11 +113,14 @@ class SoundEngine {
             this.currentMusic = ASSET_MANAGER.getAsset(musicPath);
             console.log("Got audio asset:", this.currentMusic);
             
+            
             if (this.currentMusic && this.audioEnabled) {
                 console.log("Attempting to play music");
                 this.currentMusic.volume = this.musicVolume;
                 this.currentMusic.loop = true;
                 
+                this.volume = 0.3;
+
                 // Handle browser autoplay restrictions
                 const playPromise = this.currentMusic.play();
                 if (playPromise !== undefined) {
@@ -130,11 +135,35 @@ class SoundEngine {
 
     // Play a sound effect by name
     playSFX(soundName) {
+        console.log(this.soundEffects[soundName]);
         if (this.audioEnabled && this.soundEffects[soundName]) {
+            console.log("playing sound");
             const sfx = ASSET_MANAGER.playAsset(this.soundEffects[soundName]);
             if (sfx) {
                 sfx.volume = this.sfxVolume;
             }
         }
+    }
+    
+    fadeOut(duration = 1000) {
+        if (!this.currentMusic || !this.audioEnabled) return;
+        
+        const startVolume = this.currentMusic.volume;
+        const startTime = performance.now();
+        
+        const fadeInterval = setInterval(() => {
+            const elapsed = performance.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            this.currentMusic.volume = startVolume * (1 - progress);
+            
+            if (progress >= 1) {
+                clearInterval(fadeInterval);
+                this.currentMusic.pause();
+                this.currentMusic.volume = this.musicVolume; // Reset volume for next play
+            }
+        }, 16); // ~60fps update
+        
+        return fadeInterval; // Return interval ID in case we need to cancel it
     }
 }

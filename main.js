@@ -1,7 +1,7 @@
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const SOUND_ENGINE = new SoundEngine();
-
+let interactionDone = false;
 const sceneManager = new SceneManager();
 
 // Menu Assets
@@ -13,7 +13,10 @@ ASSET_MANAGER.queueDownload("./UI_Assets/FrostArena.png");
 // Audio Assets
 ASSET_MANAGER.queueDownload("./UI_Assets/AudioOn.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AudioOff.png");
-ASSET_MANAGER.queueAudioDownload("./Sounds/menuMusic.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/menuMusic2.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/kaching.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Pyke.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/crit.wav");
 
 // Shop Buttons
 ASSET_MANAGER.queueDownload("./UI_Assets/RollButton1.png");
@@ -105,26 +108,10 @@ ASSET_MANAGER.queueDownload("./UI_Assets/NextButton2.png");
 
 // Monster Sprites
 ASSET_MANAGER.queueDownload("./UI_Assets/Select.png");
-ASSET_MANAGER.queueDownload("./Units/Unit1.png");
-ASSET_MANAGER.queueDownload("./Units/Unit2.png");
-ASSET_MANAGER.queueDownload("./Units/Unit3.png");
-ASSET_MANAGER.queueDownload("./Units/Unit4.png");
-ASSET_MANAGER.queueDownload("./Units/Unit5.png");
-ASSET_MANAGER.queueDownload("./Units/Unit6.png");
-ASSET_MANAGER.queueDownload("./Units/Unit7.png");
-ASSET_MANAGER.queueDownload("./Units/Unit8.png");
-ASSET_MANAGER.queueDownload("./Units/Unit9.png");
-ASSET_MANAGER.queueDownload("./Units/Unit10.png");
-ASSET_MANAGER.queueDownload("./Units/Chewy.png");
-ASSET_MANAGER.queueDownload("./Units/Chopper.png");
-ASSET_MANAGER.queueDownload("./Units/Cthulhu.png");
-ASSET_MANAGER.queueDownload("./Units/Ghost.png");
-ASSET_MANAGER.queueDownload("./Units/Goldie.png");
-ASSET_MANAGER.queueDownload("./Units/Pinky.png");
-ASSET_MANAGER.queueDownload("./Units/Puffer.png");
-ASSET_MANAGER.queueDownload("./Units/Slug.png");
-ASSET_MANAGER.queueDownload("./Units/Spider.png");
-ASSET_MANAGER.queueDownload("./Units/Stink.png");
+for (let i = 1; i < 41; i++) {
+    ASSET_MANAGER.queueDownload("./Units/Unit" + i + ".png");
+}
+
 
 // Win, Lose, Draw round
 ASSET_MANAGER.queueDownload("./UI_Assets/WinRound.png");
@@ -160,6 +147,16 @@ ASSET_MANAGER.queueDownload("./Projectiles/HealOrb.png");
 ASSET_MANAGER.queueDownload("./Projectiles/FrostBolt.png");
 ASSET_MANAGER.queueDownload("./Projectiles/Star.png");
 
+// Tutorial assets
+ASSET_MANAGER.queueDownload("./UI_Assets/TutorialButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/TutorialButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/BackButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/BackButton2.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel1.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel2.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel3.png");
+
+
 
 class GameState {
     constructor() {
@@ -179,6 +176,17 @@ ASSET_MANAGER.downloadAll(() => {
     // Initialize scene and sound AFTER assets are loaded
     scene = "MainMenu";
     SOUND_ENGINE.updateScene("MainMenu");
+
+    document.addEventListener('click', function onClick() {
+        if (!interactionDone) {
+            // Only run once when the user clicks
+            //SOUND_ENGINE.audioEnabled = true;
+            SOUND_ENGINE.toggleAudio();
+    
+            // Optionally, if you want the event listener to be removed after the first interaction
+            document.removeEventListener('click', onClick);
+        }
+    });
    
     // Add UI elements
     gameEngine.addEntity(new MainMenuBackground(gameEngine));
@@ -190,8 +198,13 @@ ASSET_MANAGER.downloadAll(() => {
         SOUND_ENGINE.updateScene("MainMenu");
     }));
 
+    // Add tutorial button
+    gameEngine.addEntity(new Button(687, 920, "./UI_Assets/TutorialButton1.png", 546, 100, "./UI_Assets/TutorialButton2.png", () => { 
+        scene = "Tutorial";
+    }));
+
     // Add audio button
-    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOff.png", 100, 100, "./UI_Assets/AudioOn.png", () => {
+    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 100, 100, "./UI_Assets/AudioOff.png", () => {
         SOUND_ENGINE.toggleAudio();
         if (audioButton.sprite === "./UI_Assets/AudioOff.png") {
             audioButton.sprite = "./UI_Assets/AudioOn.png";
