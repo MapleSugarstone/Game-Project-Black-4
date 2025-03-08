@@ -29,13 +29,32 @@ class SoundEngine {
             // "upgrade": "./Sounds/upgrade.mp3",
             // "roll": "./Sounds/roll.mp3",
             // "attack": "./Sounds/attack.mp3",
+            "flame": "./Sounds/flame.mp3",
+            "cannon": "./Sounds/cannon.mp3",
+            "splat": "./Sounds/splat.mp3",
+            "woosh": "./Sounds/woosh.mp3",
+            "dust": "./Sounds/dust.mp3",
             "hurt": "./Sounds/crit.wav",
+            "sell": "./Sounds/sell.wav",
+            "puff": "./Sounds/puff.mp3",
+            "wing": "./Sounds/wing.mp3",
+            "sparkle": "./Sounds/sparkle.wav",
+            "upgrade": "./Sounds/upgrade.mp3",
+            "dice": "./Sounds/dice.wav",
+            "charge": "./Sounds/charge.mp3",
+            "puncture": "./Sounds/puncture.mp3",
+            "Glass": "./Sounds/Glass.mp3",
+            "wongame": "./Sounds/Winner.wav",
+            "lostgame": "./Sounds/Loser.wav",
+            "wonround": "./Sounds/wonround.wav",
+            "anvil": "./Sounds/anvil.mp3",
             // "death": "./Sounds/death.mp3",
             // "victory": "./Sounds/victory.mp3",
             // "defeat": "./Sounds/defeat.mp3",
             // "click": "./Sounds/click.mp3"
         };
     }
+
     // Initialize sound engine by queuing all audio files for loading
     init() {
         // Queue background music tracks
@@ -134,6 +153,7 @@ class SoundEngine {
 
     // Play a sound effect by name
     playSFX(soundName) {
+        console.log("Trying to play: " + soundName);
         console.log(this.soundEffects[soundName]);
         if (this.audioEnabled && this.soundEffects[soundName]) {
             console.log("playing sound");

@@ -157,6 +157,7 @@ class SceneManager {
     }
 
     update() {
+        
         if (scene === "Shop") {
             SOUND_ENGINE.updateScene("MainMenu");
             this.clearEntities();
@@ -194,6 +195,7 @@ class SceneManager {
         // Handle dragging
         if (gameEngine.click) {
             this.handleClick(gameEngine.click.x, gameEngine.click.y);
+            
         }
     
         if (gameEngine.mouse) {
@@ -208,12 +210,14 @@ class SceneManager {
 
         setTimeout(function() {
             gameEngine.addEntity(new Button(790, 900, "./UI_Assets/UpgradeButton1.png", 360, 100, "./UI_Assets/UpgradeButton2.png", () => {
+                SOUND_ENGINE.playSFX("anvil");
                 scene = "Shop";
             }));
           }, 1500);
     }
 
     roundWin() {
+        SOUND_ENGINE.playSFX("wonround");
         SOUND_ENGINE.fadeOut(1500);
         this.endRound();
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
@@ -240,6 +244,9 @@ class SceneManager {
         setTimeout(function() {
             gameEngine.entities.pop();
           }, 1000);
+        setTimeout(function() {
+        SOUND_ENGINE.playSFX("Glass");
+        }, 1000);
     }
 
     roundDraw() {
@@ -290,6 +297,7 @@ class SceneManager {
             setTimeout(function() {
                 gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
               }, 1000);
+              SOUND_ENGINE.playSFX("wongame");
             //console.log("You Win!");
         }
         else if (this.lives <= 0) {
@@ -298,6 +306,7 @@ class SceneManager {
             setTimeout(function() {
                 gameEngine.entities.pop();
               }, 1000);
+            SOUND_ENGINE.playSFX("lostgame");  
             //console.log("You Lose!");
         }
         this.lives = STARTING_LIVES;
@@ -339,6 +348,7 @@ class SceneManager {
         // Add buttons
         gameEngine.addEntity(new Button(60, 920, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
             this.rollShop();
+            SOUND_ENGINE.playSFX("dice");
         }));
 
         gameEngine.addEntity(new Button(680, 920, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
@@ -350,6 +360,7 @@ class SceneManager {
                 this.teamSlots[this.index] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
+                SOUND_ENGINE.playSFX("sell");
             }
         }));
 
@@ -384,6 +395,7 @@ class SceneManager {
                 && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
                 this.gold -= UPGRADE_COST;
                 this.selectedUnit.levelUp();
+                SOUND_ENGINE.playSFX("upgrade");
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
                 //console.log("Up grade team unit")
@@ -505,6 +517,7 @@ class SceneManager {
         [...this.shopSlots, ...this.teamSlots].forEach(unit => {
             if (unit) {
                 unit.isHovered = this.isClickInUnit(x, y, unit);
+                
                 //add ability text bubble
             }
         });
@@ -817,13 +830,16 @@ class SceneManager {
     
         // Add death event to queue for ability triggers
         this.eventQueue.unshift("D." + unit.ID);
+        
     
         if (!isPassiveDeath) {
             // For combat deaths - start the launch animation
+            console.log("death");
+            
             unit.animator.startDeath();
         } else {
             // For passive ability deaths - create smoke puff effect
-            
+            SOUND_ENGINE.playSFX("puff");
             const deathEffect = new DeathParticleManager(
                 unit.x + unit.width / 2, 
                 unit.y + unit.height / 2
@@ -886,6 +902,7 @@ class SceneManager {
                     // Mark unit for removal and set flag to prevent multiple explosions
                     entity.removeFromWorld = true;
                     entity.animator.hasTriggeredStars = true;
+                    SOUND_ENGINE.playSFX("puff");
                 }
             }
         });

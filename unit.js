@@ -342,16 +342,16 @@ class Unit {
                 break;
             case "./Units/Unit24.png":
                 if (level == 1) {
-                    this.ability = new Passive("H", "I", "FE.1", "HP.-2", false, "Physical", "Hit front enemy for 2 HP when hit.");
+                    this.ability = new Passive("H", "I", "FE.1", "HP.-2", false, "Arrow", "Hit front enemy for 2 HP when hit.");
                 }
                 if (level == 2) {
-                    this.ability = new Passive("H", "I", "FE.1", "HP.-4", false, "Physical", "Hit front enemy for 4 HP when hit.");
+                    this.ability = new Passive("H", "I", "FE.1", "HP.-4", false, "Arrow", "Hit front enemy for 4 HP when hit.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "I", "FE.1", "HP.-4", false, "Physical", "Hit front enemy for 4 HP when hit.");
+                    this.ability = new Passive("H", "I", "FE.1", "HP.-4", false, "Arrow", "Hit front enemy for 4 HP when hit.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "I", "FE.1", "HP.-6", false, "Physical", "Hit front enemy for 6 HP when hit.");
+                    this.ability = new Passive("H", "I", "FE.1", "HP.-6", false, "Arrow", "Hit front enemy for 6 HP when hit.");
                 }
                 break;
             case "./Units/Unit25.png":
@@ -470,16 +470,16 @@ class Unit {
                 break;
             case "./Units/34.png":
                 if (level == 1) {
-                    this.ability = new Passive("H", "N", "I.1", "AT.1", false, "Damage", "Gain 1 attack whenever anyone is hit.");
+                    this.ability = new Passive("H", "N", "I.1", "AT.1", false, "BuffAlly", "Gain 1 attack whenever anyone is hit.");
                 }
                 if (level == 2) {
-                    this.ability = new Passive("H", "N", "I.1", "AT.2", false, "Damage", "Gain 2 attack whenever anyone is hit.");
+                    this.ability = new Passive("H", "N", "I.1", "AT.2", false, "BuffAlly", "Gain 2 attack whenever anyone is hit.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "N", "I.1", "AT.3", false, "Damage", "Gain 3 attack whenever anyone is hit.");
+                    this.ability = new Passive("H", "N", "I.1", "AT.3", false, "BuffAlly", "Gain 3 attack whenever anyone is hit.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "N", "I.1", "AT.4", false, "Damage", "Gain 4 attack whenever anyone is hit.");
+                    this.ability = new Passive("H", "N", "I.1", "AT.4", false, "BuffAlly", "Gain 4 attack whenever anyone is hit.");
                 }
                 break;
             case "./Units/Unit35.png":
@@ -549,7 +549,7 @@ class Unit {
                     this.ability = new Passive("N", "N", "N.1", "N", false, "N", "Has a powerful ability at level 4.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("SB", "N", "RE.1", "HP.-99", false, "Snowball", "Deal 99 damage to a random enemy at start of battle.");
+                    this.ability = new Passive("SB", "N", "RE.1", "HP.-99", false, "Magic", "Deal 99 damage to a random enemy at start of battle.");
                 }
                 break;
             case "./Units/Unit40.png":
