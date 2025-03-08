@@ -147,6 +147,16 @@ ASSET_MANAGER.queueDownload("./Projectiles/HealOrb.png");
 ASSET_MANAGER.queueDownload("./Projectiles/FrostBolt.png");
 ASSET_MANAGER.queueDownload("./Projectiles/Star.png");
 
+// Tutorial assets
+ASSET_MANAGER.queueDownload("./UI_Assets/TutorialButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/TutorialButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/BackButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/BackButton2.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel1.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel2.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel3.png");
+
+
 
 class GameState {
     constructor() {
@@ -186,6 +196,11 @@ ASSET_MANAGER.downloadAll(() => {
         gameState.inGame = true;
         // Trigger music on user interaction
         SOUND_ENGINE.updateScene("MainMenu");
+    }));
+
+    // Add tutorial button
+    gameEngine.addEntity(new Button(687, 920, "./UI_Assets/TutorialButton1.png", 546, 100, "./UI_Assets/TutorialButton2.png", () => { 
+        scene = "Tutorial";
     }));
 
     // Add audio button

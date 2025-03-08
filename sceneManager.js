@@ -158,7 +158,7 @@ class SceneManager {
 
     update() {
         if (scene === "Shop") {
-            SOUND_ENGINE.updateScene("Shop");
+            SOUND_ENGINE.updateScene("MainMenu");
             this.clearEntities();
             this.setupShop();
             scene = "LoadedShop";
@@ -185,13 +185,17 @@ class SceneManager {
         } else if (scene === "End") {
             this.clearEntities();
             this.endGame();
+        } else if (scene === "Tutorial") {
+            this.clearEntities();
+            this.setupTutorial();
+            scene = "LoadedTutorial";
         }
-
+    
         // Handle dragging
         if (gameEngine.click) {
             this.handleClick(gameEngine.click.x, gameEngine.click.y);
         }
-
+    
         if (gameEngine.mouse) {
             this.handleMouseMove(gameEngine.mouse.x, gameEngine.mouse.y);
         }
@@ -1103,4 +1107,24 @@ class SceneManager {
         this.abilityQueue = this.abilityQueue.filter(item => item.CID !== removeID);
     }
 
+    setupTutorial() {
+        // Add background
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        
+        // Create and store tutorial panels
+        const tutorialPanels = new TutorialPanels();
+        gameEngine.addEntity(tutorialPanels);
+        
+        // Add navigation buttons
+        gameEngine.addEntity(new Button(800, 950, "./UI_Assets/NextButton1.png", 100, 70, 
+            "./UI_Assets/NextButton2.png", () => { 
+                tutorialPanels.nextPanel();
+        }));
+        
+        // Add back button that refreshes the page
+        gameEngine.addEntity(new Button(100, 950, "./UI_Assets/BackButton1.png", 200, 70, 
+            "./UI_Assets/BackButton2.png", () => { 
+                window.location.reload();
+        }));
+    }
 }
