@@ -236,7 +236,7 @@ class Unit {
                     this.ability = new Passive("H", "E", "RA.3", "B.1", false, "Magic", "Increase 3 random ally's attack and HP by 1 when an enemy gets hurt.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "E", "I.1", "B.3", false, "Magic", "Increase attack and HP by 3 when an enemy gets hurt.");
+                    this.ability = new Passive("H", "E", "I.1", "B.2", false, "Magic", "Increase attack and HP by 2 when an enemy gets hurt.");
                 }
                 break;
             case "./Units/Unit16.png":
