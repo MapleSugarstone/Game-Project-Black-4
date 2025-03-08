@@ -32,9 +32,10 @@ ASSET_MANAGER.queueAudioDownload("./Sounds/charge.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/puncture.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Glass.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Winner.wav");
-ASSET_MANAGER.queueAudioDownload("./Sounds/Loser.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Loss.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/wonround.wav");
 ASSET_MANAGER.queueAudioDownload("./Sounds/anvil.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/frost.wav");
 
 // Shop Buttons
 ASSET_MANAGER.queueDownload("./UI_Assets/RollButton1.png");
@@ -165,6 +166,7 @@ ASSET_MANAGER.queueDownload("./Projectiles/Magic.png");
 ASSET_MANAGER.queueDownload("./Projectiles/HealOrb.png");
 ASSET_MANAGER.queueDownload("./Projectiles/FrostBolt.png");
 ASSET_MANAGER.queueDownload("./Projectiles/Star.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Snowflake.png");
 
 // Tutorial assets
 ASSET_MANAGER.queueDownload("./UI_Assets/TutorialButton1.png");

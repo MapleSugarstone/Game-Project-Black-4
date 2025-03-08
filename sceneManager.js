@@ -12,6 +12,7 @@ class SceneManager {
         // Game state
         this.lives = STARTING_LIVES;
         this.gold = STARTING_GOLD;
+        this.roundsPassed = 0;
         this.index = 0;
         this.wins = 0;
         this.shopLevel = 1;
@@ -290,6 +291,7 @@ class SceneManager {
           }, 1500);
 
         if (this.wins >= WINS_THRESHOLD) {
+            SOUND_ENGINE.fadeOut(1500);
             gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
             gameEngine.addEntity(new Display(625, 200, "./UI_Assets/WinGame.png", 710, 160));
             for (let i = 0; i < WINS_THRESHOLD; i++)
@@ -297,16 +299,23 @@ class SceneManager {
             setTimeout(function() {
                 gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
               }, 1000);
-              SOUND_ENGINE.playSFX("wongame");
+              setTimeout(function() {
+                SOUND_ENGINE.playSFX("wongame"); 
+              }, 1000);
             //console.log("You Win!");
         }
         else if (this.lives <= 0) {
+            SOUND_ENGINE.fadeOut(1500);
             gameEngine.addEntity(new Display(620, 200, "./UI_Assets/LoseGame.png", 720, 160));
             gameEngine.addEntity(new DisplayStill(860, 500, "./UI_Assets/HealthHeart.png", 200, 200));
             setTimeout(function() {
                 gameEngine.entities.pop();
               }, 1000);
-            SOUND_ENGINE.playSFX("lostgame");  
+              setTimeout(function() {
+                SOUND_ENGINE.playSFX("lostgame"); 
+              }, 1000);
+
+            
             //console.log("You Lose!");
         }
         this.lives = STARTING_LIVES;
@@ -550,6 +559,7 @@ class SceneManager {
     }
 
     startBattle() {
+        this.roundsPassed = 0;
         this.eventQueue = ["SB.N"];
         this.abilityQueue = [];
         this.actionQueue = [];
@@ -717,6 +727,9 @@ class SceneManager {
                 } 
                 // If no queued actions/events and no active projectiles, proceed with combat
                 else if (this.isNextApproved && this.activeProjectiles === 0) {   
+
+                    
+
                     //console.log("attempting attack");
                     const playerUnit = playerTeam[0];
                     const enemyUnit = enemyTeam[0];
@@ -766,6 +779,31 @@ class SceneManager {
                         // Queue attack events
                         this.eventQueue.unshift("A." + playerUnit.ID);
                         this.eventQueue.unshift("A." + enemyUnit.ID);
+
+                        this.roundsPassed++;
+
+                        console.log("Rounds: " + this.roundsPassed);
+                        
+
+
+                        // Deals damage to everyone after a set amount of turns to avoid infinite stalemates.
+                        if (this.roundsPassed > 10) {
+                            SOUND_ENGINE.playSFX("frost");
+                            [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
+                                unit.health -= (this.roundsPassed - 10);
+                                console.log("trying to reduce HP from blizzard");
+
+                                const frostEffect = new FrostParticleManager(
+                                    unit.x + unit.width / 2, 
+                                    unit.y + unit.height / 2
+                                );
+                                gameEngine.addEntity(frostEffect);
+
+                                if (unit.health <= 0) {
+                                    this.killUnit(unit, false);
+                                }
+                            });
+                        }
                     }
                 }
             }

@@ -45,9 +45,10 @@ class SoundEngine {
             "puncture": "./Sounds/puncture.mp3",
             "Glass": "./Sounds/Glass.mp3",
             "wongame": "./Sounds/Winner.wav",
-            "lostgame": "./Sounds/Loser.wav",
+            "lostgame": "./Sounds/Loss.mp3",
             "wonround": "./Sounds/wonround.wav",
             "anvil": "./Sounds/anvil.mp3",
+            "frost": "./Sounds/frost.wav",
             // "death": "./Sounds/death.mp3",
             // "victory": "./Sounds/victory.mp3",
             // "defeat": "./Sounds/defeat.mp3",
@@ -103,7 +104,7 @@ class SoundEngine {
 
     // Handle scene changes and update background music accordingly
     updateScene(newScene) {
-        console.log("Updating scene to:", newScene);
+        //console.log("Updating scene to:", newScene);
         if (this.currentScene !== newScene) {
             this.currentScene = newScene;
             this.playSceneMusic(newScene);
@@ -114,27 +115,27 @@ class SoundEngine {
 
     // Play the background music for a given scene
     playSceneMusic(scene) {
-        console.log("Playing scene music for:", scene);
+        //console.log("Playing scene music for:", scene);
         
         // Stop current background music if playing
         if (this.currentMusic) {
-            console.log("Stopping current music");
+            //console.log("Stopping current music");
             this.currentMusic.pause();
             this.currentMusic.currentTime = 0;
         }
 
         // Get new scene's music file path
         const musicPath = this.sceneMusicMap[scene];
-        console.log("Music path:", musicPath);
+        //console.log("Music path:", musicPath);
         
         if (musicPath) {
             // Load and setup new background music
             this.currentMusic = ASSET_MANAGER.getAsset(musicPath);
-            console.log("Got audio asset:", this.currentMusic);
+            //console.log("Got audio asset:", this.currentMusic);
             this.currentMusic.loop = true;
             
             if (this.currentMusic && this.audioEnabled) {
-                console.log("Attempting to play music");
+                //console.log("Attempting to play music");
                 this.currentMusic.volume = this.musicVolume;
                 this.currentMusic.loop = true;
                 
@@ -153,10 +154,10 @@ class SoundEngine {
 
     // Play a sound effect by name
     playSFX(soundName) {
-        console.log("Trying to play: " + soundName);
-        console.log(this.soundEffects[soundName]);
+        //console.log("Trying to play: " + soundName);
+        //console.log(this.soundEffects[soundName]);
         if (this.audioEnabled && this.soundEffects[soundName]) {
-            console.log("playing sound");
+           // console.log("playing sound");
             const sfx = ASSET_MANAGER.playAsset(this.soundEffects[soundName]);
             if (sfx) {
                 sfx.volume = this.sfxVolume;

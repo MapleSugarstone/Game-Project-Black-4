@@ -982,3 +982,112 @@ class StarParticleManager {
         ctx.restore();
     }
 }
+
+
+class FrostParticleManager {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.particles = [];
+        this.layer = 6;  // Above units
+        this.lifespan = 1.5;  // Shorter overall effect duration
+        this.elapsedTime = 0;
+        this.removeFromWorld = false;
+        
+        // Create all particles at once for a single burst
+        this.initializeParticles();
+    }
+    
+    initializeParticles() {
+        // Fewer particles for a more concentrated explosion
+        const particleCount = 10 + Math.floor(Math.random() * 15);
+        
+        for (let i = 0; i < particleCount; i++) {
+            // Create a more focused explosion pattern
+            const angle = Math.random() * Math.PI * 2;
+            
+            // More consistent initial speeds for a cleaner burst
+            const speed = 5 + Math.random() * 200;
+            
+            // More focused initial positions (all from same point)
+            this.particles.push({
+                x: this.x,
+                y: this.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 100, // Stronger upward bias
+                size: 40 + Math.random() * 40,
+                alpha: 1.0,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 10,
+                // More consistent lifespans for a cleaner effect
+                life: 0.8 + Math.random() * 0.7  
+            });
+        }
+    }
+    
+    update() {
+        const clockTick = gameEngine.clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
+        this.elapsedTime += clockTick * speedMultiplier;
+        
+        // Update all particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            
+            // Update position
+            p.x += p.vx * clockTick * speedMultiplier;
+            p.y += p.vy * clockTick * speedMultiplier;
+            
+            // Stronger deceleration for more realistic physics
+            p.vx *= 0.92;
+            p.vy *= 0.92;
+            
+            // Higher gravity for faster fall
+            p.vy += 250 * clockTick * speedMultiplier;
+            
+            // Update rotation
+            p.rotation += p.rotationSpeed * clockTick * speedMultiplier;
+            
+            // Update life
+            p.life -= clockTick * speedMultiplier;
+            
+            // Remove dead particles
+            if (p.life <= 0) {
+                this.particles.splice(i, 1);
+            } else {
+                // Fade out as life decreases
+                p.alpha = p.life;
+            }
+        }
+        
+        // Remove the manager if effect duration is over or no particles remain
+        if (this.elapsedTime >= this.lifespan || this.particles.length === 0) {
+            this.removeFromWorld = true;
+        }
+    }
+    
+    draw(ctx) {
+        ctx.save();
+        
+        for (const p of this.particles) {
+            ctx.globalAlpha = p.alpha;
+            
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            
+            const starImage = ASSET_MANAGER.getAsset("./Projectiles/Snowflake.png");
+            ctx.drawImage(
+                starImage,
+                -p.size / 2,
+                -p.size / 2,
+                p.size,
+                p.size
+            );
+            
+            ctx.rotate(-p.rotation);
+            ctx.translate(-p.x, -p.y);
+        }
+        
+        ctx.restore();
+    }
+}
