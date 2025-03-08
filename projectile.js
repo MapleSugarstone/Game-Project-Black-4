@@ -57,7 +57,9 @@ class Projectile {
     update() {
         // Calculate time and progress
         const clockTick = gameEngine.clockTick;
-        this.elapsedTime += clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
+        
+        this.elapsedTime += clockTick * speedMultiplier;
         this.progress = Math.min(this.elapsedTime / this.duration, 1);
         
         // Check for maximum lifetime (safety)
@@ -72,21 +74,21 @@ class Projectile {
         
         // Update rotation if needed
         if (this.rotationSpeed !== 0) {
-            this.rotation += this.rotationSpeed * clockTick;
+            this.rotation += this.rotationSpeed * clockTick * speedMultiplier;
         }
         
         // Generate trail particles
-        if (this.trailEffect && this.elapsedTime - this.lastTrailTime > this.trailFrequency) {
+        if (this.trailEffect && this.elapsedTime - this.lastTrailTime > this.trailFrequency / speedMultiplier) {
             this.generateTrailParticle();
             this.lastTrailTime = this.elapsedTime;
         }
         
         // Update existing particles
-        this.updateParticles(clockTick);
+        this.updateParticles(clockTick * speedMultiplier);
         
         // Custom update behavior
         if (this.onUpdate) {
-            this.onUpdate(this, clockTick);
+            this.onUpdate(this, clockTick * speedMultiplier);
         }
         
         // Check if reached target
@@ -285,7 +287,7 @@ class Projectile {
                 p.size *= 0.98;
             }
         }
-    }
+    } 
     
     drawParticles(ctx) {
         ctx.save();
@@ -406,24 +408,25 @@ class ImpactParticleManager {
     
     update() {
         const clockTick = gameEngine.clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
         
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             
             // Update position
-            p.x += p.vx * clockTick;
-            p.y += p.vy * clockTick;
+            p.x += p.vx * clockTick * speedMultiplier;
+            p.y += p.vy * clockTick * speedMultiplier;
             
             // Apply gravity to some effects
             if (p.color.includes("hsl(30") || p.color.includes("hsl(190")) { // Fire or ice
-                p.vy += 60 * clockTick; // Gravity
+                p.vy += 60 * clockTick * speedMultiplier; // Gravity
             }
             
             // Update rotation
-            p.rotation += 2 * clockTick;
+            p.rotation += 2 * clockTick * speedMultiplier;
             
             // Update life
-            p.life -= clockTick;
+            p.life -= clockTick * speedMultiplier;
             
             // Remove dead particles
             if (p.life <= 0) {
@@ -749,28 +752,29 @@ class DeathParticleManager {
     
     update() {
         const clockTick = gameEngine.clockTick;
-        this.elapsedTime += clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
+        this.elapsedTime += clockTick * speedMultiplier;
         
         // Update all particles
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             
             // Update position
-            p.x += p.vx * clockTick;
-            p.y += p.vy * clockTick;
+            p.x += p.vx * clockTick * speedMultiplier;
+            p.y += p.vy * clockTick * speedMultiplier;
             
             // Apply gentle deceleration
             p.vx *= 0.95;
             p.vy *= 0.95;
             
             // Apply gravity
-            p.vy += 15 * clockTick;
+            p.vy += 15 * clockTick * speedMultiplier;
             
             // Update rotation
-            p.rotation += p.rotationSpeed * clockTick;
+            p.rotation += p.rotationSpeed * clockTick * speedMultiplier;
             
             // Update life
-            p.life -= clockTick;
+            p.life -= clockTick * speedMultiplier;
             
             // Remove dead particles
             if (p.life <= 0) {
@@ -863,28 +867,29 @@ class StarParticleManager {
     
     update() {
         const clockTick = gameEngine.clockTick;
-        this.elapsedTime += clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
+        this.elapsedTime += clockTick * speedMultiplier;
         
         // Update all particles
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             
             // Update position
-            p.x += p.vx * clockTick;
-            p.y += p.vy * clockTick;
+            p.x += p.vx * clockTick * speedMultiplier;
+            p.y += p.vy * clockTick * speedMultiplier;
             
             // Apply gentle deceleration
             p.vx *= 0.95;
             p.vy *= 0.95;
             
             // Apply gravity
-            p.vy += 200 * clockTick;
+            p.vy += 200 * clockTick * speedMultiplier;
             
             // Update rotation
-            p.rotation += p.rotationSpeed * clockTick;
+            p.rotation += p.rotationSpeed * clockTick * speedMultiplier;
             
             // Update life
-            p.life -= clockTick;
+            p.life -= clockTick * speedMultiplier;
             
             // Remove dead particles
             if (p.life <= 0) {
