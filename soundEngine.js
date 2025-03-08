@@ -144,4 +144,26 @@ class SoundEngine {
             }
         }
     }
+    
+    fadeOut(duration = 1000) {
+        if (!this.currentMusic || !this.audioEnabled) return;
+        
+        const startVolume = this.currentMusic.volume;
+        const startTime = performance.now();
+        
+        const fadeInterval = setInterval(() => {
+            const elapsed = performance.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            this.currentMusic.volume = startVolume * (1 - progress);
+            
+            if (progress >= 1) {
+                clearInterval(fadeInterval);
+                this.currentMusic.pause();
+                this.currentMusic.volume = this.musicVolume; // Reset volume for next play
+            }
+        }, 16); // ~60fps update
+        
+        return fadeInterval; // Return interval ID in case we need to cancel it
+    }
 }
