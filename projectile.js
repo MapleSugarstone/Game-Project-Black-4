@@ -22,6 +22,9 @@ class Projectile {
         this.animator = options.animator || null;
         this.trailEffect = options.trailEffect || null;
         this.impactEffect = options.impactEffect || null;
+
+        this.launchSound = options.launchSound || null;
+        this.impactSound = options.impactSound || null;
         
         // Trajectory
         this.trajectoryType = options.trajectoryType || "linear";
@@ -181,6 +184,7 @@ class Projectile {
         // Create impact effect if specified
         if (this.impactEffect) {
             this.createImpactEffect();
+            SOUND_ENGINE.playSFX(this.impactSound);
         }
         
         // Call hit callback if specified
@@ -485,6 +489,8 @@ class ProjectileManager {
                 rotationSpeed: 0,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.02
             },
             "iceShard": {
@@ -495,6 +501,8 @@ class ProjectileManager {
                 rotationSpeed: 5,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.03
             },
             "dagger": {
@@ -504,6 +512,8 @@ class ProjectileManager {
                 trajectoryType: "linear",
                 rotationSpeed: 8,
                 trailEffect: null,
+                launchSound: "woosh",
+                impactSound: "splat",
                 impactEffect: null
             },
             "healOrb": {
@@ -516,6 +526,8 @@ class ProjectileManager {
                 trailEffect: "sparkle",
                 impactEffect: "heal",
                 trailFrequency: 0.04,
+                launchSound: "woosh",
+                impactSound: "sparkle",
                 scale: 1.2
             },
             "frostBolt": {
@@ -526,6 +538,8 @@ class ProjectileManager {
                 rotationSpeed: 0,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.02
             },
             "fireball": {
@@ -536,6 +550,8 @@ class ProjectileManager {
                 rotationSpeed: 0,
                 trailEffect: "fire",
                 impactEffect: "explosion",
+                launchSound: "flame",
+                impactSound: "cannon",
                 trailFrequency: 0.01
             },
             "arrow": {
@@ -545,6 +561,8 @@ class ProjectileManager {
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: null,
+                launchSound: "woosh",
+                impactSound: "puncture",
                 impactEffect: null
             },
             "poison": {
@@ -554,8 +572,10 @@ class ProjectileManager {
                 trajectoryType: "bounce",
                 rotationSpeed: 2,
                 trailEffect: "smoke",
-                impactEffect: "splash",
+                impactEffect: "heal",
                 scale: 0.9,
+                launchSound: "woosh",
+                impactSound: "charge",
                 trailFrequency: 0.05
             },
             "magic": {
@@ -566,6 +586,8 @@ class ProjectileManager {
                 rotationSpeed: 4,
                 trailEffect: "sparkle",
                 impactEffect: "explosion",
+                launchSound: "dust",
+                impactSound: "wing",
                 trailFrequency: 0.02
             }
         };
@@ -596,6 +618,8 @@ class ProjectileManager {
                 rotationSpeed: 0,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.02
             },
             "iceShard": {
@@ -606,6 +630,8 @@ class ProjectileManager {
                 rotationSpeed: 5,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.03
             },
             "dagger": {
@@ -615,6 +641,8 @@ class ProjectileManager {
                 trajectoryType: "spiral",
                 rotationSpeed: 8,
                 trailEffect: null,
+                launchSound: "woosh",
+                impactSound: "splat",
                 impactEffect: null
             },
             "healOrb": {
@@ -627,6 +655,8 @@ class ProjectileManager {
                 trailEffect: "sparkle",
                 impactEffect: "heal",
                 trailFrequency: 0.04,
+                launchSound: "woosh",
+                impactSound: "sparkle",
                 scale: 1.2
             },
             "frostBolt": {
@@ -637,6 +667,8 @@ class ProjectileManager {
                 rotationSpeed: 0,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.02
             },
             "fireball": {
@@ -647,6 +679,8 @@ class ProjectileManager {
                 rotationSpeed: 0,
                 trailEffect: "fire",
                 impactEffect: "explosion",
+                launchSound: "flame",
+                impactSound: "cannon",
                 trailFrequency: 0.01
             },
             "arrow": {
@@ -656,17 +690,21 @@ class ProjectileManager {
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: null,
+                launchSound: "woosh",
+                impactSound: "puncture",
                 impactEffect: null
             },
             "poison": {
-                width: 28,
-                height: 28,
+                width: 40,
+                height: 40,
                 speed: 800,
                 trajectoryType: "bounce",
                 rotationSpeed: 2,
                 trailEffect: "smoke",
-                impactEffect: "splash",
+                impactEffect: "heal",
                 scale: 0.9,
+                launchSound: "woosh",
+                impactSound: "charge",
                 trailFrequency: 0.05
             },
             "magic": {
@@ -677,6 +715,8 @@ class ProjectileManager {
                 rotationSpeed: 4,
                 trailEffect: "sparkle",
                 impactEffect: "explosion",
+                launchSound: "dust",
+                impactSound: "wing",
                 trailFrequency: 0.02
             }
         };
@@ -688,6 +728,12 @@ class ProjectileManager {
         const projectile = new Projectile(
             sourceX, sourceY, targetX, targetY, type, mergedOptions
         );
+        console.log("Projectile launch sound: " + projectile.launchSound);
+
+        if (projectile.targetX !== projectile.sourceX) {
+            SOUND_ENGINE.playSFX(projectile.launchSound);
+        }
+        
         
         // Add to game engine
         gameEngine.addEntity(projectile);
@@ -724,6 +770,7 @@ class DeathParticleManager {
         this.elapsedTime = 0;
         
         // Create initial particles
+        
         this.initializeParticles();
     }
     

@@ -16,7 +16,25 @@ ASSET_MANAGER.queueDownload("./UI_Assets/AudioOff.png");
 ASSET_MANAGER.queueAudioDownload("./Sounds/menuMusic2.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/kaching.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Pyke.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/woosh.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/splat.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/flame.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/cannon.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/sell.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/dice.wav");
 ASSET_MANAGER.queueAudioDownload("./Sounds/crit.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/puff.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/wing.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/dust.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/sparkle.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/upgrade.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/charge.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/puncture.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Glass.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Winner.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Loser.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/wonround.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/anvil.mp3");
 
 // Shop Buttons
 ASSET_MANAGER.queueDownload("./UI_Assets/RollButton1.png");
