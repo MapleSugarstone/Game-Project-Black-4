@@ -655,7 +655,7 @@ class Unit {
                 break;
             case "./Units/Unit14.png":
                 this.attack = 1;
-                this.health = 10;
+                this.health = 4;
                 this.rarity = 2;
                 this.name = "Harvar";
                 break;
@@ -787,7 +787,7 @@ class Unit {
                 break;
             case "./Units/Unit36.png":
                 this.attack = 19;
-                this.health = 4;
+                this.health = 3;
                 this.rarity = 4;
                 this.name = "Schism";
                 break;
@@ -810,8 +810,8 @@ class Unit {
                 this.name = "Lost";
                 break;
             case "./Units/Unit40.png":
-                this.attack = 4;
-                this.health = 4;
+                this.attack = 2;
+                this.health = 2;
                 this.rarity = 4;
                 this.name = "IO";
                 break;
