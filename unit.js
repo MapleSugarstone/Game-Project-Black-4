@@ -469,7 +469,7 @@ class Unit {
                     this.ability = new Passive("SB", "N", "FA.1", "B.9", false, "BuffAlly", "At the start of round, buff the front ally's HP and Attack by 9.");
                 }
                 break;
-            case "./Units/34.png":
+            case "./Units/Unit34.png":
                 if (level == 1) {
                     this.ability = new Passive("H", "N", "I.1", "AT.1", false, "BuffAlly", "Gain 1 attack whenever anyone is hit.");
                 }
@@ -477,10 +477,10 @@ class Unit {
                     this.ability = new Passive("H", "N", "I.1", "AT.2", false, "BuffAlly", "Gain 2 attack whenever anyone is hit.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "N", "I.1", "AT.3", false, "BuffAlly", "Gain 3 attack whenever anyone is hit.");
+                    this.ability = new Passive("H", "N", "I.1", "AT.2", false, "BuffAlly", "Gain 2 attack whenever anyone is hit.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "N", "I.1", "AT.4", false, "BuffAlly", "Gain 4 attack whenever anyone is hit.");
+                    this.ability = new Passive("H", "N", "I.1", "AT.3", false, "BuffAlly", "Gain 3 attack whenever anyone is hit.");
                 }
                 break;
             case "./Units/Unit35.png":
