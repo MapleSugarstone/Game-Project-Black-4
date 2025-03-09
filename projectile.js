@@ -22,6 +22,9 @@ class Projectile {
         this.animator = options.animator || null;
         this.trailEffect = options.trailEffect || null;
         this.impactEffect = options.impactEffect || null;
+
+        this.launchSound = options.launchSound || null;
+        this.impactSound = options.impactSound || null;
         
         // Trajectory
         this.trajectoryType = options.trajectoryType || "linear";
@@ -51,18 +54,20 @@ class Projectile {
         // Start time - used for synchronized animations
         this.startTime = gameEngine.theTime;
 
-        console.log(`Projectile created: ${type} from (${sourceX}, ${sourceY}) to (${targetX}, ${targetY})`);
+        //console.log(`Projectile created: ${type} from (${sourceX}, ${sourceY}) to (${targetX}, ${targetY})`);
     }
     
     update() {
         // Calculate time and progress
         const clockTick = gameEngine.clockTick;
-        this.elapsedTime += clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
+        
+        this.elapsedTime += clockTick * speedMultiplier;
         this.progress = Math.min(this.elapsedTime / this.duration, 1);
         
         // Check for maximum lifetime (safety)
         if (this.elapsedTime > this.maxLifetime) {
-            console.log("Projectile reached maximum lifetime, completing");
+            //console.log("Projectile reached maximum lifetime, completing");
             this.hitTarget();
             return;
         }
@@ -72,21 +77,21 @@ class Projectile {
         
         // Update rotation if needed
         if (this.rotationSpeed !== 0) {
-            this.rotation += this.rotationSpeed * clockTick;
+            this.rotation += this.rotationSpeed * clockTick * speedMultiplier;
         }
         
         // Generate trail particles
-        if (this.trailEffect && this.elapsedTime - this.lastTrailTime > this.trailFrequency) {
+        if (this.trailEffect && this.elapsedTime - this.lastTrailTime > this.trailFrequency / speedMultiplier) {
             this.generateTrailParticle();
             this.lastTrailTime = this.elapsedTime;
         }
         
         // Update existing particles
-        this.updateParticles(clockTick);
+        this.updateParticles(clockTick * speedMultiplier);
         
         // Custom update behavior
         if (this.onUpdate) {
-            this.onUpdate(this, clockTick);
+            this.onUpdate(this, clockTick * speedMultiplier);
         }
         
         // Check if reached target
@@ -179,6 +184,7 @@ class Projectile {
         // Create impact effect if specified
         if (this.impactEffect) {
             this.createImpactEffect();
+            SOUND_ENGINE.playSFX(this.impactSound);
         }
         
         // Call hit callback if specified
@@ -186,7 +192,7 @@ class Projectile {
             this.onHit(this);
         }
         
-        console.log(`Projectile ${this.type} hit target`);
+        //console.log(`Projectile ${this.type} hit target`);
         
         // Mark for removal
         this.removeFromWorld = true;
@@ -285,7 +291,7 @@ class Projectile {
                 p.size *= 0.98;
             }
         }
-    }
+    } 
     
     drawParticles(ctx) {
         ctx.save();
@@ -406,24 +412,25 @@ class ImpactParticleManager {
     
     update() {
         const clockTick = gameEngine.clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
         
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             
             // Update position
-            p.x += p.vx * clockTick;
-            p.y += p.vy * clockTick;
+            p.x += p.vx * clockTick * speedMultiplier;
+            p.y += p.vy * clockTick * speedMultiplier;
             
             // Apply gravity to some effects
             if (p.color.includes("hsl(30") || p.color.includes("hsl(190")) { // Fire or ice
-                p.vy += 60 * clockTick; // Gravity
+                p.vy += 60 * clockTick * speedMultiplier; // Gravity
             }
             
             // Update rotation
-            p.rotation += 2 * clockTick;
+            p.rotation += 2 * clockTick * speedMultiplier;
             
             // Update life
-            p.life -= clockTick;
+            p.life -= clockTick * speedMultiplier;
             
             // Remove dead particles
             if (p.life <= 0) {
@@ -482,87 +489,105 @@ class ProjectileManager {
                 rotationSpeed: 0,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.02
             },
             "iceShard": {
                 width: 28,
                 height: 28,
-                speed: 450,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 5,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.03
             },
             "dagger": {
                 width: 24,
                 height: 24,
-                speed: 600,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 8,
                 trailEffect: null,
+                launchSound: "woosh",
+                impactSound: "splat",
                 impactEffect: null
             },
             "healOrb": {
                 width: 32,
                 height: 32,
-                speed: 250,
+                speed: 800,
                 trajectoryType: "arc",
                 arcHeight: 150,
                 rotationSpeed: 3,
                 trailEffect: "sparkle",
                 impactEffect: "heal",
                 trailFrequency: 0.04,
+                launchSound: "woosh",
+                impactSound: "sparkle",
                 scale: 1.2
             },
             "frostBolt": {
                 width: 36,
                 height: 36,
-                speed: 350,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.02
             },
             "fireball": {
                 width: 40,
                 height: 40,
-                speed: 400,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: "fire",
                 impactEffect: "explosion",
+                launchSound: "flame",
+                impactSound: "cannon",
                 trailFrequency: 0.01
             },
             "arrow": {
                 width: 30,
                 height: 30,
-                speed: 700,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: null,
+                launchSound: "woosh",
+                impactSound: "puncture",
                 impactEffect: null
             },
             "poison": {
                 width: 28,
                 height: 28,
-                speed: 300,
+                speed: 800,
                 trajectoryType: "bounce",
                 rotationSpeed: 2,
                 trailEffect: "smoke",
-                impactEffect: "splash",
+                impactEffect: "heal",
                 scale: 0.9,
+                launchSound: "woosh",
+                impactSound: "charge",
                 trailFrequency: 0.05
             },
             "magic": {
                 width: 36,
                 height: 36,
-                speed: 350,
+                speed: 800,
                 trajectoryType: "spiral",
                 rotationSpeed: 4,
                 trailEffect: "sparkle",
                 impactEffect: "explosion",
+                launchSound: "dust",
+                impactSound: "wing",
                 trailFrequency: 0.02
             }
         };
@@ -593,87 +618,105 @@ class ProjectileManager {
                 rotationSpeed: 0,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.02
             },
             "iceShard": {
                 width: 28,
                 height: 28,
-                speed: 450,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 5,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.03
             },
             "dagger": {
                 width: 24,
                 height: 24,
-                speed: 600,
+                speed: 800,
                 trajectoryType: "spiral",
                 rotationSpeed: 8,
                 trailEffect: null,
+                launchSound: "woosh",
+                impactSound: "splat",
                 impactEffect: null
             },
             "healOrb": {
                 width: 32,
                 height: 32,
-                speed: 250,
+                speed: 800,
                 trajectoryType: "arc",
                 arcHeight: 150,
                 rotationSpeed: 3,
                 trailEffect: "sparkle",
                 impactEffect: "heal",
                 trailFrequency: 0.04,
+                launchSound: "woosh",
+                impactSound: "sparkle",
                 scale: 1.2
             },
             "frostBolt": {
                 width: 36,
                 height: 36,
-                speed: 350,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: "ice",
                 impactEffect: "splash",
+                launchSound: "woosh",
+                impactSound: "splat",
                 trailFrequency: 0.02
             },
             "fireball": {
                 width: 40,
                 height: 40,
-                speed: 400,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: "fire",
                 impactEffect: "explosion",
+                launchSound: "flame",
+                impactSound: "cannon",
                 trailFrequency: 0.01
             },
             "arrow": {
                 width: 30,
                 height: 30,
-                speed: 700,
+                speed: 800,
                 trajectoryType: "linear",
                 rotationSpeed: 0,
                 trailEffect: null,
+                launchSound: "woosh",
+                impactSound: "puncture",
                 impactEffect: null
             },
             "poison": {
-                width: 28,
-                height: 28,
-                speed: 300,
+                width: 40,
+                height: 40,
+                speed: 800,
                 trajectoryType: "bounce",
                 rotationSpeed: 2,
                 trailEffect: "smoke",
-                impactEffect: "splash",
+                impactEffect: "heal",
                 scale: 0.9,
+                launchSound: "woosh",
+                impactSound: "charge",
                 trailFrequency: 0.05
             },
             "magic": {
                 width: 36,
                 height: 36,
-                speed: 350,
+                speed: 800,
                 trajectoryType: "spiral",
                 rotationSpeed: 4,
                 trailEffect: "sparkle",
                 impactEffect: "explosion",
+                launchSound: "dust",
+                impactSound: "wing",
                 trailFrequency: 0.02
             }
         };
@@ -685,6 +728,12 @@ class ProjectileManager {
         const projectile = new Projectile(
             sourceX, sourceY, targetX, targetY, type, mergedOptions
         );
+        console.log("Projectile launch sound: " + projectile.launchSound);
+
+        if (projectile.targetX !== projectile.sourceX) {
+            SOUND_ENGINE.playSFX(projectile.launchSound);
+        }
+        
         
         // Add to game engine
         gameEngine.addEntity(projectile);
@@ -721,6 +770,7 @@ class DeathParticleManager {
         this.elapsedTime = 0;
         
         // Create initial particles
+        
         this.initializeParticles();
     }
     
@@ -749,28 +799,29 @@ class DeathParticleManager {
     
     update() {
         const clockTick = gameEngine.clockTick;
-        this.elapsedTime += clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
+        this.elapsedTime += clockTick * speedMultiplier;
         
         // Update all particles
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             
             // Update position
-            p.x += p.vx * clockTick;
-            p.y += p.vy * clockTick;
+            p.x += p.vx * clockTick * speedMultiplier;
+            p.y += p.vy * clockTick * speedMultiplier;
             
             // Apply gentle deceleration
             p.vx *= 0.95;
             p.vy *= 0.95;
             
             // Apply gravity
-            p.vy += 15 * clockTick;
+            p.vy += 15 * clockTick * speedMultiplier;
             
             // Update rotation
-            p.rotation += p.rotationSpeed * clockTick;
+            p.rotation += p.rotationSpeed * clockTick * speedMultiplier;
             
             // Update life
-            p.life -= clockTick;
+            p.life -= clockTick * speedMultiplier;
             
             // Remove dead particles
             if (p.life <= 0) {
@@ -830,61 +881,66 @@ class StarParticleManager {
         this.y = y;
         this.particles = [];
         this.layer = 6;  // Above units
-        this.lifespan = 2.5;  // How long the entire effect lasts
+        this.lifespan = 1.5;  // Shorter overall effect duration
         this.elapsedTime = 0;
         this.removeFromWorld = false;
         
-        // Create initial particles
+        // Create all particles at once for a single burst
         this.initializeParticles();
     }
     
     initializeParticles() {
-        // Create star particles in an explosion pattern - INCREASED COUNT AND SIZE
-        const particleCount = 80 + Math.floor(Math.random() * 20);
+        // Fewer particles for a more concentrated explosion
+        const particleCount = 50 + Math.floor(Math.random() * 15);
         
         for (let i = 0; i < particleCount; i++) {
+            // Create a more focused explosion pattern
             const angle = Math.random() * Math.PI * 2;
-            const speed = 150 + Math.random() * 250;
             
+            // More consistent initial speeds for a cleaner burst
+            const speed = 200 + Math.random() * 200;
+            
+            // More focused initial positions (all from same point)
             this.particles.push({
                 x: this.x,
                 y: this.y,
                 vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed - 80, // Stronger upward bias
-                size: 30 + Math.random() * 30, // MUCH LARGER STARS
+                vy: Math.sin(angle) * speed - 100, // Stronger upward bias
+                size: 40 + Math.random() * 40,
                 alpha: 1.0,
                 rotation: Math.random() * Math.PI * 2,
-                rotationSpeed: (Math.random() - 0.5) * 15,
-                life: 0.8 + Math.random() * 1.5 // Longer life
+                rotationSpeed: (Math.random() - 0.5) * 10,
+                // More consistent lifespans for a cleaner effect
+                life: 0.8 + Math.random() * 0.7  
             });
         }
     }
     
-    
     update() {
         const clockTick = gameEngine.clockTick;
-        this.elapsedTime += clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
+        this.elapsedTime += clockTick * speedMultiplier;
         
         // Update all particles
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             
             // Update position
-            p.x += p.vx * clockTick;
-            p.y += p.vy * clockTick;
+            p.x += p.vx * clockTick * speedMultiplier;
+            p.y += p.vy * clockTick * speedMultiplier;
             
-            // Apply gentle deceleration
-            p.vx *= 0.95;
-            p.vy *= 0.95;
+            // Stronger deceleration for more realistic physics
+            p.vx *= 0.92;
+            p.vy *= 0.92;
             
-            // Apply gravity
-            p.vy += 200 * clockTick;
+            // Higher gravity for faster fall
+            p.vy += 250 * clockTick * speedMultiplier;
             
             // Update rotation
-            p.rotation += p.rotationSpeed * clockTick;
+            p.rotation += p.rotationSpeed * clockTick * speedMultiplier;
             
             // Update life
-            p.life -= clockTick;
+            p.life -= clockTick * speedMultiplier;
             
             // Remove dead particles
             if (p.life <= 0) {
@@ -904,15 +960,122 @@ class StarParticleManager {
     draw(ctx) {
         ctx.save();
         
-        // Draw each particle
         for (const p of this.particles) {
             ctx.globalAlpha = p.alpha;
             
             ctx.translate(p.x, p.y);
             ctx.rotate(p.rotation);
             
-            // Draw the star image
             const starImage = ASSET_MANAGER.getAsset("./Projectiles/Star.png");
+            ctx.drawImage(
+                starImage,
+                -p.size / 2,
+                -p.size / 2,
+                p.size,
+                p.size
+            );
+            
+            ctx.rotate(-p.rotation);
+            ctx.translate(-p.x, -p.y);
+        }
+        
+        ctx.restore();
+    }
+}
+
+
+class FrostParticleManager {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.particles = [];
+        this.layer = 6;  // Above units
+        this.lifespan = 1.5;  // Shorter overall effect duration
+        this.elapsedTime = 0;
+        this.removeFromWorld = false;
+        
+        // Create all particles at once for a single burst
+        this.initializeParticles();
+    }
+    
+    initializeParticles() {
+        // Fewer particles for a more concentrated explosion
+        const particleCount = 10 + Math.floor(Math.random() * 15);
+        
+        for (let i = 0; i < particleCount; i++) {
+            // Create a more focused explosion pattern
+            const angle = Math.random() * Math.PI * 2;
+            
+            // More consistent initial speeds for a cleaner burst
+            const speed = 5 + Math.random() * 200;
+            
+            // More focused initial positions (all from same point)
+            this.particles.push({
+                x: this.x,
+                y: this.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 100, // Stronger upward bias
+                size: 40 + Math.random() * 40,
+                alpha: 1.0,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 10,
+                // More consistent lifespans for a cleaner effect
+                life: 0.8 + Math.random() * 0.7  
+            });
+        }
+    }
+    
+    update() {
+        const clockTick = gameEngine.clockTick;
+        const speedMultiplier = sceneManager.battleAnimationSpeed || 1;
+        this.elapsedTime += clockTick * speedMultiplier;
+        
+        // Update all particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            
+            // Update position
+            p.x += p.vx * clockTick * speedMultiplier;
+            p.y += p.vy * clockTick * speedMultiplier;
+            
+            // Stronger deceleration for more realistic physics
+            p.vx *= 0.92;
+            p.vy *= 0.92;
+            
+            // Higher gravity for faster fall
+            p.vy += 250 * clockTick * speedMultiplier;
+            
+            // Update rotation
+            p.rotation += p.rotationSpeed * clockTick * speedMultiplier;
+            
+            // Update life
+            p.life -= clockTick * speedMultiplier;
+            
+            // Remove dead particles
+            if (p.life <= 0) {
+                this.particles.splice(i, 1);
+            } else {
+                // Fade out as life decreases
+                p.alpha = p.life;
+            }
+        }
+        
+        // Remove the manager if effect duration is over or no particles remain
+        if (this.elapsedTime >= this.lifespan || this.particles.length === 0) {
+            this.removeFromWorld = true;
+        }
+    }
+    
+    draw(ctx) {
+        ctx.save();
+        
+        for (const p of this.particles) {
+            ctx.globalAlpha = p.alpha;
+            
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            
+            const starImage = ASSET_MANAGER.getAsset("./Projectiles/Snowflake.png");
             ctx.drawImage(
                 starImage,
                 -p.size / 2,

@@ -1,7 +1,7 @@
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 const SOUND_ENGINE = new SoundEngine();
-
+let interactionDone = false;
 const sceneManager = new SceneManager();
 
 // Menu Assets
@@ -13,7 +13,29 @@ ASSET_MANAGER.queueDownload("./UI_Assets/FrostArena.png");
 // Audio Assets
 ASSET_MANAGER.queueDownload("./UI_Assets/AudioOn.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/AudioOff.png");
-ASSET_MANAGER.queueAudioDownload("./Sounds/menuMusic.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/menuMusic2.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/kaching.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Pyke.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/woosh.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/splat.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/flame.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/cannon.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/sell.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/dice.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/crit.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/puff.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/wing.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/dust.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/sparkle.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/upgrade.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/charge.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/puncture.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Glass.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Winner.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Loss.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/wonround.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/anvil.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/frost.wav");
 
 // Shop Buttons
 ASSET_MANAGER.queueDownload("./UI_Assets/RollButton1.png");
@@ -105,7 +127,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/NextButton2.png");
 
 // Monster Sprites
 ASSET_MANAGER.queueDownload("./UI_Assets/Select.png");
-for (let i = 1; i < 21; i++) {
+for (let i = 1; i < 41; i++) {
     ASSET_MANAGER.queueDownload("./Units/Unit" + i + ".png");
 }
 
@@ -122,6 +144,7 @@ ASSET_MANAGER.queueDownload("./UI_Assets/WinPlaceHolder.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/DrawDisplay.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidBlack.png");
 ASSET_MANAGER.queueDownload("./Backgrounds/SolidWhite.png");
+ASSET_MANAGER.queueDownload("./Backgrounds/MountainBackground.png");
 
 // Win, Lose game
 ASSET_MANAGER.queueDownload("./UI_Assets/WinGame.png");
@@ -143,6 +166,21 @@ ASSET_MANAGER.queueDownload("./Projectiles/Magic.png");
 ASSET_MANAGER.queueDownload("./Projectiles/HealOrb.png");
 ASSET_MANAGER.queueDownload("./Projectiles/FrostBolt.png");
 ASSET_MANAGER.queueDownload("./Projectiles/Star.png");
+ASSET_MANAGER.queueDownload("./Projectiles/Snowflake.png");
+
+// Tutorial assets
+ASSET_MANAGER.queueDownload("./UI_Assets/TutorialButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/TutorialButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/MainMenuButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/MainMenuButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NextSlideButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/NextSlideButton2.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/PrevSlideButton1.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/PrevSlideButton2.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel1.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel2.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel3.png");
+
 
 
 class GameState {
@@ -163,6 +201,17 @@ ASSET_MANAGER.downloadAll(() => {
     // Initialize scene and sound AFTER assets are loaded
     scene = "MainMenu";
     SOUND_ENGINE.updateScene("MainMenu");
+
+    document.addEventListener('click', function onClick() {
+        if (!interactionDone) {
+            // Only run once when the user clicks
+            //SOUND_ENGINE.audioEnabled = true;
+            SOUND_ENGINE.toggleAudio();
+    
+            // Optionally, if you want the event listener to be removed after the first interaction
+            document.removeEventListener('click', onClick);
+        }
+    });
    
     // Add UI elements
     gameEngine.addEntity(new MainMenuBackground(gameEngine));
@@ -174,8 +223,13 @@ ASSET_MANAGER.downloadAll(() => {
         SOUND_ENGINE.updateScene("MainMenu");
     }));
 
+    // Add tutorial button
+    gameEngine.addEntity(new Button(809.5, 920, "./UI_Assets/TutorialButton1.png", 301, 100, "./UI_Assets/TutorialButton2.png", () => { 
+        scene = "Tutorial";
+    }));
+
     // Add audio button
-    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOff.png", 100, 100, "./UI_Assets/AudioOn.png", () => {
+    const audioButton = new Button(1750, 50, "./UI_Assets/AudioOn.png", 100, 100, "./UI_Assets/AudioOff.png", () => {
         SOUND_ENGINE.toggleAudio();
         if (audioButton.sprite === "./UI_Assets/AudioOff.png") {
             audioButton.sprite = "./UI_Assets/AudioOn.png";

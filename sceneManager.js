@@ -12,6 +12,7 @@ class SceneManager {
         // Game state
         this.lives = STARTING_LIVES;
         this.gold = STARTING_GOLD;
+        this.roundsPassed = 0;
         this.index = 0;
         this.wins = 0;
         this.shopLevel = 1;
@@ -157,7 +158,9 @@ class SceneManager {
     }
 
     update() {
+        
         if (scene === "Shop") {
+            SOUND_ENGINE.updateScene("MainMenu");
             this.clearEntities();
             this.setupShop();
             scene = "LoadedShop";
@@ -166,6 +169,7 @@ class SceneManager {
             this.upgradeShop();
             scene = "LoadedUpgradeShop";
         } else if (scene === "Battle") {
+            SOUND_ENGINE.updateScene("Battle");
             this.clearEntities();
             this.startBattle();
             scene = "LoadedBattle";
@@ -183,35 +187,42 @@ class SceneManager {
         } else if (scene === "End") {
             this.clearEntities();
             this.endGame();
+        } else if (scene === "Tutorial") {
+            this.clearEntities();
+            this.setupTutorial();
+            scene = "LoadedTutorial";
         }
-
+    
         // Handle dragging
         if (gameEngine.click) {
             this.handleClick(gameEngine.click.x, gameEngine.click.y);
+            
         }
-
+    
         if (gameEngine.mouse) {
             this.handleMouseMove(gameEngine.mouse.x, gameEngine.mouse.y);
         }
     }
 
     upgradeShop() {
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/MountainBackground.png"));
         gameEngine.addEntity(new Display(463, 200, "./UI_Assets/UpgradeShop.png", 994, 238));
         this.shopLevel++;
 
         setTimeout(function() {
             gameEngine.addEntity(new Button(790, 900, "./UI_Assets/UpgradeButton1.png", 360, 100, "./UI_Assets/UpgradeButton2.png", () => {
+                SOUND_ENGINE.playSFX("anvil");
                 scene = "Shop";
             }));
           }, 1500);
     }
 
     roundWin() {
+        SOUND_ENGINE.playSFX("wonround");
+        SOUND_ENGINE.fadeOut(1500);
         this.endRound();
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
-        console.log("Total wins: " + this.wins);
-
+        //
         for (let i = 0; i < WINS_THRESHOLD; i++)
             gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
         let x = 415;
@@ -225,6 +236,7 @@ class SceneManager {
     }
 
     roundLose() {
+        SOUND_ENGINE.fadeOut(1500);
         this.endRound();
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
 
@@ -233,9 +245,13 @@ class SceneManager {
         setTimeout(function() {
             gameEngine.entities.pop();
           }, 1000);
+        setTimeout(function() {
+        SOUND_ENGINE.playSFX("Glass");
+        }, 1000);
     }
 
     roundDraw() {
+        SOUND_ENGINE.fadeOut(1500);
         this.endRound();
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 160));
         gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
@@ -243,8 +259,8 @@ class SceneManager {
 
     endRound() {
         this.clearEntities();
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
-        if ((this.currentRound-1) % 2 === 0) {
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/MountainBackground.png"));
+        if (((this.currentRound-1) % 2 === 0) && this.shopLevel<4) {
             setTimeout(function() {
                 gameEngine.addEntity(new Button(760, 900, "./UI_Assets/NextTurnButton1.png",
                                                 400, 100, "./UI_Assets/NextTurnButton2.png", () => {
@@ -263,7 +279,7 @@ class SceneManager {
 
     endGame() {
         scene = "End Game";
-        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/MountainBackground.png"));
 
         gameState.inGame = false;
         setTimeout(function() {
@@ -275,6 +291,7 @@ class SceneManager {
           }, 1500);
 
         if (this.wins >= WINS_THRESHOLD) {
+            SOUND_ENGINE.fadeOut(1500);
             gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
             gameEngine.addEntity(new Display(625, 200, "./UI_Assets/WinGame.png", 710, 160));
             for (let i = 0; i < WINS_THRESHOLD; i++)
@@ -282,15 +299,24 @@ class SceneManager {
             setTimeout(function() {
                 gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
               }, 1000);
-            console.log("You Win!");
+              setTimeout(function() {
+                SOUND_ENGINE.playSFX("wongame"); 
+              }, 1000);
+            //console.log("You Win!");
         }
         else if (this.lives <= 0) {
+            SOUND_ENGINE.fadeOut(1500);
             gameEngine.addEntity(new Display(620, 200, "./UI_Assets/LoseGame.png", 720, 160));
             gameEngine.addEntity(new DisplayStill(860, 500, "./UI_Assets/HealthHeart.png", 200, 200));
             setTimeout(function() {
                 gameEngine.entities.pop();
               }, 1000);
-            console.log("You Lose!");
+              setTimeout(function() {
+                SOUND_ENGINE.playSFX("lostgame"); 
+              }, 1000);
+
+            
+            //console.log("You Lose!");
         }
         this.lives = STARTING_LIVES;
         this.gold = STARTING_GOLD;
@@ -331,6 +357,7 @@ class SceneManager {
         // Add buttons
         gameEngine.addEntity(new Button(60, 920, "./UI_Assets/RollButton1.png", 200, 100, "./UI_Assets/RollButton2.png", () => {
             this.rollShop();
+            SOUND_ENGINE.playSFX("dice");
         }));
 
         gameEngine.addEntity(new Button(680, 920, "./UI_Assets/SellButton1.png", 200, 100, "./UI_Assets/SellButton2.png", () => {
@@ -342,15 +369,16 @@ class SceneManager {
                 this.teamSlots[this.index] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
+                SOUND_ENGINE.playSFX("sell");
             }
         }));
 
         gameEngine.addEntity(new Button(270, 920, "./UI_Assets/PurchaseButton1.png", 400, 100, "./UI_Assets/PurchaseButton2.png", () => {
-            console.log(gameEngine.SelectedUnitGlobal);
-            console.log(this.teamSlots.includes(null));
-            console.log(this.gold);
-            console.log(this.teamSlots);
-            console.log(this.selectedUnit);
+            //console.log(gameEngine.SelectedUnitGlobal);
+            //console.log(this.teamSlots.includes(null));
+            //console.log(this.gold);
+            //console.log(this.teamSlots);
+            //console.log(this.selectedUnit);
             if (this.gold >= BUY_COST && !(gameEngine.SelectedUnitGlobal==null) && (this.teamSlots.includes(null))
                 && this.selectedUnit && (this.shopSlots.includes(this.selectedUnit))) {
                 this.gold -= BUY_COST;
@@ -362,22 +390,24 @@ class SceneManager {
                 this.shopSlots[this.index2] = null;
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
+                SOUND_ENGINE.playSFX("purchase");
             }
         }));
 
         gameEngine.addEntity(new Button(890, 920, "./UI_Assets/UpgradeButton1.png", 360, 100, "./UI_Assets/UpgradeButton2.png", () => {
-            console.log(gameEngine.SelectedUnitGlobal);
-            console.log(this.teamSlots.includes(null));
-            console.log(this.gold);
-            console.log(this.teamSlots);
-            console.log(this.selectedUnit);
+            //console.log(gameEngine.SelectedUnitGlobal);
+            //console.log(this.teamSlots.includes(null));
+            //console.log(this.gold);
+            //console.log(this.teamSlots);
+            //console.log(this.selectedUnit);
             if (this.gold >= UPGRADE_COST && !(gameEngine.SelectedUnitGlobal==null)
                 && this.teamSlots.includes(this.selectedUnit) && this.selectedUnit.level < 4) {
                 this.gold -= UPGRADE_COST;
                 this.selectedUnit.levelUp();
+                SOUND_ENGINE.playSFX("upgrade");
                 gameEngine.SelectedUnitGlobal = null;
                 this.selectedUnit = null;
-                console.log("Up grade team unit")
+                //console.log("Up grade team unit")
             }
         }));
 
@@ -411,8 +441,8 @@ class SceneManager {
         if (this.shopLevel > 1) { usedTypes = usedTypes.concat(this.uncommonMonsterTypes);}
         if (this.shopLevel > 2) { usedTypes = usedTypes.concat(this.rareMonsterTypes);}
         if (this.shopLevel > 3) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
-        if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
-        if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
+        //if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
+        //if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
 
         if (this.gold >= ROLL_COST) {
             this.gold -= ROLL_COST;
@@ -442,7 +472,7 @@ class SceneManager {
             }
             this.updateUnitDisplay();
         }
-        console.log(this.gold);
+        //console.log(this.gold);
     }
 
     updateUnitDisplay() {
@@ -485,7 +515,7 @@ class SceneManager {
                 if (gameEngine.SelectedUnitGlobal != unit.ID) {
                     gameEngine.SelectedUnitGlobal = unit.ID;
                     this.selectedUnit = unit;
-                    console.log("Selected team unit");
+                    //console.log("Selected team unit");
                 }
             }
         }
@@ -496,6 +526,7 @@ class SceneManager {
         [...this.shopSlots, ...this.teamSlots].forEach(unit => {
             if (unit) {
                 unit.isHovered = this.isClickInUnit(x, y, unit);
+                
                 //add ability text bubble
             }
         });
@@ -528,6 +559,7 @@ class SceneManager {
     }
 
     startBattle() {
+        this.roundsPassed = 0;
         this.eventQueue = ["SB.N"];
         this.abilityQueue = [];
         this.actionQueue = [];
@@ -620,8 +652,10 @@ class SceneManager {
         if (this.shopLevel > 1) { usedTypes = usedTypes.concat(this.uncommonMonsterTypes);}
         if (this.shopLevel > 2) { usedTypes = usedTypes.concat(this.rareMonsterTypes);}
         if (this.shopLevel > 3) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
-        if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
-        if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
+        //if (this.shopLevel > 4) { usedTypes = usedTypes.concat(this.epicMonsterTypes);}
+        //if (this.shopLevel > 5) { usedTypes = usedTypes.concat(this.legendaryMonsterTypes);}
+        if (this.currentRound > 9) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
+        if (this.currentRound > 12) { usedTypes = usedTypes.concat(this.superRareMonsterTypes);}
         
         // Create each unit and assign stats
         for (let i = 0; i < teamSize; i++) {
@@ -632,20 +666,12 @@ class SceneManager {
             // Remove the selected type from available types
             usedTypes.splice(randomIndex, 1);
             
-            // Set attack and health values
-            const attack = 1;
-            const health = 2;
-            
             // Construct the unit with given stats
-            const unit = new Unit(0, 0, type, {
-                attack: attack,
-                health: health
-            }, true);
+            const unit = new Unit(2000, 400, type, undefined, true);
             
             // Make the unit face left
             unit.facingLeft = true;
             // Set maximum health
-            unit.maxHealth = health;
             
             // Add the unit to the team
             team.push(unit);
@@ -663,10 +689,10 @@ class SceneManager {
                 // First check if there are any queued actions to process
                 if (this.actionQueue.length > 0 && this.activeProjectiles === 0) {
                     let theAction = this.actionQueue.pop();
-                    console.log("attempting action " + theAction[0] + theAction[1]);
+                    //console.log("attempting action " + theAction[0] + theAction[1]);
     
                     // Placeholder for animation
-                    console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
+                    //console.log("Animate: " + theAction[6] + " going from " + theAction[5] + " to " + theAction[2]);
                     
                     // Determine the appropriate projectile type based on the visual effect
                     const projectileType = ProjectileManager.getProjectileTypeFromVisualEffect(theAction[6]);
@@ -696,12 +722,15 @@ class SceneManager {
                 }
                 // Then check if there are any events to parse (only if no projectiles are active)
                 else if (this.eventQueue.length > 0 && this.activeProjectiles === 0) {
-                    console.log("parsing events" + this.eventQueue);
+                    //console.log("parsing events" + this.eventQueue);
                     this.ParseEvents();
                 } 
                 // If no queued actions/events and no active projectiles, proceed with combat
                 else if (this.isNextApproved && this.activeProjectiles === 0) {   
-                    console.log("attempting attack");
+
+                    
+
+                    //console.log("attempting attack");
                     const playerUnit = playerTeam[0];
                     const enemyUnit = enemyTeam[0];
         
@@ -719,6 +748,7 @@ class SceneManager {
                     if (!playerUnit.animator.hasDealtDamage && attackTime >= 0.75) {
                         playerUnit.animator.hasDealtDamage = true;
                         enemyUnit.animator.hasDealtDamage = true;
+                        SOUND_ENGINE.playSFX("hurt");
                     }
                     
                     // Check if attack sequence is complete
@@ -734,6 +764,7 @@ class SceneManager {
                         this.battleTimer = gameEngine.timestamp/10000 + 0.1;
                         
                         // Apply damage to both units
+                        
                         this.affectStat("HP", enemyUnit.attack*-1, playerUnit, this.activeTeam, this.battlePositionsPlayer);
                         this.affectStat("HP", playerUnit.attack*-1, enemyUnit, this.enemyTeam, this.battlePositionsEnemy);
                         
@@ -748,6 +779,31 @@ class SceneManager {
                         // Queue attack events
                         this.eventQueue.unshift("A." + playerUnit.ID);
                         this.eventQueue.unshift("A." + enemyUnit.ID);
+
+                        this.roundsPassed++;
+
+                        console.log("Rounds: " + this.roundsPassed);
+                        
+
+
+                        // Deals damage to everyone after a set amount of turns to avoid infinite stalemates.
+                        if (this.roundsPassed > 10) {
+                            SOUND_ENGINE.playSFX("frost");
+                            [...this.enemyTeam, ...this.activeTeam].forEach(unit => {
+                                unit.health -= (this.roundsPassed - 10);
+                                console.log("trying to reduce HP from blizzard");
+
+                                const frostEffect = new FrostParticleManager(
+                                    unit.x + unit.width / 2, 
+                                    unit.y + unit.height / 2
+                                );
+                                gameEngine.addEntity(frostEffect);
+
+                                if (unit.health <= 0) {
+                                    this.killUnit(unit, false);
+                                }
+                            });
+                        }
                     }
                 }
             }
@@ -766,7 +822,7 @@ class SceneManager {
             if (playerTeam.length > 0) {
                 this.wins++;
                 scene = "Win round";
-                console.log(scene);
+                //console.log(scene);
             } else if (enemyTeam.length > 0) {
                 this.lives--;
                 scene = "Lose round";
@@ -781,7 +837,7 @@ class SceneManager {
                 this.currentRound++;
                 this.gold = STARTING_GOLD;
 
-                console.log("Current Round: " + this.currentRound)
+                //console.log("Current Round: " + this.currentRound)
 
                 if (scene === "Win round") {
                     this.roundWin();
@@ -812,12 +868,16 @@ class SceneManager {
     
         // Add death event to queue for ability triggers
         this.eventQueue.unshift("D." + unit.ID);
+        
     
         if (!isPassiveDeath) {
             // For combat deaths - start the launch animation
+            console.log("death");
+            
             unit.animator.startDeath();
         } else {
             // For passive ability deaths - create smoke puff effect
+            SOUND_ENGINE.playSFX("puff");
             const deathEffect = new DeathParticleManager(
                 unit.x + unit.width / 2, 
                 unit.y + unit.height / 2
@@ -846,13 +906,41 @@ class SceneManager {
     checkAndCleanupDeadUnits() {
         // Check each entity for dying units that have gone off screen
         gameEngine.entities.forEach(entity => {
-            if (entity instanceof Unit && entity.animator.isDying) {
+            if (entity instanceof Unit && entity.animator.isDying && !entity.animator.hasTriggeredStars) {
                 // Check if unit has gone far enough off screen
                 if (entity.x < -100 || entity.x > gameEngine.ctx.canvas.width + 100 || 
                     entity.y > gameEngine.ctx.canvas.height + 100) {
                     
-                    // Trigger star explosion effect
-                    entity.animator.triggerStarExplosion();
+                    // Calculate edge position based on trajectory
+                    let starX = entity.x;
+                    let starY = entity.y;
+                    
+                    // Determine if unit is going left or right and calculate edge position
+                    if (entity.animator.deathVelocityX < 0) {
+                        // Left edge
+                        starX = 0;
+                        // Estimate Y position where it would hit the edge
+                        starY = entity.y + entity.animator.deathVelocityY * 
+                               (Math.abs(entity.x) / Math.abs(entity.animator.deathVelocityX));
+                    } else {
+                        // Right edge
+                        starX = gameEngine.ctx.canvas.width;
+                        // Estimate Y position where it would hit the edge
+                        starY = entity.y + entity.animator.deathVelocityY * 
+                               ((gameEngine.ctx.canvas.width - entity.x) / entity.animator.deathVelocityX);
+                    }
+                    
+                    // Clamp Y to visible area
+                    starY = Math.max(100, Math.min(starY, gameEngine.ctx.canvas.height - 100));
+                    
+                    // Create a single star explosion
+                    const starEffect = new StarParticleManager(starX, starY);
+                    gameEngine.addEntity(starEffect);
+                    
+                    // Mark unit for removal and set flag to prevent multiple explosions
+                    entity.removeFromWorld = true;
+                    entity.animator.hasTriggeredStars = true;
+                    SOUND_ENGINE.playSFX("puff");
                 }
             }
         });
@@ -866,8 +954,8 @@ class SceneManager {
     }
 
     ParseEvents() {
-        console.log("Events are being parsed");
-        console.log(this.eventQueue);
+        //console.log("Events are being parsed");
+        //console.log(this.eventQueue);
 
         while (this.eventQueue.length > 0) {
             this.currentEvent = this.eventQueue.pop();
@@ -890,7 +978,7 @@ class SceneManager {
 
     applyEffect(ability, eventTriggerer, team, owner) {
         let abilityInfo = ability.effect.split(".");
-        console.log(ability);
+        //console.log(ability);
         let targets = ability.whoAffected.split(".");
         let tempWhoAffected = (targets[0]);
         targets = (targets[1]);
@@ -905,11 +993,11 @@ class SceneManager {
             }
         });
         if (ownerUnit == null) {
-            console.log("no owner found, aborting");
+            //console.log("no owner found, aborting");
             return;
         }
 
-        console.log("Ability tried to find ID " + owner + " and it registered the owner as: " + ownerUnit);
+        //console.log("Ability tried to find ID " + owner + " and it registered the owner as: " + ownerUnit);
 
         if (team == 0) {
             theParty = this.activeTeam;
@@ -922,7 +1010,7 @@ class SceneManager {
         let i = 0;
         let cap = 0
         let usedTargets = new Set();
-        console.log("targets: " + targets);
+        //console.log("targets: " + targets);
 
         while (i < targets && cap < 9999) {
 
@@ -952,6 +1040,9 @@ class SceneManager {
                 if (tempWhoAffected == "FA") {
                     target = this.activeTeam[0];
                 }
+                if (tempWhoAffected == "LE") {
+                    target = this.enemyTeam[this.enemyTeam.length-1];
+                }
                 if (tempWhoAffected == "BA") {
                     let tempIndex = this.indexOfID(owner, this.activeTeam);
                     target = this.activeTeam[tempIndex+1];
@@ -971,6 +1062,9 @@ class SceneManager {
                 if (tempWhoAffected == "FA") {
                     target = this.enemyTeam[0];
                 }
+                if (tempWhoAffected == "LE") {
+                    target = this.activeTeam[this.activeTeam.length-1];
+                }
                 if (tempWhoAffected == "BA") {
                     let tempIndex = this.indexOfID(owner, this.enemyTeam);
                     target = this.enemyTeam[tempIndex+1];
@@ -978,11 +1072,11 @@ class SceneManager {
             }
 
             if (target == null) {
-                console.log("no target found, aborting");
+                //console.log("no target found, aborting");
                 return;
             }
 
-            console.log("target found "+ target);
+            //console.log("target found "+ target);
             if (usedTargets.has(target)) {
                 cap++;
             } else {
@@ -998,15 +1092,21 @@ class SceneManager {
 
     affectStat(stat, amount, unit, team, teampos) {
         // Log debug info about stat change
-        console.log("affecting stats" + stat + " " + amount + " " + unit);
+        //console.log("affecting stats" + stat + " " + amount + " " + unit);
      
         // Handle HP changes
+
+        if (stat == "HO") {
+            unit.health += Number(amount);
+        }
+
         if (stat == "HP" || stat == "B") {
             // Apply HP change
             unit.health += Number(amount);
             
             // If unit took damage, add hurt event to queue
-            if (amount < 0) {
+            if (Number(amount) < 0) {
+                
                 this.eventQueue.unshift("H." + unit.ID);
             }
         }
@@ -1067,4 +1167,26 @@ class SceneManager {
         this.abilityQueue = this.abilityQueue.filter(item => item.CID !== removeID);
     }
 
+    setupTutorial() {
+        // Add background
+        gameEngine.addEntity(new Background(0, 0, "./Backgrounds/SolidWhite.png"));
+        
+        // Create and store tutorial panels
+        const tutorialPanels = new TutorialPanels();
+        gameEngine.addEntity(tutorialPanels);
+        
+        // Add navigation buttons
+        gameEngine.addEntity(new Button(1496, 920, "./UI_Assets/NextSlideButton1.png", 364, 100, "./UI_Assets/NextSlideButton2.png", () => { 
+                tutorialPanels.nextPanel();
+        }));
+
+        gameEngine.addEntity(new Button(60, 920, "./UI_Assets/PrevSlideButton1.png", 364, 100, "./UI_Assets/PrevSlideButton2.png", () => { 
+            tutorialPanels.prevPanel();
+        }));
+        
+        // Add back button that refreshes the page
+        gameEngine.addEntity(new Button(792, 920, "./UI_Assets/MainMenuButton1.png", 336, 100, "./UI_Assets/MainMenuButton2.png", () => { 
+                window.location.reload();
+        }));
+    }
 }
