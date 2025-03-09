@@ -42,7 +42,7 @@ class SoundEngine {
             "upgrade": "./Sounds/upgrade.mp3",
             "dice": "./Sounds/dice.wav",
             "charge": "./Sounds/charge.mp3",
-            "puncture": "./Sounds/puncture.mp3",
+            "puncture": "./Sounds/Puncture.wav",
             "Glass": "./Sounds/Glass.mp3",
             "wongame": "./Sounds/Winner.wav",
             "lostgame": "./Sounds/Loss.mp3",

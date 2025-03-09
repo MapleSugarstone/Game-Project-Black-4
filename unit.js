@@ -631,12 +631,12 @@ class Unit {
                 break;
             case "./Units/Unit10.png":
                 this.attack = 5;
-                this.health = 8;
+                this.health = 11;
                 this.rarity = 1;
                 this.name = "Fistt";
                 break;
             case "./Units/Unit11.png":
-                this.attack = 6;
+                this.attack = 5;
                 this.health = 13;
                 this.rarity = 2;
                 this.name = "Skiever";
@@ -654,8 +654,8 @@ class Unit {
                 this.name = "Skealax";
                 break;
             case "./Units/Unit14.png":
-                this.attack = 4;
-                this.health = 15;
+                this.attack = 1;
+                this.health = 10;
                 this.rarity = 2;
                 this.name = "Harvar";
                 break;
@@ -726,8 +726,8 @@ class Unit {
                 this.name = "Skelter";
                 break;
             case "./Units/Unit26.png":
-                this.attack = 3;
-                this.health = 24;
+                this.attack = 4;
+                this.health = 20;
                 this.rarity = 3;
                 this.name = "Peebo";
                 break;
@@ -751,7 +751,7 @@ class Unit {
                 break;
             case "./Units/Unit30.png":
                 this.attack = 2;
-                this.health = 25;
+                this.health = 28;
                 this.rarity = 3;
                 this.name = "Coda";
                 break;
@@ -804,8 +804,8 @@ class Unit {
                 this.name = "Spark";
                 break;
             case "./Units/Unit39.png":
-                this.attack = 7;
-                this.health = 10;
+                this.attack = 1;
+                this.health = 1;
                 this.rarity = 4;
                 this.name = "Lost";
                 break;
