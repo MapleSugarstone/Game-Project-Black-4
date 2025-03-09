@@ -29,7 +29,7 @@ ASSET_MANAGER.queueAudioDownload("./Sounds/dust.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/sparkle.wav");
 ASSET_MANAGER.queueAudioDownload("./Sounds/upgrade.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/charge.mp3");
-ASSET_MANAGER.queueAudioDownload("./Sounds/puncture.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Puncture.wav");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Glass.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Winner.wav");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Loss.mp3");
