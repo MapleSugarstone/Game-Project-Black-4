@@ -676,6 +676,15 @@ class SceneManager {
             // Add the unit to the team
             team.push(unit);
         }
+
+        if (this.currentRound > 5) {
+            for (let i = 0; i < (this.currentRound-3)/2; i++) {
+                let randex = Math.floor(Math.random() * team.length);
+                if (team[randex].level < 4) {
+                    team[randex].levelUp();
+                }
+            }
+        }
         
         // Return the final team
         return team;
