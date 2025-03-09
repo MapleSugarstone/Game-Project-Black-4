@@ -370,6 +370,7 @@ class Unit {
                 break;
             case "./Units/Unit26.png":
                 this.ability = new Passive("N", "N", "N.1", "N", false, "N", "This unit has no passive.");
+                break;
             case "./Units/Unit27.png":
                 if (level == 1) {
                     this.ability = new Passive("SB", "N", "FE.1", "HP.-5", false, "Frost", "Hit front enemy for 5 HP at the start of battle.");
@@ -588,9 +589,9 @@ class Unit {
                 break;
             case "./Units/Unit3.png":
                 this.attack = 4;
-                this.health = 6;
+                this.health = 7;
                 this.rarity = 1;
-                this.name = "Frostman";
+                this.name = "Frostwell";
                 break;
             case "./Units/Unit4.png":
                 this.attack = 2;
@@ -605,8 +606,8 @@ class Unit {
                 this.name = "Knower";
                 break;
             case "./Units/Unit6.png":
-                this.attack = 4;
-                this.health = 6;
+                this.attack = 3;
+                this.health = 4;
                 this.rarity = 1;
                 this.name = "Ratman";
                 break;
