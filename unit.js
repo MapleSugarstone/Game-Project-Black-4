@@ -56,7 +56,7 @@ class Unit {
                 break;
             case "./Units/Unit2.png":
                 if (level == 1) {
-                    this.ability = new Passive("SB", "N", "RE.1", "HP.-2", false, "Arrow", "Deal 2 damage to random enemy at the start of the battle.");
+                    this.ability = new Passive("SB", "N", "RE.1", "HP.-2", false, "Snowball", "Deal 2 damage to random enemy at the start of the battle.");
                 }
                 if (level == 2) {
                     this.ability = new Passive("SB", "N", "RE.1", "HP.-3", false, "Snowball", "Deal 3 damage to random enemy at the start of the battle.");
