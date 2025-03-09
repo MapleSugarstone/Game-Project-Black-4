@@ -219,10 +219,10 @@ class Unit {
                     this.ability = new Passive("D", "A", "I.1", "B.3", false, "BuffAlly", "Increase attack and HP by 3 when an ally dies.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("D", "A", "I.1", "B.4", false, "BuffAlly", "Increase attack and HP by 4 when an ally dies.");
+                    this.ability = new Passive("D", "A", "I.1", "B.3", false, "BuffAlly", "Increase attack and HP by 3 when an ally dies.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("D", "A", "I.1", "B.5", false, "BuffAlly", "Increase attack and HP by 5 when an ally dies.");
+                    this.ability = new Passive("D", "A", "I.1", "B.4", false, "BuffAlly", "Increase attack and HP by 4 when an ally dies.");
                 }
                 break;
             case "./Units/Unit15.png":
