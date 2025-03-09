@@ -756,14 +756,14 @@ class Unit {
                 this.name = "Coda";
                 break;
             case "./Units/Unit31.png":
-                this.attack = 9;
+                this.attack = 8;
                 this.health = 18;
                 this.rarity = 4;
                 this.name = "Slice";
                 break;
             case "./Units/Unit32.png":
-                this.attack = 11;
-                this.health = 16;
+                this.attack = 7;
+                this.health = 15;
                 this.rarity = 4;
                 this.name = "Vyiam";
                 break;
@@ -812,7 +812,7 @@ class Unit {
             case "./Units/Unit40.png":
                 this.attack = 4;
                 this.health = 4;
-                this.rarity = 3;
+                this.rarity = 4;
                 this.name = "IO";
                 break;
             default:
