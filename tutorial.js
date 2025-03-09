@@ -1,11 +1,11 @@
 class TutorialPanels {
     constructor() {
         this.currentPanel = 1;
-        this.totalPanels = 3;
-        this.width = 1600;
-        this.height = 800;
+        this.totalPanels = 9;
+        this.width = 1920;
+        this.height = 1080;
         this.x = (1920 - this.width) / 2;
-        this.y = 120;
+        this.y = 0;
     }
     
     update() {

@@ -180,7 +180,12 @@ ASSET_MANAGER.queueDownload("./UI_Assets/PrevSlideButton2.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel1.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel2.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel3.png");
-
+ASSET_MANAGER.queueDownload("./Tutorial/Panel4.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel5.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel6.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel7.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel8.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel9.png");
 
 
 class GameState {
