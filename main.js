@@ -29,7 +29,7 @@ ASSET_MANAGER.queueAudioDownload("./Sounds/dust.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/sparkle.wav");
 ASSET_MANAGER.queueAudioDownload("./Sounds/upgrade.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/charge.mp3");
-ASSET_MANAGER.queueAudioDownload("./Sounds/puncture.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/Puncture.wav");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Glass.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Winner.wav");
 ASSET_MANAGER.queueAudioDownload("./Sounds/Loss.mp3");
@@ -180,7 +180,12 @@ ASSET_MANAGER.queueDownload("./UI_Assets/PrevSlideButton2.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel1.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel2.png");
 ASSET_MANAGER.queueDownload("./Tutorial/Panel3.png");
-
+ASSET_MANAGER.queueDownload("./Tutorial/Panel4.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel5.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel6.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel7.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel8.png");
+ASSET_MANAGER.queueDownload("./Tutorial/Panel9.png");
 
 
 class GameState {

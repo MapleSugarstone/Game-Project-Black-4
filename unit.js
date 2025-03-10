@@ -219,10 +219,10 @@ class Unit {
                     this.ability = new Passive("D", "A", "I.1", "B.3", false, "BuffAlly", "Increase attack and HP by 3 when an ally dies.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("D", "A", "I.1", "B.4", false, "BuffAlly", "Increase attack and HP by 4 when an ally dies.");
+                    this.ability = new Passive("D", "A", "I.1", "B.3", false, "BuffAlly", "Increase attack and HP by 3 when an ally dies.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("D", "A", "I.1", "B.5", false, "BuffAlly", "Increase attack and HP by 5 when an ally dies.");
+                    this.ability = new Passive("D", "A", "I.1", "B.4", false, "BuffAlly", "Increase attack and HP by 4 when an ally dies.");
                 }
                 break;
             case "./Units/Unit15.png":
@@ -469,7 +469,7 @@ class Unit {
                     this.ability = new Passive("SB", "N", "FA.1", "B.9", false, "BuffAlly", "At the start of round, buff the front ally's HP and Attack by 9.");
                 }
                 break;
-            case "./Units/34.png":
+            case "./Units/Unit34.png":
                 if (level == 1) {
                     this.ability = new Passive("H", "N", "I.1", "AT.1", false, "BuffAlly", "Gain 1 attack whenever anyone is hit.");
                 }
@@ -477,10 +477,10 @@ class Unit {
                     this.ability = new Passive("H", "N", "I.1", "AT.2", false, "BuffAlly", "Gain 2 attack whenever anyone is hit.");
                 }
                 if (level == 3) {
-                    this.ability = new Passive("H", "N", "I.1", "AT.3", false, "BuffAlly", "Gain 3 attack whenever anyone is hit.");
+                    this.ability = new Passive("H", "N", "I.1", "AT.2", false, "BuffAlly", "Gain 2 attack whenever anyone is hit.");
                 }
                 if (level == 4) {
-                    this.ability = new Passive("H", "N", "I.1", "AT.4", false, "BuffAlly", "Gain 4 attack whenever anyone is hit.");
+                    this.ability = new Passive("H", "N", "I.1", "AT.3", false, "BuffAlly", "Gain 3 attack whenever anyone is hit.");
                 }
                 break;
             case "./Units/Unit35.png":
@@ -631,12 +631,12 @@ class Unit {
                 break;
             case "./Units/Unit10.png":
                 this.attack = 5;
-                this.health = 8;
+                this.health = 11;
                 this.rarity = 1;
                 this.name = "Fistt";
                 break;
             case "./Units/Unit11.png":
-                this.attack = 6;
+                this.attack = 5;
                 this.health = 13;
                 this.rarity = 2;
                 this.name = "Skiever";
@@ -654,8 +654,8 @@ class Unit {
                 this.name = "Skealax";
                 break;
             case "./Units/Unit14.png":
-                this.attack = 4;
-                this.health = 15;
+                this.attack = 1;
+                this.health = 4;
                 this.rarity = 2;
                 this.name = "Harvar";
                 break;
@@ -726,8 +726,8 @@ class Unit {
                 this.name = "Skelter";
                 break;
             case "./Units/Unit26.png":
-                this.attack = 3;
-                this.health = 24;
+                this.attack = 4;
+                this.health = 20;
                 this.rarity = 3;
                 this.name = "Peebo";
                 break;
@@ -751,19 +751,19 @@ class Unit {
                 break;
             case "./Units/Unit30.png":
                 this.attack = 2;
-                this.health = 25;
+                this.health = 28;
                 this.rarity = 3;
                 this.name = "Coda";
                 break;
             case "./Units/Unit31.png":
-                this.attack = 9;
+                this.attack = 8;
                 this.health = 18;
                 this.rarity = 4;
                 this.name = "Slice";
                 break;
             case "./Units/Unit32.png":
-                this.attack = 11;
-                this.health = 16;
+                this.attack = 7;
+                this.health = 15;
                 this.rarity = 4;
                 this.name = "Vyiam";
                 break;
@@ -787,7 +787,7 @@ class Unit {
                 break;
             case "./Units/Unit36.png":
                 this.attack = 19;
-                this.health = 4;
+                this.health = 3;
                 this.rarity = 4;
                 this.name = "Schism";
                 break;
@@ -804,15 +804,15 @@ class Unit {
                 this.name = "Spark";
                 break;
             case "./Units/Unit39.png":
-                this.attack = 7;
-                this.health = 10;
+                this.attack = 1;
+                this.health = 1;
                 this.rarity = 4;
                 this.name = "Lost";
                 break;
             case "./Units/Unit40.png":
-                this.attack = 4;
-                this.health = 4;
-                this.rarity = 3;
+                this.attack = 2;
+                this.health = 2;
+                this.rarity = 4;
                 this.name = "IO";
                 break;
             default:

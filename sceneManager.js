@@ -224,14 +224,14 @@ class SceneManager {
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/WinRound.png", 800, 160));
         //
         for (let i = 0; i < WINS_THRESHOLD; i++)
-            gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+            gameEngine.addEntity(new Display(415 + 110 * i, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
         let x = 415;
         for (let i = 1; i < this.wins; i++) {
-            gameEngine.addEntity(new DisplayStill(x , 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new Display(x , 500, "./UI_Assets/Win.png", 100, 100));
             x += 110;
         }
         setTimeout(function() {
-            gameEngine.addEntity(new DisplayStill(x, 500, "./UI_Assets/Win.png", 100, 100));
+            gameEngine.addEntity(new Display(x, 500, "./UI_Assets/Win.png", 100, 100));
           }, 1000);
     }
 
@@ -241,7 +241,7 @@ class SceneManager {
         gameEngine.addEntity(new Display(580, 200, "./UI_Assets/LoseRound.png", 800, 160));
 
         for (let i = 0; i <= this.lives;i++) 
-            gameEngine.addEntity(new DisplayStill((920 - 124 * this.lives) + 224 * i, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new Display((920 - 124 * this.lives) + 224 * i, 500, "./UI_Assets/HealthHeart.png", 200, 200));
         setTimeout(function() {
             gameEngine.entities.pop();
           }, 1000);
@@ -254,7 +254,7 @@ class SceneManager {
         SOUND_ENGINE.fadeOut(1500);
         this.endRound();
         gameEngine.addEntity(new Display(535, 200, "./UI_Assets/DrawRound.png", 850, 160));
-        gameEngine.addEntity(new DisplayStill(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
+        gameEngine.addEntity(new Display(755, 400, "./UI_Assets/DrawDisplay.png", 400, 400));
     }
 
     endRound() {
@@ -292,12 +292,12 @@ class SceneManager {
 
         if (this.wins >= WINS_THRESHOLD) {
             SOUND_ENGINE.fadeOut(1500);
-            gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
+            gameEngine.addEntity(new Display(1405, 500, "./UI_Assets/WinPlaceHolder.png", 100, 100));
             gameEngine.addEntity(new Display(625, 200, "./UI_Assets/WinGame.png", 710, 160));
             for (let i = 0; i < WINS_THRESHOLD; i++)
-                gameEngine.addEntity(new DisplayStill(415 + 110 * i, 500, "./UI_Assets/Win.png", 100, 100));
+                gameEngine.addEntity(new Display(415 + 110 * i, 500, "./UI_Assets/Win.png", 100, 100));
             setTimeout(function() {
-                gameEngine.addEntity(new DisplayStill(1405, 500, "./UI_Assets/Win.png", 100, 100));
+                gameEngine.addEntity(new Display(1405, 500, "./UI_Assets/Win.png", 100, 100));
               }, 1000);
               setTimeout(function() {
                 SOUND_ENGINE.playSFX("wongame"); 
@@ -307,7 +307,7 @@ class SceneManager {
         else if (this.lives <= 0) {
             SOUND_ENGINE.fadeOut(1500);
             gameEngine.addEntity(new Display(620, 200, "./UI_Assets/LoseGame.png", 720, 160));
-            gameEngine.addEntity(new DisplayStill(860, 500, "./UI_Assets/HealthHeart.png", 200, 200));
+            gameEngine.addEntity(new Display(860, 500, "./UI_Assets/HealthHeart.png", 200, 200));
             setTimeout(function() {
                 gameEngine.entities.pop();
               }, 1000);
@@ -675,6 +675,15 @@ class SceneManager {
             
             // Add the unit to the team
             team.push(unit);
+        }
+
+        if (this.currentRound > 5) {
+            for (let i = 0; i < (this.currentRound-3)/2; i++) {
+                let randex = Math.floor(Math.random() * team.length);
+                if (team[randex].level < 4) {
+                    team[randex].levelUp();
+                }
+            }
         }
         
         // Return the final team

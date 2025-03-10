@@ -184,8 +184,8 @@ class Projectile {
         // Create impact effect if specified
         if (this.impactEffect) {
             this.createImpactEffect();
-            SOUND_ENGINE.playSFX(this.impactSound);
         }
+        SOUND_ENGINE.playSFX(this.impactSound);
         
         // Call hit callback if specified
         if (this.onHit) {
